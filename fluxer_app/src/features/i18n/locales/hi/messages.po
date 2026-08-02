@@ -4,12 +4,12 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Weblate 2026.7.dev0\n"
+"X-Generator: Weblate 2026.8.dev0\n"
 "Language: hi\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-03 01:18+0000\n"
-"Last-Translator: Hampus <hampus@fluxer.com>\n"
+"PO-Revision-Date: 2026-08-02 17:41+0000\n"
+"Last-Translator: Jiralite <me@jiralite.dev>\n"
 "Language-Team: Hindi <https://weblate.fluxer.tools/projects/fluxer/app/hi/>\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 
@@ -37775,7 +37775,10 @@ msgstr "{PREMIUM_PRODUCT_NAME} के साथ, आप एनिमेटेड
 #. Premium upsell sentence in the file-too-large alert. premiumProductName is the paid product name; fileSizeLimit is a localized file size.
 #: src/features/messaging/components/alerts/FileSizeTooLargeModal.tsx:43
 msgid "With {premiumProductName}, your per-file upload limit increases to {fileSizeLimit}, plus animated avatars, longer messages, and many other {premiumProductName} perks."
-msgstr "{PREMIUM_PRODUCT_NAME} के साथ, आपकी प्रति-फ़ाइल अपलोड सीमा बढ़कर {fileSizeLimit} हो जाती है, साथ ही एनिमेटेड अवतार, लंबे संदेश और कई अन्य {premiumProductName} लाभ भी मिलते हैं।"
+msgstr ""
+"{premiumProductName} के साथ, आपकी प्रति-फ़ाइल अपलोड सीमा बढ़कर {fileSizeLimit} "
+"हो जाती है, साथ ही एनिमेटेड अवतार, लंबे संदेश और कई अन्य {premiumProductName} लाभ भी "
+"मिलते हैं।"
 
 #. Label in the messages tab.
 #: src/features/user/components/modals/tabs/appearance_tab/MessagesTab.tsx:39
