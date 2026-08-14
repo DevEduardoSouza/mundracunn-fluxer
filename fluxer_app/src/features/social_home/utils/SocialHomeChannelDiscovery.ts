@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import type {Channel} from '@app/features/channel/models/Channel';
 import Channels from '@app/features/channel/state/Channels';
 import Permission from '@app/features/permissions/state/Permission';
 import {ChannelTypes, Permissions} from '@fluxer/constants/src/ChannelConstants';
@@ -40,4 +41,11 @@ export function discoverFeedChannelIds(guildId: string): Array<string> {
 		channelIds.push(channel.id);
 	}
 	return channelIds;
+}
+
+export function getProfessorFeedChannel(guildId: string): Channel | undefined {
+	return Channels.getGuildChannels(guildId).find(
+		(channel) =>
+			channel.type === ChannelTypes.GUILD_TEXT && normalizeChannelName(channel.name) === PROFESSOR_FEED_CHANNEL_NAME,
+	);
 }

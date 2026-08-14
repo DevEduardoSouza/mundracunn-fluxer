@@ -7,6 +7,7 @@ import {SOCIAL_HOME_DESCRIPTOR} from '@app/features/i18n/utils/CommonMessageDesc
 import {fetchFeed, fetchNextFeedPage} from '@app/features/social_home/commands/SocialHomeCommands';
 import styles from '@app/features/social_home/components/pages/SocialHomePage.module.css';
 import {SocialHomeFeedList} from '@app/features/social_home/components/SocialHomeFeedList';
+import {SocialHomePublishBar} from '@app/features/social_home/components/SocialHomePublishBar';
 import SocialHome from '@app/features/social_home/state/SocialHome';
 import {remFromPx} from '@app/features/theme/layout/RemFromPx';
 import {useFluxerDocumentTitle} from '@app/features/window/hooks/useFluxerDocumentTitle';
@@ -82,36 +83,41 @@ export const SocialHomePage: React.FC<SocialHomePageProps> = observer(({guildId}
 				/>
 			}
 			chatArea={
-				posts.length > 0 ? (
-					<SocialHomeFeedList
-						guildId={guildId}
-						posts={posts}
-						hasMore={hasMore}
-						isLoadingMore={isLoading}
-						onLoadMore={handleLoadMore}
-						data-flx="social_home.social-home-page.social-home-feed-list"
-					/>
-				) : (
-					<div className={styles.content} data-flx="social_home.social-home-page.content">
-						{isLoading ? (
-							<p className={styles.placeholderText} data-flx="social_home.social-home-page.loading-text">
-								{i18n._(FEED_LOADING_DESCRIPTOR)}
-							</p>
-						) : isIndexing ? (
-							<p className={styles.placeholderText} data-flx="social_home.social-home-page.indexing-text">
-								{i18n._(FEED_INDEXING_DESCRIPTOR)}
-							</p>
-						) : error ? (
-							<p className={styles.placeholderText} data-flx="social_home.social-home-page.error-text">
-								{i18n._(FEED_ERROR_DESCRIPTOR)}
-							</p>
+				<div className={styles.chatArea} data-flx="social_home.social-home-page.chat-area">
+					<SocialHomePublishBar guildId={guildId} data-flx="social_home.social-home-page.social-home-publish-bar" />
+					<div className={styles.body} data-flx="social_home.social-home-page.body">
+						{posts.length > 0 ? (
+							<SocialHomeFeedList
+								guildId={guildId}
+								posts={posts}
+								hasMore={hasMore}
+								isLoadingMore={isLoading}
+								onLoadMore={handleLoadMore}
+								data-flx="social_home.social-home-page.social-home-feed-list"
+							/>
 						) : (
-							<p className={styles.placeholderText} data-flx="social_home.social-home-page.empty-text">
-								{i18n._(FEED_EMPTY_DESCRIPTOR)}
-							</p>
+							<div className={styles.content} data-flx="social_home.social-home-page.content">
+								{isLoading ? (
+									<p className={styles.placeholderText} data-flx="social_home.social-home-page.loading-text">
+										{i18n._(FEED_LOADING_DESCRIPTOR)}
+									</p>
+								) : isIndexing ? (
+									<p className={styles.placeholderText} data-flx="social_home.social-home-page.indexing-text">
+										{i18n._(FEED_INDEXING_DESCRIPTOR)}
+									</p>
+								) : error ? (
+									<p className={styles.placeholderText} data-flx="social_home.social-home-page.error-text">
+										{i18n._(FEED_ERROR_DESCRIPTOR)}
+									</p>
+								) : (
+									<p className={styles.placeholderText} data-flx="social_home.social-home-page.empty-text">
+										{i18n._(FEED_EMPTY_DESCRIPTOR)}
+									</p>
+								)}
+							</div>
 						)}
 					</div>
-				)
+				</div>
 			}
 			data-flx="social_home.social-home-page.channel-view-scaffold"
 		/>
