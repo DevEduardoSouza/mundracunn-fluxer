@@ -6,7 +6,7 @@ import Permission from '@app/features/permissions/state/Permission';
 import {ChannelTypes, Permissions} from '@fluxer/constants/src/ChannelConstants';
 
 const SKETCHBOOKS_CATEGORY_NAME = 'sketchbooks';
-const PROFESSOR_FEED_CHANNEL_NAME = 'feed do professor';
+const PROFESSOR_FEED_CHANNEL_NAME = 'feed-do-professor';
 const FEED_CHANNEL_VIEW_PERMISSIONS = Permissions.VIEW_CHANNEL | Permissions.READ_MESSAGE_HISTORY;
 
 function normalizeChannelName(name: string | undefined): string {
