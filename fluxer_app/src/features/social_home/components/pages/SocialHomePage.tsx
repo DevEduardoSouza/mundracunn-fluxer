@@ -4,6 +4,7 @@ import {ChannelHeader} from '@app/features/channel/components/ChannelHeader';
 import {ChannelViewScaffold} from '@app/features/channel/components/channel_view/ChannelViewScaffold';
 import Guilds from '@app/features/guild/state/Guilds';
 import {SOCIAL_HOME_DESCRIPTOR} from '@app/features/i18n/utils/CommonMessageDescriptors';
+import {fetchFeed} from '@app/features/social_home/commands/SocialHomeCommands';
 import styles from '@app/features/social_home/components/pages/SocialHomePage.module.css';
 import SocialHome from '@app/features/social_home/state/SocialHome';
 import {remFromPx} from '@app/features/theme/layout/RemFromPx';
@@ -13,11 +14,19 @@ import {useLingui} from '@lingui/react/macro';
 import {HouseIcon} from '@phosphor-icons/react';
 import {observer} from 'mobx-react-lite';
 import type React from 'react';
-import {useMemo} from 'react';
+import {useEffect, useMemo} from 'react';
 
 const FEED_LOADING_DESCRIPTOR = msg({
 	message: 'Loading feed…',
 	comment: 'Loading state shown while the class feed posts are being fetched.',
+});
+const FEED_INDEXING_DESCRIPTOR = msg({
+	message: 'Setting up search for this class for the first time — try again in a moment.',
+	comment: 'Shown when the feed search backend is still indexing the class channels.',
+});
+const FEED_ERROR_DESCRIPTOR = msg({
+	message: "Couldn't load the feed.",
+	comment: 'Shown when fetching the class feed fails.',
 });
 const FEED_EMPTY_DESCRIPTOR = msg({
 	message: 'No posts yet.',
@@ -50,8 +59,13 @@ export const SocialHomePage: React.FC<SocialHomePageProps> = observer(({guildId}
 		),
 		[i18n.locale],
 	);
+	useEffect(() => {
+		void fetchFeed(i18n, guildId);
+	}, [i18n, guildId]);
 	const posts = SocialHome.getPosts();
 	const isLoading = SocialHome.getIsLoading();
+	const isIndexing = SocialHome.getIsIndexing();
+	const error = SocialHome.getError();
 	return (
 		<ChannelViewScaffold
 			header={
@@ -68,11 +82,23 @@ export const SocialHomePage: React.FC<SocialHomePageProps> = observer(({guildId}
 						<p className={styles.placeholderText} data-flx="social_home.social-home-page.loading-text">
 							{i18n._(FEED_LOADING_DESCRIPTOR)}
 						</p>
+					) : isIndexing ? (
+						<p className={styles.placeholderText} data-flx="social_home.social-home-page.indexing-text">
+							{i18n._(FEED_INDEXING_DESCRIPTOR)}
+						</p>
+					) : error ? (
+						<p className={styles.placeholderText} data-flx="social_home.social-home-page.error-text">
+							{i18n._(FEED_ERROR_DESCRIPTOR)}
+						</p>
 					) : posts.length === 0 ? (
 						<p className={styles.placeholderText} data-flx="social_home.social-home-page.empty-text">
 							{i18n._(FEED_EMPTY_DESCRIPTOR)}
 						</p>
-					) : null}
+					) : (
+						<p className={styles.placeholderText} data-flx="social_home.social-home-page.posts-count-text">
+							{posts.length}
+						</p>
+					)}
 				</div>
 			}
 			data-flx="social_home.social-home-page.channel-view-scaffold"
