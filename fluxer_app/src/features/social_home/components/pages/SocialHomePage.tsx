@@ -4,8 +4,9 @@ import {ChannelHeader} from '@app/features/channel/components/ChannelHeader';
 import {ChannelViewScaffold} from '@app/features/channel/components/channel_view/ChannelViewScaffold';
 import Guilds from '@app/features/guild/state/Guilds';
 import {SOCIAL_HOME_DESCRIPTOR} from '@app/features/i18n/utils/CommonMessageDescriptors';
-import {fetchFeed} from '@app/features/social_home/commands/SocialHomeCommands';
+import {fetchFeed, fetchNextFeedPage} from '@app/features/social_home/commands/SocialHomeCommands';
 import styles from '@app/features/social_home/components/pages/SocialHomePage.module.css';
+import {SocialHomeFeedList} from '@app/features/social_home/components/SocialHomeFeedList';
 import SocialHome from '@app/features/social_home/state/SocialHome';
 import {remFromPx} from '@app/features/theme/layout/RemFromPx';
 import {useFluxerDocumentTitle} from '@app/features/window/hooks/useFluxerDocumentTitle';
@@ -14,7 +15,7 @@ import {useLingui} from '@lingui/react/macro';
 import {HouseIcon} from '@phosphor-icons/react';
 import {observer} from 'mobx-react-lite';
 import type React from 'react';
-import {useEffect, useMemo} from 'react';
+import {useCallback, useEffect, useMemo} from 'react';
 
 const FEED_LOADING_DESCRIPTOR = msg({
 	message: 'Loading feed…',
@@ -66,6 +67,10 @@ export const SocialHomePage: React.FC<SocialHomePageProps> = observer(({guildId}
 	const isLoading = SocialHome.getIsLoading();
 	const isIndexing = SocialHome.getIsIndexing();
 	const error = SocialHome.getError();
+	const hasMore = SocialHome.getHasMore();
+	const handleLoadMore = useCallback(() => {
+		void fetchNextFeedPage(i18n, guildId);
+	}, [i18n, guildId]);
 	return (
 		<ChannelViewScaffold
 			header={
@@ -77,29 +82,36 @@ export const SocialHomePage: React.FC<SocialHomePageProps> = observer(({guildId}
 				/>
 			}
 			chatArea={
-				<div className={styles.content} data-flx="social_home.social-home-page.content">
-					{isLoading && posts.length === 0 ? (
-						<p className={styles.placeholderText} data-flx="social_home.social-home-page.loading-text">
-							{i18n._(FEED_LOADING_DESCRIPTOR)}
-						</p>
-					) : isIndexing ? (
-						<p className={styles.placeholderText} data-flx="social_home.social-home-page.indexing-text">
-							{i18n._(FEED_INDEXING_DESCRIPTOR)}
-						</p>
-					) : error ? (
-						<p className={styles.placeholderText} data-flx="social_home.social-home-page.error-text">
-							{i18n._(FEED_ERROR_DESCRIPTOR)}
-						</p>
-					) : posts.length === 0 ? (
-						<p className={styles.placeholderText} data-flx="social_home.social-home-page.empty-text">
-							{i18n._(FEED_EMPTY_DESCRIPTOR)}
-						</p>
-					) : (
-						<p className={styles.placeholderText} data-flx="social_home.social-home-page.posts-count-text">
-							{posts.length}
-						</p>
-					)}
-				</div>
+				posts.length > 0 ? (
+					<SocialHomeFeedList
+						guildId={guildId}
+						posts={posts}
+						hasMore={hasMore}
+						isLoadingMore={isLoading}
+						onLoadMore={handleLoadMore}
+						data-flx="social_home.social-home-page.social-home-feed-list"
+					/>
+				) : (
+					<div className={styles.content} data-flx="social_home.social-home-page.content">
+						{isLoading ? (
+							<p className={styles.placeholderText} data-flx="social_home.social-home-page.loading-text">
+								{i18n._(FEED_LOADING_DESCRIPTOR)}
+							</p>
+						) : isIndexing ? (
+							<p className={styles.placeholderText} data-flx="social_home.social-home-page.indexing-text">
+								{i18n._(FEED_INDEXING_DESCRIPTOR)}
+							</p>
+						) : error ? (
+							<p className={styles.placeholderText} data-flx="social_home.social-home-page.error-text">
+								{i18n._(FEED_ERROR_DESCRIPTOR)}
+							</p>
+						) : (
+							<p className={styles.placeholderText} data-flx="social_home.social-home-page.empty-text">
+								{i18n._(FEED_EMPTY_DESCRIPTOR)}
+							</p>
+						)}
+					</div>
+				)
 			}
 			data-flx="social_home.social-home-page.channel-view-scaffold"
 		/>
