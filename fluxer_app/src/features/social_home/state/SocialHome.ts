@@ -80,6 +80,10 @@ class SocialHome {
 		this.isIndexing = false;
 		this.error = null;
 	}
+
+	setHasMore(hasMore: boolean): void {
+		this.hasMore = hasMore;
+	}
 }
 
 export default new SocialHome();
