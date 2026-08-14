@@ -1,0 +1,69 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# Build do fork MUNDRACUNN: gera a imagem fluxer-app-proxy-self-hosted
+# (SPA do fluxer_app + proxy) e publica no GHCR desta conta. O staging
+# na VPS puxa a tag :mundracunn via timer (pull-based, sem SSH de entrada).
+#
+# Nao usa o _build-image.yaml do upstream porque a matriz dele exige
+# runners blacksmith-* que este fork nao possui. Build single-arch amd64
+# num runner padrao do GitHub, sem CalVer nem GitHub Release.
+name: mundracunn deploy app
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "fluxer_app/**"
+      - "fluxer_app_proxy/**"
+      - "fluxer_common/**"
+      - "fluxer_svc/**"
+      - "packages/**"
+      - "patches/**"
+      - "tools/ci/**"
+      - "tsconfigs/**"
+      - "pnpm-lock.yaml"
+      - "Cargo.lock"
+      - ".github/workflows/mundracunn-deploy-app.yaml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: mundracunn-deploy-app
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: fluxer_app_proxy/Dockerfile
+          push: true
+          provenance: false
+          platforms: linux/amd64
+          tags: |
+            ghcr.io/deveduardosouza/fluxer-app-proxy-self-hosted:mundracunn
+            ghcr.io/deveduardosouza/fluxer-app-proxy-self-hosted:sha-${{ github.sha }}
+          build-args: |
+            BUILD_VERSION=mundracunn-${{ github.run_number }}
+            FLUXER_APP_PROXY_TIME_FREEZE_ENABLED=false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max,ignore-error=true
+        env:
+          DOCKER_BUILD_SUMMARY: false
+          DOCKER_BUILD_RECORD_UPLOAD: false
