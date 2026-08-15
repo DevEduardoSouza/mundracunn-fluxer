@@ -14,15 +14,23 @@ interface FetchFeedOptions {
 	before?: string;
 }
 
-/**
- * Sticky for the session: once the search backend is confirmed unavailable (self-host without
- * Meilisearch/Elasticsearch — CLAUDE.md section 6.1), skip straight to the per-channel fallback
- * instead of re-probing the search endpoint on every page load.
- */
-let searchUnavailable = false;
-
 function isSearchUnavailableError(error: unknown): boolean {
 	return failureCode(error) === APIErrorCodes.FEATURE_TEMPORARILY_DISABLED;
+}
+
+/**
+ * A request issued for a guild the store no longer points at (the user switched classes while it
+ * was in flight) must not land — its posts belong to another class.
+ */
+function isStale(guildId: string): boolean {
+	return SocialHome.getGuildId() !== guildId;
+}
+
+function applyError(guildId: string, error: unknown): void {
+	if (isStale(guildId)) {
+		return;
+	}
+	SocialHome.setError(error instanceof Error ? error.message : String(error));
 }
 
 async function fetchFeedViaSearch(
@@ -43,31 +51,47 @@ async function fetchFeedViaSearch(
 			maxId: options.before,
 		},
 	);
+	if (isStale(guildId)) {
+		return;
+	}
 	if (isIndexing(result)) {
 		SocialHome.setIndexing();
 		return;
 	}
 	SocialHome.setPosts(result.messages, {append: options.before != null});
+	SocialHome.setHasMore(result.messages.length === FEED_HITS_PER_PAGE);
 }
 
-async function fetchFeedViaFallback(channelIds: Array<string>, options: FetchFeedOptions): Promise<void> {
+async function fetchFeedViaFallback(
+	guildId: string,
+	channelIds: Array<string>,
+	options: FetchFeedOptions,
+): Promise<void> {
 	const result = await fetchFeedByChannel(channelIds, options.before);
+	if (isStale(guildId)) {
+		return;
+	}
 	SocialHome.setPosts(result.messages, {append: options.before != null});
 	SocialHome.setHasMore(result.hasMore);
 }
 
 export async function fetchFeed(i18n: I18n, guildId: string, options: FetchFeedOptions = {}): Promise<void> {
+	if (SocialHome.getGuildId() !== guildId) {
+		SocialHome.reset();
+		SocialHome.setGuildId(guildId);
+	}
 	const channelIds = discoverFeedChannelIds(guildId);
 	if (channelIds.length === 0) {
 		SocialHome.setPosts([], {append: false});
+		SocialHome.setHasMore(false);
 		return;
 	}
 	SocialHome.setLoading(true);
-	if (searchUnavailable) {
+	if (SocialHome.isSearchUnavailable()) {
 		try {
-			await fetchFeedViaFallback(channelIds, options);
+			await fetchFeedViaFallback(guildId, channelIds, options);
 		} catch (error) {
-			SocialHome.setError(error instanceof Error ? error.message : String(error));
+			applyError(guildId, error);
 		}
 		return;
 	}
@@ -75,14 +99,14 @@ export async function fetchFeed(i18n: I18n, guildId: string, options: FetchFeedO
 		await fetchFeedViaSearch(i18n, guildId, channelIds, options);
 	} catch (error) {
 		if (!isSearchUnavailableError(error)) {
-			SocialHome.setError(error instanceof Error ? error.message : String(error));
+			applyError(guildId, error);
 			return;
 		}
-		searchUnavailable = true;
+		SocialHome.markSearchUnavailable();
 		try {
-			await fetchFeedViaFallback(channelIds, options);
+			await fetchFeedViaFallback(guildId, channelIds, options);
 		} catch (fallbackError) {
-			SocialHome.setError(fallbackError instanceof Error ? fallbackError.message : String(fallbackError));
+			applyError(guildId, fallbackError);
 		}
 	}
 }

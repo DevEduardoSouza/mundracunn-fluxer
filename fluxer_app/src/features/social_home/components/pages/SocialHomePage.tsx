@@ -62,7 +62,11 @@ export const SocialHomePage: React.FC<SocialHomePageProps> = observer(({guildId}
 		[i18n.locale],
 	);
 	useEffect(() => {
+		SocialHome.reset();
 		void fetchFeed(i18n, guildId);
+		return () => {
+			SocialHome.reset();
+		};
 	}, [i18n, guildId]);
 	const posts = SocialHome.getPosts();
 	const isLoading = SocialHome.getIsLoading();
