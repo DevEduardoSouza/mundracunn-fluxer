@@ -46,6 +46,10 @@ const GuildMembersPage = createNamedLoadableComponent<AppRouteComponentProps>({
 	displayName: 'GuildMembersPage',
 	load: async () => (await import('@app/features/channel/components/GuildMembersPage')).GuildMembersPage,
 });
+const SocialHomePage = createNamedLoadableComponent<AppRouteComponentProps>({
+	displayName: 'SocialHomePage',
+	load: async () => (await import('@app/features/social_home/components/pages/SocialHomePage')).SocialHomePage,
+});
 const BookmarksBottomSheet = createNamedLoadableComponent<AppRouteComponentProps>({
 	displayName: 'BookmarksBottomSheet',
 	load: async () => (await import('@app/features/channel/components/modals/BookmarksBottomSheet')).BookmarksBottomSheet,
@@ -267,6 +271,16 @@ const membersRoute = createRoute({
 		return <GuildMembersPage guildId={guildId} data-flx="app.router.app-routes.guild-members-page" />;
 	},
 });
+const socialHomeRoute = createRoute({
+	getParentRoute: () => channelsRoute,
+	id: 'socialHome',
+	path: '/channels/:guildId/home',
+	preload: SocialHomePage.preload,
+	component: () => {
+		const {guildId} = useParams() as {guildId: string};
+		return <SocialHomePage guildId={guildId} data-flx="app.router.app-routes.social-home-page" />;
+	},
+});
 const channelRoute = createRoute({
 	getParentRoute: () => channelsRoute,
 	id: 'channel',
@@ -319,6 +333,6 @@ export const appRouteTree = appLayoutRoute.addChildren([
 		meRoute,
 		discoverRoute,
 		favoritesRoute.addChildren([favoritesChannelRoute]),
-		channelsRoute.addChildren([membersRoute, channelRoute.addChildren([messageRoute])]),
+		channelsRoute.addChildren([membersRoute, socialHomeRoute, channelRoute.addChildren([messageRoute])]),
 	]),
 ]);

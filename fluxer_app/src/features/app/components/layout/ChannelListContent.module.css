@@ -64,6 +64,16 @@
 	background: var(--background-modifier-hover);
 }
 
+.homeSection {
+	padding: 0 0 0.125rem;
+}
+
+.homeSeparator {
+	height: 0.0625rem;
+	margin: 0.375rem 0.75rem;
+	background: var(--background-modifier-hover);
+}
+
 .bottomSpacer {
 	height: calc(var(--layout-user-area-overlay-height, var(--layout-user-area-reserved-height, 0px)) + var(--spacing-2));
 	flex: 0 0 auto;

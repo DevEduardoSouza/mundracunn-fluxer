@@ -27,7 +27,7 @@ import {useRovingFocusList} from '@app/features/app/hooks/useRovingFocusList';
 import Channels from '@app/features/channel/state/Channels';
 import * as GuildCommands from '@app/features/guild/commands/GuildCommands';
 import type {Guild} from '@app/features/guild/models/Guild';
-import {MEMBERS_DESCRIPTOR} from '@app/features/i18n/utils/CommonMessageDescriptors';
+import {MEMBERS_DESCRIPTOR, SOCIAL_HOME_DESCRIPTOR} from '@app/features/i18n/utils/CommonMessageDescriptors';
 import {isKeyboardActivationKey} from '@app/features/input/utils/KeyboardUtils';
 import * as RouterUtils from '@app/features/navigation/utils/RouterUtils';
 import Permission from '@app/features/permissions/state/Permission';
@@ -53,7 +53,7 @@ import {Permissions} from '@fluxer/constants/src/ChannelConstants';
 import {MAX_CHANNELS_PER_CATEGORY} from '@fluxer/constants/src/LimitConstants';
 import {msg} from '@lingui/core/macro';
 import {useLingui} from '@lingui/react/macro';
-import {UsersIcon} from '@phosphor-icons/react';
+import {HouseIcon, UsersIcon} from '@phosphor-icons/react';
 import {clsx} from 'clsx';
 import {observer} from 'mobx-react-lite';
 import type {MotionValue} from 'motion';
@@ -76,6 +76,10 @@ const CHANNELS_DESCRIPTOR = msg({
 });
 const MEMBERS_SELECTED_DESCRIPTOR = msg({
 	message: 'Members, selected',
+	comment: 'Short label in the app layout channel list content.',
+});
+const HOME_SELECTED_DESCRIPTOR = msg({
+	message: 'Home, selected',
 	comment: 'Short label in the app layout channel list content.',
 });
 const NEW_MESSAGES_DESCRIPTOR = msg({
@@ -124,11 +128,14 @@ export const ChannelListContent = observer(({guild, scrollY}: {guild: Guild; scr
 	const guildPrefix = `/channels/${guild.id}/`;
 	let selectedChannelInGuildId: string | null = null;
 	let isMembersSelected = false;
+	let isHomeSelected = false;
 	if (location.pathname.startsWith(guildPrefix)) {
 		const tail = location.pathname.slice(guildPrefix.length);
 		const slash = tail.indexOf('/');
 		const segment = slash === -1 ? tail : tail.slice(0, slash);
-		if (segment === 'members') {
+		if (segment === 'home') {
+			isHomeSelected = true;
+		} else if (segment === 'members') {
 			isMembersSelected = true;
 		} else if (segment.length > 0) {
 			selectedChannelInGuildId = segment;
@@ -144,6 +151,17 @@ export const ChannelListContent = observer(({guild, scrollY}: {guild: Guild; scr
 			handleMembersClick();
 		},
 		[handleMembersClick],
+	);
+	const handleHomeClick = useCallback(() => {
+		RouterUtils.transitionTo(Routes.guildHome(guild.id));
+	}, [guild.id]);
+	const handleHomeKeyDown = useCallback(
+		(event: React.KeyboardEvent) => {
+			if (!isKeyboardActivationKey(event.key)) return;
+			event.preventDefault();
+			handleHomeClick();
+		},
+		[handleHomeClick],
 	);
 	const collapsedCategories = useMemo(() => {
 		const overrides = userGuildSettings?.channel_overrides;
@@ -313,6 +331,41 @@ export const ChannelListContent = observer(({guild, scrollY}: {guild: Guild; scr
 							data-flx="app.channel-list-content.null-space-drop-indicator"
 						/>
 					</div>
+					<div className={styles.homeSection} data-flx="app.channel-list-content.home-section">
+						<GenericChannelItem
+							containerClassName={channelItemStyles.container}
+							className={clsx(
+								channelItemStyles.channelItem,
+								channelItemStyles.channelItemRegular,
+								isHomeSelected && channelItemStyles.channelItemSelected,
+								!isHomeSelected && channelItemStyles.channelItemHoverable,
+							)}
+							isSelected={isHomeSelected}
+							aria-label={isHomeSelected ? i18n._(HOME_SELECTED_DESCRIPTOR) : i18n._(SOCIAL_HOME_DESCRIPTOR)}
+							aria-current={isHomeSelected ? 'page' : undefined}
+							onClick={handleHomeClick}
+							onKeyDown={handleHomeKeyDown}
+							data-flx="app.channel-list-content.generic-channel-item.home-click"
+						>
+							<ChannelItemContent
+								icon={
+									<HouseIcon
+										size={remFromPx(20)}
+										className={clsx(
+											channelItemStyles.channelItemIcon,
+											isHomeSelected
+												? channelItemStyles.channelItemIconSelected
+												: channelItemStyles.channelItemIconUnselected,
+										)}
+										data-flx="app.channel-list-content.house-icon"
+									/>
+								}
+								name={i18n._(SOCIAL_HOME_DESCRIPTOR)}
+								data-flx="app.channel-list-content.channel-item-content--home"
+							/>
+						</GenericChannelItem>
+					</div>
+					<div className={styles.homeSeparator} data-flx="app.channel-list-content.home-separator" />
 					{canViewMembers && (
 						<>
 							<div className={styles.membersSection} data-flx="app.channel-list-content.members-section">
