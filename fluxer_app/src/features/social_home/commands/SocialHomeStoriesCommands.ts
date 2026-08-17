@@ -10,6 +10,12 @@ import {fromTimestamp} from '@fluxer/snowflake/src/SnowflakeUtils';
 import type {I18n} from '@lingui/core';
 
 const STORY_WINDOW_MS = 24 * 60 * 60 * 1000;
+/**
+ * The Stories bar has no "load more" of its own — whatever comes back here is the whole 24h
+ * window — so more than 25 stories in a day silently truncates to the most recent 25 (search's
+ * `sortOrder: 'desc'`). Fine for the expected posting volume (only professor/staff post stories),
+ * but worth knowing if that assumption ever changes.
+ */
 const STORY_HITS_PER_PAGE = 25;
 
 function isSearchUnavailableError(error: unknown): boolean {

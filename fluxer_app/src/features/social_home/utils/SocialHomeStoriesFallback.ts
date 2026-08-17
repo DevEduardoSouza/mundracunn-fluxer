@@ -6,6 +6,12 @@ import {http} from '@app/features/platform/transport/RestTransport';
 import type {Message as WireMessage} from '@fluxer/schema/src/domains/message/MessageResponseSchemas';
 import {sortBySnowflakeDesc} from '@fluxer/snowflake/src/SnowflakeUtils';
 
+/**
+ * `limit` bounds the raw channel fetch, before filtering to image/video messages — so more than
+ * 100 total messages (stories + comments combined) since `minId` silently truncates which stories
+ * this fallback finds. Same truncation trade-off as STORY_HITS_PER_PAGE in
+ * SocialHomeStoriesCommands.ts, just measured before rather than after the attachment filter.
+ */
 const CHANNEL_FETCH_LIMIT = 100;
 
 function messageHasStoryAttachment(message: WireMessage): boolean {

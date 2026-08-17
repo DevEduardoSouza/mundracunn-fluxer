@@ -33,6 +33,12 @@ function sortByIdAsc(messages: ReadonlyArray<Message>): Array<Message> {
  * replies-to-replies = sub-comments (CLAUDE.md section 6.1 — no native threads in Fluxer, so the
  * tree is rebuilt client-side from `message_reference` on every load).
  *
+ * A message with no reply reference at all is still treated as a top-level comment rather than
+ * dropped: the panel's own composer (SocialHomeStoryCommentsPanel) reuses the plain ChannelTextarea,
+ * which sends an ordinary message with no `message_reference`, and CLAUDE.md section 6.1 already
+ * frames the raw channel itself as the discussion area — a plain post in this window is exactly
+ * that, not noise.
+ *
  * `messages` is whatever the channel's message store currently holds, which may include another
  * story's own comments (loaded elsewhere in the same session) — this filters to the (root,
  * upperBoundStoryId) window first, same bound SocialHomeStoryCommentsCommands fetches within (see
@@ -54,10 +60,14 @@ export function buildCommentTree(
 		byId.set(message.id, message);
 	}
 	const childrenByParent = new Map<string, Array<Message>>();
+	const topLevelPlain: Array<Message> = [];
 	const orphans: Array<Message> = [];
 	for (const message of windowMessages) {
 		const parentId = replyParentId(message);
-		if (parentId == null) continue;
+		if (parentId == null) {
+			topLevelPlain.push(message);
+			continue;
+		}
 		if (parentId === root.id || byId.has(parentId)) {
 			const siblings = childrenByParent.get(parentId);
 			if (siblings) {
@@ -74,6 +84,7 @@ export function buildCommentTree(
 		return {message, children, isOrphan};
 	}
 	const topLevel = sortByIdAsc(childrenByParent.get(root.id) ?? []).map((message) => buildNode(message, false));
+	const topLevelPlainNodes = sortByIdAsc(topLevelPlain).map((message) => buildNode(message, false));
 	const orphanNodes = sortByIdAsc(orphans).map((message) => buildNode(message, true));
-	return [...topLevel, ...orphanNodes].sort((a, b) => compare(a.message.id, b.message.id));
+	return [...topLevel, ...topLevelPlainNodes, ...orphanNodes].sort((a, b) => compare(a.message.id, b.message.id));
 }
