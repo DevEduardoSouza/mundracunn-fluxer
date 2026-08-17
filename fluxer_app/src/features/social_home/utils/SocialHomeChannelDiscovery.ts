@@ -7,7 +7,9 @@ import {ChannelTypes, Permissions} from '@fluxer/constants/src/ChannelConstants'
 
 const SKETCHBOOKS_CATEGORY_NAME = 'sketchbooks';
 const PROFESSOR_FEED_CHANNEL_NAME = 'feed-do-professor';
+const STORIES_CHANNEL_NAME = 'stories';
 const FEED_CHANNEL_VIEW_PERMISSIONS = Permissions.VIEW_CHANNEL | Permissions.READ_MESSAGE_HISTORY;
+const STORIES_POST_PERMISSIONS = Permissions.VIEW_CHANNEL | Permissions.SEND_MESSAGES;
 
 function normalizeChannelName(name: string | undefined): string {
 	return (name ?? '').trim().toLowerCase();
@@ -48,4 +50,45 @@ export function getProfessorFeedChannel(guildId: string): Channel | undefined {
 		(channel) =>
 			channel.type === ChannelTypes.GUILD_TEXT && normalizeChannelName(channel.name) === PROFESSOR_FEED_CHANNEL_NAME,
 	);
+}
+
+/**
+ * The Stories channel is restricted (only professor/admin can post — CLAUDE.md section 4); a
+ * student who can't view it simply never receives it in their guild channel list, so no separate
+ * permission check is needed here, same as {@link getProfessorFeedChannel}.
+ */
+export function getStoriesChannel(guildId: string): Channel | undefined {
+	return Channels.getGuildChannels(guildId).find(
+		(channel) =>
+			channel.type === ChannelTypes.GUILD_TEXT && normalizeChannelName(channel.name) === STORIES_CHANNEL_NAME,
+	);
+}
+
+/**
+ * Who can post a Story is deliberately not hardcoded to a role name: the kickoff checklist
+ * (CLAUDE.md section 7) left "só professor/admin ou monitores também?" open, and the client can
+ * answer that later purely by editing the Stories channel's permission overwrites in Fluxer's own
+ * UI — whoever ends up with SEND_MESSAGES there sees the publish button, no code change needed.
+ */
+export function canPostStories(guildId: string): boolean {
+	const channel = getStoriesChannel(guildId);
+	if (!channel) return false;
+	const permissions = Permission.getChannelPermissions(channel.id) ?? 0n;
+	return (permissions & STORIES_POST_PERMISSIONS) === STORIES_POST_PERMISSIONS;
+}
+
+/**
+ * Optional per CLAUDE.md section 7 ("esconder o canal cru... acesso só pela Home?") — whoever can
+ * post still needs the raw channel to actually manage/moderate Stories, so only non-posting
+ * visitors (students) get funneled to the Home page instead. This is a client-side routing nudge,
+ * not a permission change: the channel stays exactly as visible/readable as it already is via
+ * Fluxer's own permission system, which is what actually gates access. True hiding (removing
+ * VIEW_CHANNEL for @everyone) is a server-side permission decision for whoever administers the
+ * guild, not something this fork changes on its own — see AppRoutes.tsx's channelRoute/messageRoute
+ * for where this is applied.
+ */
+export function shouldRedirectAwayFromRawStoriesChannel(guildId: string, channelId: string): boolean {
+	const storiesChannel = getStoriesChannel(guildId);
+	if (!storiesChannel || storiesChannel.id !== channelId) return false;
+	return !canPostStories(guildId);
 }
