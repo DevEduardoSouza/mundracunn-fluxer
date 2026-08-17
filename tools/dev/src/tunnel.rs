@@ -368,16 +368,8 @@ fn docker_command() -> Vec<PathBuf> {
     vec![PathBuf::from("sudo"), PathBuf::from("docker")]
 }
 
-#[cfg(unix)]
 fn docker_socket_is_writable() -> bool {
     std::os::unix::net::UnixStream::connect("/var/run/docker.sock").is_ok()
-}
-
-// Docker Desktop on Windows talks over a named pipe, not a Unix socket, and there's no `sudo`
-// concept here — `docker_command()` only consults this to decide whether to prefix `sudo`.
-#[cfg(not(unix))]
-fn docker_socket_is_writable() -> bool {
-    false
 }
 
 fn replace_marked_block(existing: &str, generated: &str) -> String {
