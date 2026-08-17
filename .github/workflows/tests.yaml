@@ -80,6 +80,9 @@ jobs:
           --step test
 
   rust:
+    # Runner pago (Blacksmith) que este fork nao possui — o job ficaria 'queued' para sempre
+    # e deixaria o workflow eternamente amarelo. Roda apenas no upstream oficial.
+    if: ${{ github.repository == 'fluxerapp/fluxer' }}
     runs-on: blacksmith-4vcpu-ubuntu-2404
     timeout-minutes: 30
     steps:
@@ -363,3 +366,4 @@ jobs:
             -n fluxer \
             | docker run -i --rm ghcr.io/yannh/kubeconform:v0.6.7 \
                 -strict -summary -kubernetes-version 1.31.0
+
