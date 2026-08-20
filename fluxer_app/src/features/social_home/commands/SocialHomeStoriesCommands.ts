@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import type {Message} from '@app/features/messaging/models/MessagingMessage';
 import {failureCode} from '@app/features/platform/utils/ResponseInspection';
 import {isIndexing, searchMessages} from '@app/features/search/utils/SearchUtils';
 import SocialHomeStories from '@app/features/social_home/state/SocialHomeStories';
 import {getStoriesChannel} from '@app/features/social_home/utils/SocialHomeChannelDiscovery';
 import {fetchStoriesByChannel} from '@app/features/social_home/utils/SocialHomeStoriesFallback';
 import {APIErrorCodes} from '@fluxer/constants/src/ApiErrorCodes';
-import {fromTimestamp} from '@fluxer/snowflake/src/SnowflakeUtils';
+import {fromTimestamp, sortBySnowflakeDesc} from '@fluxer/snowflake/src/SnowflakeUtils';
 import type {I18n} from '@lingui/core';
 
 const STORY_WINDOW_MS = 24 * 60 * 60 * 1000;
@@ -14,9 +15,19 @@ const STORY_WINDOW_MS = 24 * 60 * 60 * 1000;
  * The Stories bar has no "load more" of its own — whatever comes back here is the whole 24h
  * window — so more than 25 stories in a day silently truncates to the most recent 25 (search's
  * `sortOrder: 'desc'`). Fine for the expected posting volume (only professor/staff post stories),
- * but worth knowing if that assumption ever changes.
+ * but worth knowing if that assumption ever changes. Applied per media type and again after the
+ * merge below, so the bar never renders more than this many circles.
  */
 const STORY_HITS_PER_PAGE = 25;
+
+/**
+ * Queried one at a time, never as a single `has: ['image', 'video']`. The search API turns every
+ * entry of `has` into its own filter clause and joins them with AND (fluxer_api's
+ * `compactMeiliFilters`), so asking for both in one request matches only a message carrying an
+ * image *and* a video — in practice, nothing. Merging one request per type gives the OR the bar
+ * actually wants, and matches what the fallback path already does (SocialHomeStoriesFallback.ts).
+ */
+const STORY_MEDIA_TYPES = ['image', 'video'] as const;
 
 function isSearchUnavailableError(error: unknown): boolean {
 	return failureCode(error) === APIErrorCodes.FEATURE_TEMPORARILY_DISABLED;
@@ -38,26 +49,39 @@ function applyError(guildId: string, error: unknown): void {
 }
 
 async function fetchStoriesViaSearch(i18n: I18n, guildId: string, channelId: string, minId: string): Promise<void> {
-	const result = await searchMessages(
-		i18n,
-		{contextGuildId: guildId},
-		{
-			channelId: [channelId],
-			has: ['image', 'video'],
-			sortBy: 'timestamp',
-			sortOrder: 'desc',
-			hitsPerPage: STORY_HITS_PER_PAGE,
-			minId,
-		},
+	const results = await Promise.all(
+		STORY_MEDIA_TYPES.map((mediaType) =>
+			searchMessages(
+				i18n,
+				{contextGuildId: guildId},
+				{
+					channelId: [channelId],
+					has: [mediaType],
+					sortBy: 'timestamp',
+					sortOrder: 'desc',
+					hitsPerPage: STORY_HITS_PER_PAGE,
+					minId,
+				},
+			),
+		),
 	);
 	if (isStale(guildId)) {
 		return;
 	}
-	if (isIndexing(result)) {
+	if (results.some(isIndexing)) {
 		SocialHomeStories.setIndexing();
 		return;
 	}
-	SocialHomeStories.setStories(result.messages);
+	const byId = new Map<string, Message>();
+	for (const result of results) {
+		if (isIndexing(result)) {
+			continue;
+		}
+		for (const message of result.messages) {
+			byId.set(message.id, message);
+		}
+	}
+	SocialHomeStories.setStories(sortBySnowflakeDesc([...byId.values()]).slice(0, STORY_HITS_PER_PAGE));
 }
 
 async function fetchStoriesViaFallback(guildId: string, channelId: string, minId: string): Promise<void> {
