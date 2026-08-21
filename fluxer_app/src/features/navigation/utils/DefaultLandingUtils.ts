@@ -3,6 +3,7 @@
 import {Routes} from '@app/app/Routes';
 import Accessibility from '@app/features/accessibility/state/Accessibility';
 import RuntimeConfig from '@app/features/app/state/RuntimeConfig';
+import {canAccessDiscovery} from '@app/features/discovery/utils/DiscoveryAccess';
 import GuildListState from '@app/features/guild/state/GuildList';
 
 function getFirstAvailableGuildId(): string | null {
@@ -23,7 +24,7 @@ export function getDirectMessagesFallbackPath(): string {
 	if (Accessibility.showFavorites) {
 		return Routes.FAVORITES;
 	}
-	if (!RuntimeConfig.singleCommunityEnabled) {
+	if (canAccessDiscovery()) {
 		return Routes.DISCOVER;
 	}
 	return Routes.ME;
