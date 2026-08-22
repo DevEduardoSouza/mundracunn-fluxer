@@ -39,12 +39,16 @@ function canViewChannel(channelId: string): boolean {
  * explicit channel_ids include a channel the requester can't see, and Sketchbooks may be
  * private per student.
  */
-export function discoverFeedChannelIds(guildId: string): Array<string> {
-	const channels = Channels.getGuildChannels(guildId);
-	const sketchbooksCategory = channels.find(
+export function getSketchbooksCategory(guildId: string): Channel | undefined {
+	return Channels.getGuildChannels(guildId).find(
 		(channel) =>
 			channel.type === ChannelTypes.GUILD_CATEGORY && normalizeChannelName(channel.name) === SKETCHBOOKS_CATEGORY_NAME,
 	);
+}
+
+export function discoverFeedChannelIds(guildId: string): Array<string> {
+	const channels = Channels.getGuildChannels(guildId);
+	const sketchbooksCategory = getSketchbooksCategory(guildId);
 	const channelIds: Array<string> = [];
 	for (const channel of channels) {
 		if (channel.type !== ChannelTypes.GUILD_TEXT) continue;
