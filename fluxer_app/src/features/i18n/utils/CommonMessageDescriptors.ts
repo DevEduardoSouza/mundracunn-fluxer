@@ -492,7 +492,7 @@ export const MEMBERS_DESCRIPTOR = msg({
 	comment: 'Generic header / tab label for a community or group member list.',
 });
 export const SOCIAL_HOME_DESCRIPTOR = msg({
-	message: 'Home',
+	message: 'Gallery',
 	comment: 'Generic header / tab label for a guild social home (class feed) page.',
 });
 export const JUMP_DESCRIPTOR = msg({
