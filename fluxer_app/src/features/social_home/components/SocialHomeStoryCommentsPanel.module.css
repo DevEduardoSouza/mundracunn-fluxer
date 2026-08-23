@@ -6,6 +6,12 @@
 	right: 0;
 	bottom: 0;
 	z-index: calc(var(--z-index-modal) + 1);
+	/* O portal do media viewer (#media-viewer-portal-root) tem pointer-events: none e
+	   cada filho reabilita o proprio — o overlay do MediaModal faz isso, este painel nao
+	   fazia. Sem esta linha o painel fica visivel mas INCLICAVEL: todo clique atravessa,
+	   cai na superficie de pan/zoom do viewer e fecha o story (bug relatado em 22/08,
+	   "ao clicar para comentar ele fecha"). */
+	pointer-events: auto;
 	display: flex;
 	flex-direction: column;
 	width: min(24rem, 100vw);
