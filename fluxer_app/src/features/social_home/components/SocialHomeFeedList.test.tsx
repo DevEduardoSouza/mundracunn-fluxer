@@ -12,8 +12,9 @@
  * given*, so a wiring bug (wrong channel, dropped post, stale props) still fails loudly here.
  *
  * DOM mounting follows this codebase's only existing pattern for it (see
- * `voice/components/VoiceLiveKitRoot.test.tsx`): `@vitest-environment happy-dom` + raw
- * `react-dom/client` + `act()`, no testing-library.
+ * `voice/components/VoiceLiveKitRoot.test.tsx`): the happy-dom vitest environment pragma + raw
+ * `react-dom/client` + `act()`, no testing-library. (The pragma is deliberately not spelled out
+ * here: knip scans comments for it and misreads a quoted mention as an environment package.)
  */
 vi.mock('@app/app/Routes', () => ({
 	Routes: {
