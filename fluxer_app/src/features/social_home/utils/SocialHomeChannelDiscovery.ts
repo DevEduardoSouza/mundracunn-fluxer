@@ -11,8 +11,20 @@ const STORIES_CHANNEL_NAME = 'stories';
 const FEED_CHANNEL_VIEW_PERMISSIONS = Permissions.VIEW_CHANNEL | Permissions.READ_MESSAGE_HISTORY;
 const STORIES_POST_PERMISSIONS = Permissions.VIEW_CHANNEL | Permissions.SEND_MESSAGES;
 
+/**
+ * Categories in a real class are decorated - the pilot guild ships a paint-palette emoji before
+ * `sketchbooks`, a house before `home social`, a pin before `inicio` - so matching the bare
+ * convention name against a raw `toLowerCase()` silently found nothing, and the Feed quietly
+ * degraded to the professor's channel alone. Stripping anything that isn't a letter, digit or
+ * hyphen makes the convention survive whatever emoji or padding the guild owner puts around it,
+ * while still requiring the name itself to match exactly (a `sketchbooks antigos` category stays
+ * excluded).
+ */
 function normalizeChannelName(name: string | undefined): string {
-	return (name ?? '').trim().toLowerCase();
+	return (name ?? '')
+		.toLowerCase()
+		.replace(/[^\p{L}\p{N}-]+/gu, ' ')
+		.trim();
 }
 
 function canViewChannel(channelId: string): boolean {
@@ -27,12 +39,16 @@ function canViewChannel(channelId: string): boolean {
  * explicit channel_ids include a channel the requester can't see, and Sketchbooks may be
  * private per student.
  */
-export function discoverFeedChannelIds(guildId: string): Array<string> {
-	const channels = Channels.getGuildChannels(guildId);
-	const sketchbooksCategory = channels.find(
+export function getSketchbooksCategory(guildId: string): Channel | undefined {
+	return Channels.getGuildChannels(guildId).find(
 		(channel) =>
 			channel.type === ChannelTypes.GUILD_CATEGORY && normalizeChannelName(channel.name) === SKETCHBOOKS_CATEGORY_NAME,
 	);
+}
+
+export function discoverFeedChannelIds(guildId: string): Array<string> {
+	const channels = Channels.getGuildChannels(guildId);
+	const sketchbooksCategory = getSketchbooksCategory(guildId);
 	const channelIds: Array<string> = [];
 	for (const channel of channels) {
 		if (channel.type !== ChannelTypes.GUILD_TEXT) continue;

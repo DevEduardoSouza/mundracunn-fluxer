@@ -14,10 +14,11 @@ import {ChannelIndexPage} from '@app/features/channel/components/ChannelIndexPag
 import {ChannelLayout} from '@app/features/channel/components/ChannelLayout';
 import {DMLayout} from '@app/features/channel/components/direct_message/DirectMessageLayout';
 import Channels from '@app/features/channel/state/Channels';
+import {canAccessDiscovery} from '@app/features/discovery/utils/DiscoveryAccess';
 import {setPathQueryParams} from '@app/features/messaging/utils/MessagingUrlUtils';
 import SelectedChannel from '@app/features/navigation/state/SelectedChannel';
 import {navigateToLinkedUserProfile} from '@app/features/navigation/utils/DeepLinkUtils';
-import {getDirectMessagesFallbackPath} from '@app/features/navigation/utils/DefaultLandingUtils';
+import {getDefaultLandingPath, getDirectMessagesFallbackPath} from '@app/features/navigation/utils/DefaultLandingUtils';
 import {
 	createDefaultLoadableComponent,
 	createNamedLoadableComponent,
@@ -213,6 +214,12 @@ const discoverRoute = createRoute({
 	getParentRoute: () => guildsLayoutRoute,
 	id: 'discover',
 	path: '/channels/@discover',
+	onEnter: () => {
+		if (!canAccessDiscovery()) {
+			return new Redirect(getDefaultLandingPath());
+		}
+		return undefined;
+	},
 	component: () => <DiscoveryLayout data-flx="app.router.app-routes.discovery-layout" />,
 });
 const userProfileRoute = createRoute({

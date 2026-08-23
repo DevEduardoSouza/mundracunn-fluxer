@@ -79,7 +79,7 @@ const MEMBERS_SELECTED_DESCRIPTOR = msg({
 	comment: 'Short label in the app layout channel list content.',
 });
 const HOME_SELECTED_DESCRIPTOR = msg({
-	message: 'Home, selected',
+	message: 'Gallery, selected',
 	comment: 'Short label in the app layout channel list content.',
 });
 const NEW_MESSAGES_DESCRIPTOR = msg({

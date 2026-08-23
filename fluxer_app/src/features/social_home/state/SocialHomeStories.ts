@@ -62,6 +62,16 @@ class SocialHomeStories {
 		return this.stories.filter((story) => extractTimestamp(story.id) >= cutoff);
 	}
 
+	/**
+	 * The id of the newest story this viewer has already watched from `authorId`, or null if none.
+	 * Distinct from {@link isAuthorSeen}, which only answers "is the whole group caught up" — the
+	 * viewer needs the boundary itself so it can resume at the first unwatched story instead of
+	 * replaying the group from the beginning.
+	 */
+	getLastSeenStoryId(authorId: string): string | null {
+		return this.seenByAuthor[authorId] ?? null;
+	}
+
 	isAuthorSeen(authorId: string, latestStoryId: string): boolean {
 		const lastSeenId = this.seenByAuthor[authorId];
 		return lastSeenId != null && compare(lastSeenId, latestStoryId) >= 0;
