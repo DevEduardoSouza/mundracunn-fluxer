@@ -7,7 +7,7 @@
  * fork's code, and 900+ lines pulling in markdown/emoji/reactions/RuntimeConfig — see
  * `SocialHomeCommandMocks.ts` for why that chain is expensive to stand up in a test). What
  * `SocialHomeFeedList` itself owns — and what this test actually verifies — is that it wires the
- * right post/channel into a card for every post, in order, and that "View in Sketchbook" deep-links
+ * right post/channel into a card for every post, in order, and that the comment button deep-links
  * correctly. `ChannelMessage` is replaced with a stub that renders the fields it *would have been
  * given*, so a wiring bug (wrong channel, dropped post, stale props) still fails loudly here.
  *
@@ -23,6 +23,18 @@ vi.mock('@app/app/Routes', () => ({
 	},
 }));
 vi.mock('@app/features/channel/state/Channels', () => ({default: {getChannel: vi.fn()}}));
+// The feed-card react button pulls the emoji picker, whose import chain reaches RuntimeConfig -
+// a module whose constructor throws outside the real app-proxy (window.__FLUXER_BOOTSTRAP__).
+// Same failure mode PR #4 hit with SocialHomePage; mock the chain out. Permission answers 0n so
+// the react button stays unrendered and the first card button remains the comment deep-link the
+// assertions below rely on.
+vi.mock('@app/features/emoji/components/popouts/EmojiPickerPopout', () => ({EmojiPickerPopout: () => null}));
+vi.mock('@app/features/messaging/commands/ReactionCommands', () => ({addReaction: vi.fn(), removeReaction: vi.fn()}));
+vi.mock('@app/features/messaging/utils/ReactionUtils', () => ({toReactionEmoji: (emoji: unknown) => emoji}));
+vi.mock('@app/features/permissions/state/Permission', () => ({
+	default: {getChannelPermissions: vi.fn(() => 0n)},
+}));
+vi.mock('@app/features/ui/commands/PopoutCommands', () => ({open: vi.fn(), close: vi.fn()}));
 vi.mock('@app/features/navigation/utils/RouterUtils', () => ({transitionTo: vi.fn()}));
 vi.mock('@app/features/ui/components/Scroller', () => ({
 	Scroller: forwardRef<HTMLDivElement, {children?: React.ReactNode; onScroll?: () => void}>(
@@ -156,7 +168,7 @@ describe('SocialHomeFeedList', () => {
 		expect(container!.querySelectorAll('[data-testid^="stub-message-"]')).toHaveLength(0);
 	});
 
-	it('navigates to the original Sketchbook message when "View in Sketchbook" is clicked', () => {
+	it('navigates to the original Sketchbook message when the comment button is clicked', () => {
 		const posts = [post({id: 'post-1'})];
 		act(() => {
 			root?.render(
