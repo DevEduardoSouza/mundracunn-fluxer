@@ -35,6 +35,25 @@ vi.mock('@app/features/social_home/commands/SocialHomeCommands', () => ({
 	fetchFeed: vi.fn(),
 	fetchNextFeedPage: vi.fn(),
 }));
+// The setup-button work (#9) made the page import Permission state and the class-setup commands;
+// unmocked, that chain reaches RuntimeConfig, whose module-scope constructor throws outside the
+// real app-proxy (window.__FLUXER_BOOTSTRAP__). Mocked to the "structure exists, no special
+// permissions" shape so every scenario below keeps exercising the original empty/loading/error
+// states rather than the admin setup prompt.
+vi.mock('@app/features/permissions/state/Permission', () => ({
+	default: {getGuildPermissions: vi.fn(() => 0n)},
+}));
+vi.mock('@app/features/social_home/commands/SocialHomeSetupCommands', () => ({
+	isClassStructureMissing: vi.fn(() => false),
+	setupClassChannels: vi.fn(),
+}));
+vi.mock('@app/features/ui/button/Button', () => ({
+	Button: ({children, onClick}: {children?: React.ReactNode; onClick?: () => void}) => (
+		<button type="button" onClick={onClick} data-testid="stub-button">
+			{children}
+		</button>
+	),
+}));
 vi.mock('@app/features/social_home/components/SocialHomeFeedList', () => ({
 	SocialHomeFeedList: ({posts}: {posts: ReadonlyArray<unknown>}) => (
 		<div data-testid="stub-feed-list">{posts.length} posts</div>
