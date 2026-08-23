@@ -15359,6 +15359,16 @@ msgstr "Saia e reinicie o {productName} completamente para que o macOS aplique e
 msgid "Gain control"
 msgstr "Tenha controle"
 
+#. Generic header / tab label for a guild social home (class feed) page.
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:494
+msgid "Gallery"
+msgstr "Galeria"
+
+#. Short label in the app layout channel list content.
+#: src/features/app/components/layout/ChannelListContent.tsx:81
+msgid "Gallery, selected"
+msgstr "Galeria, selecionada"
+
 #. Button label that starts native Linux game capture through the OBS-compatible hook path.
 #: src/features/voice/components/modals/ScreenSharePickerModal.tsx:165
 msgid "Game capture"
