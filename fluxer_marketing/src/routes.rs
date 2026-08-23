@@ -7,7 +7,7 @@ use crate::{
         blog_tag_label, blog_tag_slug, get_blog_post, get_help_article, get_job, get_policy,
         render_blog_markdown_with_copy_label,
     },
-    downloads::fetch_latest_desktop_versions_cached,
+    downloads::{fetch_latest_android_apk_cached, fetch_latest_desktop_versions_cached},
     geoip::resolver_from_marketing_config,
     i18n::{Locale, MarketingI18n, descriptors::*},
     request_context::{AppState, CANARY_WEB_APP_ENDPOINT, RequestContext, create_locale_cookie},
@@ -157,6 +157,7 @@ pub fn build_router(config: MarketingConfig) -> Router {
         i18n: Arc::new(i18n),
         swish_qr_cache: SwishQrCache::new(),
         latest_versions_cache: crate::downloads::LatestVersionsCache::new(),
+        android_apk_cache: crate::downloads::AndroidApkCache::new(),
         donation_rate_limiter: crate::rate_limit::RateLimiter::new(20, Duration::from_secs(60)),
     };
     Router::new()
@@ -218,6 +219,7 @@ pub fn build_router(config: MarketingConfig) -> Router {
         .route("/en/articles/{slug}", get(redirect_intercom_article))
         .route("/en/collections/{slug}", get(redirect_intercom_collection))
         .route("/download", get(download))
+        .route("/download/android/apk", get(android_apk_download))
         .route("/careers", get(careers))
         .route("/careers/{slug}", get(job))
         .route("/donate", get(donate))
@@ -620,6 +622,57 @@ async fn download(State(state): State<AppState>, headers: HeaderMap, uri: Uri) -
     response.headers_mut().insert(
         header::CACHE_CONTROL,
         HeaderValue::from_static("public, max-age=60, stale-while-revalidate=300"),
+    );
+    response
+}
+
+async fn android_apk_download(State(state): State<AppState>) -> Response {
+    let Some(apk) =
+        fetch_latest_android_apk_cached(&state.android_apk_cache, &state.http_client).await
+    else {
+        return StatusCode::BAD_GATEWAY.into_response();
+    };
+    let Ok(upstream) = state
+        .http_client
+        .get(apk.download_url.as_str())
+        .timeout(Duration::from_secs(120))
+        .send()
+        .await
+    else {
+        return StatusCode::BAD_GATEWAY.into_response();
+    };
+    if !upstream.status().is_success() {
+        return StatusCode::BAD_GATEWAY.into_response();
+    }
+    let content_length = upstream
+        .headers()
+        .get(reqwest::header::CONTENT_LENGTH)
+        .and_then(|value| value.to_str().ok())
+        .map(str::to_owned);
+    let Ok(body) = upstream.bytes().await else {
+        return StatusCode::BAD_GATEWAY.into_response();
+    };
+    let mut response = body.into_response();
+    response.headers_mut().insert(
+        header::CONTENT_TYPE,
+        HeaderValue::from_static("application/vnd.android.package-archive"),
+    );
+    if let Some(content_length) = content_length
+        && let Ok(value) = HeaderValue::from_str(&content_length)
+    {
+        response.headers_mut().insert(header::CONTENT_LENGTH, value);
+    }
+    if let Ok(value) = HeaderValue::from_str(&format!(
+        "attachment; filename=\"{}\"",
+        apk.file_name
+    )) {
+        response
+            .headers_mut()
+            .insert(header::CONTENT_DISPOSITION, value);
+    }
+    response.headers_mut().insert(
+        header::CACHE_CONTROL,
+        HeaderValue::from_static("no-cache"),
     );
     response
 }

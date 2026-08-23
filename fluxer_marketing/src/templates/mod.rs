@@ -1846,8 +1846,8 @@ fn mobile_download_row(
             },
             details: html! {},
             actions: html! {
-                a class="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#4641D9] px-5 py-3 font-semibold text-sm text-white shadow-md transition hover:bg-[#3832B8] sm:w-auto" href="https://github.com/fluxerapp/flutter_client" target="_blank" rel="noopener noreferrer" {
-                    (icon(Icon::Github, "h-5 w-5 shrink-0"))
+                a class="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#4641D9] px-5 py-3 font-semibold text-sm text-white shadow-md transition hover:bg-[#3832B8] sm:w-auto" href=(ctx.href("/download/android/apk")) {
+                    (icon(Icon::Download, "h-5 w-5 shrink-0"))
                     (tr(i18n, ctx, PLATFORM_SUPPORT_MOBILE_ANDROID_CTA_DESCRIPTOR))
                 }
             },

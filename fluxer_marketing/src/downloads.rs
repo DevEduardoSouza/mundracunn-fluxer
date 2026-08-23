@@ -6,6 +6,10 @@ use std::time::Duration;
 
 const FETCH_TIMEOUT: Duration = Duration::from_millis(1500);
 const CACHE_TTL: Duration = Duration::from_secs(120);
+const ANDROID_APK_FETCH_TIMEOUT: Duration = Duration::from_secs(10);
+const ANDROID_APK_CACHE_TTL: Duration = Duration::from_secs(600);
+const ANDROID_APK_RELEASES_URL: &str =
+    "https://api.github.com/repos/fluxerapp/flutter_client/releases/latest";
 
 #[derive(Clone, Debug, Default)]
 pub struct LatestDesktopVersions {
@@ -80,6 +84,80 @@ pub async fn fetch_latest_desktop_versions(
 
 pub fn format_latest_version_line(info: &LatestVersionInfo) -> String {
     format!("v{}", info.version)
+}
+
+#[derive(Clone, Debug)]
+pub struct LatestAndroidApk {
+    pub file_name: String,
+    pub download_url: String,
+}
+
+#[derive(Deserialize)]
+struct GithubReleaseAsset {
+    name: String,
+    browser_download_url: String,
+}
+
+#[derive(Deserialize)]
+struct GithubRelease {
+    assets: Vec<GithubReleaseAsset>,
+}
+
+#[derive(Clone)]
+pub struct AndroidApkCache {
+    entry: Cache<(), LatestAndroidApk>,
+}
+
+impl AndroidApkCache {
+    pub fn new() -> Self {
+        Self {
+            entry: Cache::builder()
+                .max_capacity(1)
+                .time_to_live(ANDROID_APK_CACHE_TTL)
+                .build(),
+        }
+    }
+}
+
+impl Default for AndroidApkCache {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+pub async fn fetch_latest_android_apk_cached(
+    cache: &AndroidApkCache,
+    client: &reqwest::Client,
+) -> Option<LatestAndroidApk> {
+    if let Some(cached) = cache.entry.get(&()).await {
+        return Some(cached);
+    }
+    let fresh = fetch_latest_android_apk(client).await?;
+    cache.entry.insert((), fresh.clone()).await;
+    Some(fresh)
+}
+
+async fn fetch_latest_android_apk(client: &reqwest::Client) -> Option<LatestAndroidApk> {
+    let response = client
+        .get(ANDROID_APK_RELEASES_URL)
+        .timeout(ANDROID_APK_FETCH_TIMEOUT)
+        .header(reqwest::header::ACCEPT, "application/vnd.github+json")
+        .header(reqwest::header::USER_AGENT, "mundracunn-fluxer-marketing")
+        .send()
+        .await
+        .ok()?;
+    if !response.status().is_success() {
+        return None;
+    }
+    let release = response.json::<GithubRelease>().await.ok()?;
+    let asset = release
+        .assets
+        .into_iter()
+        .find(|asset| asset.name.to_ascii_lowercase().ends_with(".apk"))?;
+    Some(LatestAndroidApk {
+        file_name: asset.name,
+        download_url: asset.browser_download_url,
+    })
 }
 
 async fn fetch_latest_desktop_version(

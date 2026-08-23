@@ -34,6 +34,7 @@ pub struct AppState {
     pub i18n: Arc<MarketingI18n>,
     pub swish_qr_cache: crate::swish::SwishQrCache,
     pub latest_versions_cache: crate::downloads::LatestVersionsCache,
+    pub android_apk_cache: crate::downloads::AndroidApkCache,
     pub donation_rate_limiter: crate::rate_limit::RateLimiter,
 }
 
