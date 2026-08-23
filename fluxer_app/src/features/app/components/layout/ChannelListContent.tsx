@@ -123,8 +123,14 @@ export const ChannelListContent = observer(({guild, scrollY}: {guild: Guild; scr
 	const hideMutedChannels = userGuildSettings?.hide_muted_channels ?? false;
 	const showFadedUnreadOnMutedChannels = Accessibility.showFadedUnreadOnMutedChannels;
 	const isMobile = MobileLayout.enabled;
+	// MUNDRACUNN (pedido do cliente, 22/08): o item "Membros" sai da sidebar para
+	// todo mundo. A pagina continua alcancavel pela rota direta, e o gate original
+	// de permissoes fica preservado abaixo - reativar e trocar esta constante.
+	const MEMBERS_ITEM_ENABLED = false;
 	const canViewMembers =
-		!isMobile && ((Permission.getGuildPermissions(guild.id) ?? 0n) & MEMBERS_PAGE_PERMISSIONS) !== 0n;
+		MEMBERS_ITEM_ENABLED &&
+		!isMobile &&
+		((Permission.getGuildPermissions(guild.id) ?? 0n) & MEMBERS_PAGE_PERMISSIONS) !== 0n;
 	const guildPrefix = `/channels/${guild.id}/`;
 	let selectedChannelInGuildId: string | null = null;
 	let isMembersSelected = false;
