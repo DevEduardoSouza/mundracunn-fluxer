@@ -40,6 +40,7 @@ vi.mock('@app/features/social_home/commands/SocialHomeCommands', () => ({
 // real app-proxy (window.__FLUXER_BOOTSTRAP__). Mocked to the "structure exists, no special
 // permissions" shape so every scenario below keeps exercising the original empty/loading/error
 // states rather than the admin setup prompt.
+vi.mock('@app/features/navigation/commands/NavigationCommands', () => ({selectChannel: vi.fn()}));
 vi.mock('@app/features/permissions/state/Permission', () => ({
 	default: {getGuildPermissions: vi.fn(() => 0n)},
 }));

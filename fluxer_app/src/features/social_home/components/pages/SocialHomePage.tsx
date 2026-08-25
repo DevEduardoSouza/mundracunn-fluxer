@@ -4,6 +4,7 @@ import {ChannelHeader} from '@app/features/channel/components/ChannelHeader';
 import {ChannelViewScaffold} from '@app/features/channel/components/channel_view/ChannelViewScaffold';
 import Guilds from '@app/features/guild/state/Guilds';
 import {SOCIAL_HOME_DESCRIPTOR} from '@app/features/i18n/utils/CommonMessageDescriptors';
+import * as NavigationCommands from '@app/features/navigation/commands/NavigationCommands';
 import Permission from '@app/features/permissions/state/Permission';
 import {fetchFeed, fetchNextFeedPage} from '@app/features/social_home/commands/SocialHomeCommands';
 import {isClassStructureMissing, setupClassChannels} from '@app/features/social_home/commands/SocialHomeSetupCommands';
@@ -116,6 +117,10 @@ export const SocialHomePage: React.FC<SocialHomePageProps> = observer(({guildId}
 	const isIndexing = SocialHome.getIsIndexing();
 	const error = SocialHome.getError();
 	const hasMore = SocialHome.getHasMore();
+	// Mobile back arrow: return to the class channel list (deep-links have no history to go back to).
+	const handleBackClick = useCallback(() => {
+		NavigationCommands.selectChannel(guildId);
+	}, [guildId]);
 	const handleLoadMore = useCallback(() => {
 		void fetchNextFeedPage(i18n, guildId);
 	}, [i18n, guildId]);
@@ -125,6 +130,7 @@ export const SocialHomePage: React.FC<SocialHomePageProps> = observer(({guildId}
 				header={
 					<ChannelHeader
 						leftContent={headerLeftContent}
+						onBackClick={handleBackClick}
 						showMembersToggle={false}
 						showPins={false}
 						data-flx="social_home.social-home-page.channel-header"
