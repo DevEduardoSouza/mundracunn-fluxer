@@ -26,7 +26,7 @@ import Navigation from '@app/features/navigation/state/Navigation';
 import SelectedChannel from '@app/features/navigation/state/SelectedChannel';
 import Permission from '@app/features/permissions/state/Permission';
 import * as PermissionUtils from '@app/features/permissions/utils/PermissionUtils';
-import {useParams} from '@app/features/platform/components/router/RouterReact';
+import {useLocation, useParams} from '@app/features/platform/components/router/RouterReact';
 import {ComponentDispatch} from '@app/features/platform/utils/ComponentBus';
 import * as ModalCommands from '@app/features/ui/commands/ModalCommands';
 import {modal} from '@app/features/ui/commands/ModalCommands';
@@ -334,6 +334,12 @@ const GuildUnavailable = observer(function GuildUnavailable({
 export const GuildLayout = observer(({children}: {children: React.ReactNode}) => {
 	const {i18n} = useLingui();
 	const {guildId, channelId} = useParams() as {guildId: string; channelId?: string};
+	const location = useLocation();
+	// Guild sub-pages without a channelId (social home "Galeria", members) still
+	// carry content: on mobile they must open the content pane like a channel does.
+	const isGuildSubpage =
+		location.pathname === Routes.guildHome(guildId) || location.pathname === Routes.guildMembers(guildId);
+	const hasMobileContent = Boolean(channelId) || isGuildSubpage;
 	const mobileLayout = MobileLayout;
 	const guild = Guilds.getGuild(guildId);
 	const unavailableGuilds = GuildAvailability.unavailableGuilds;
@@ -543,13 +549,13 @@ export const GuildLayout = observer(({children}: {children: React.ReactNode}) =>
 			<TopNagbarContext.Provider value={nagbarContextValue}>
 				{guild && (
 					<div
-						className={channelId ? styles.mobileNavbarHidden : styles.mobileNavbarSlot}
+						className={hasMobileContent ? styles.mobileNavbarHidden : styles.mobileNavbarSlot}
 						data-flx="app.guild-layout.mobile-navbar"
 					>
 						<GuildNavbar guild={guild} data-flx="app.guild-layout.guild-navbar" />
 					</div>
 				)}
-				{channelId && (
+				{hasMobileContent && (
 					<div
 						className={hasGuildNagbars ? styles.guildLayoutContainerWithNagbar : styles.guildLayoutContainer}
 						data-flx="app.guild-layout.guild-layout-container--2"
