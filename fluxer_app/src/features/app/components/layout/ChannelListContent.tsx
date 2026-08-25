@@ -38,6 +38,7 @@ import {remFromPx} from '@app/features/theme/layout/RemFromPx';
 import {ChannelListContextMenu} from '@app/features/ui/action_menu/ChannelListContextMenu';
 import * as ContextMenuCommands from '@app/features/ui/commands/ContextMenuCommands';
 import * as DimensionCommands from '@app/features/ui/commands/DimensionCommands';
+import * as LayoutCommands from '@app/features/ui/commands/LayoutCommands';
 import * as ModalCommands from '@app/features/ui/commands/ModalCommands';
 import type {ScrollerHandle} from '@app/features/ui/components/Scroller';
 import {Scroller} from '@app/features/ui/components/Scroller';
@@ -149,6 +150,9 @@ export const ChannelListContent = observer(({guild, scrollY}: {guild: Guild; scr
 	}
 	const handleMembersClick = useCallback(() => {
 		RouterUtils.transitionTo(Routes.guildMembers(guild.id));
+		if (MobileLayout.isMobileLayout()) {
+			LayoutCommands.updateMobileLayoutState(false, true);
+		}
 	}, [guild.id]);
 	const handleMembersKeyDown = useCallback(
 		(event: React.KeyboardEvent) => {
@@ -160,6 +164,11 @@ export const ChannelListContent = observer(({guild, scrollY}: {guild: Guild; scr
 	);
 	const handleHomeClick = useCallback(() => {
 		RouterUtils.transitionTo(Routes.guildHome(guild.id));
+		// Mobile: same pane switch a channel tap does (ChannelItem.navigateToChannel),
+		// otherwise the channel list stays open on top of the Galeria page.
+		if (MobileLayout.isMobileLayout()) {
+			LayoutCommands.updateMobileLayoutState(false, true);
+		}
 	}, [guild.id]);
 	const handleHomeKeyDown = useCallback(
 		(event: React.KeyboardEvent) => {
