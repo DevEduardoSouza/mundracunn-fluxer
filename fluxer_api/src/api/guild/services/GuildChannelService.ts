@@ -6,7 +6,7 @@ import {UnknownGuildError} from '@fluxer/errors/src/domains/guild/UnknownGuildEr
 import type {ChannelCreateRequest} from '@fluxer/schema/src/domains/channel/ChannelRequestSchemas';
 import type {ChannelResponse} from '@fluxer/schema/src/domains/channel/ChannelSchemas';
 import type {ICacheService} from '@pkgs/cache/src/ICacheService';
-import type {ChannelID, GuildID, UserID} from '../../BrandedTypes';
+import {type ChannelID, createChannelID, type GuildID, type UserID} from '../../BrandedTypes';
 import {mapChannelToResponse} from '../../channel/ChannelMappers';
 import type {IChannelRepository} from '../../channel/IChannelRepository';
 import type {IGatewayService} from '../../infrastructure/IGatewayService';
@@ -83,10 +83,14 @@ export class GuildChannelService {
 		},
 		auditLogReason?: string | null,
 	): Promise<ChannelResponse> {
+		// When creating inside a category, evaluate MANAGE_CHANNELS in the context of that
+		// category so permission overwrites on the parent are honoured (Discord semantics).
+		const parentId = params.data.parent_id ? createChannelID(params.data.parent_id) : undefined;
 		await this.checkPermission({
 			userId: params.userId,
 			guildId: params.guildId,
 			permission: Permissions.MANAGE_CHANNELS,
+			channelId: parentId,
 		});
 		return this.channelOps.createChannel(params, auditLogReason);
 	}
@@ -124,11 +128,17 @@ export class GuildChannelService {
 		await this.channelOps.sanitizeTextChannelNames(params);
 	}
 
-	private async checkPermission(params: {userId: UserID; guildId: GuildID; permission: bigint}): Promise<void> {
+	private async checkPermission(params: {
+		userId: UserID;
+		guildId: GuildID;
+		permission: bigint;
+		channelId?: ChannelID;
+	}): Promise<void> {
 		const hasPermission = await this.gatewayService.checkPermission({
 			guildId: params.guildId,
 			userId: params.userId,
 			permission: params.permission,
+			channelId: params.channelId,
 		});
 		if (!hasPermission) throw new MissingPermissionsError();
 	}

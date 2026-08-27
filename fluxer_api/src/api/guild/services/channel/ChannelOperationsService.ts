@@ -80,10 +80,12 @@ export class ChannelOperationsService {
 		let permissionOverwrites: Map<RoleID | UserID, PermissionOverwrite> | null = null;
 		const requestedOverwrites = params.data.permission_overwrites ?? null;
 		if (requestedOverwrites) {
+			// Evaluate in the parent category's context so category overwrites are honoured.
 			const canManageRoles = await this.gatewayService.checkPermission({
 				guildId: params.guildId,
 				userId: params.userId,
 				permission: Permissions.MANAGE_ROLES,
+				channelId: parentId ?? undefined,
 			});
 			if (!canManageRoles) throw new MissingPermissionsError();
 			const basePermissions = await this.gatewayService.getUserPermissions({
