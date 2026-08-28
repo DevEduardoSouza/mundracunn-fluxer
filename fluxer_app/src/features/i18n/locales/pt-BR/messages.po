@@ -2007,7 +2007,7 @@ msgstr "Uma sinfonia de teclas sendo digitadas está em andamento..."
 
 #. Validation error when the forum post title is empty.
 #. Validation error when the forum post title is empty.
-#: src/features/forum/components/ForumCreatePostModal.tsx:34
+#: src/features/forum/components/ForumCreatePostModal.tsx:32
 #: src/features/forum/components/ForumEditPostModal.tsx:27
 msgid "A title is required."
 msgstr "Um título é obrigatório."
@@ -2269,7 +2269,7 @@ msgstr "Clique de ativação"
 msgid "Active"
 msgstr "Ativa"
 
-#. Relative last-activity label on a forum post row. {time} is a short relative time like "5m" or "3d".
+#. Relative last-activity label on a forum post row. {time} is an already localized relative phrase such as "3 days ago" / "há 3 dias", so the translation should read naturally around it.
 #: src/features/forum/components/ForumPostRow.tsx:31
 msgid "active {time}"
 msgstr "ativo há {time}"
@@ -2439,7 +2439,7 @@ msgstr "Adicionar uma tag"
 #. Placeholder for the tag input in the edit forum post modal.
 #. Placeholder for the tag input in the new forum post modal.
 #. Placeholder in the tag input on the Discovery application form. "Enter" refers to the Enter/Return key.
-#: src/features/forum/components/ForumCreatePostModal.tsx:58
+#: src/features/forum/components/ForumCreatePostModal.tsx:56
 #: src/features/forum/components/ForumEditPostModal.tsx:43
 #: src/features/guild/components/modals/guild_tabs/GuildDiscoveryTab.tsx:137
 msgid "Add a tag and press Enter"
@@ -2885,6 +2885,11 @@ msgstr "Canal ausente / inativo"
 #: src/features/guild/components/modals/guild_tabs/guild_overview_tab/sections/IdleSettingsSection.tsx:32
 msgid "AFK timeout"
 msgstr "Tempo limite de ausência"
+
+#. Forum "hide inactive" option: move a post to "Older posts" after {days} days without a message.
+#: src/features/forum/components/ForumToolbar.tsx:93
+msgid "After {days} days"
+msgstr "Depois de {days} dias"
 
 #: src/features/auth/components/modals/AccountDeleteModal.tsx:53
 msgid "After 14 days, your account will be permanently deleted"
@@ -6577,7 +6582,7 @@ msgstr "Canal: {0}."
 
 #. Preview showing the channel name the post will get after renaming. {name} is the sanitized slug.
 #. Preview under the title field showing the channel name the post will get. {name} is the sanitized slug.
-#: src/features/forum/components/ForumCreatePostModal.tsx:42
+#: src/features/forum/components/ForumCreatePostModal.tsx:40
 #: src/features/forum/components/ForumEditPostModal.tsx:35
 msgid "Channel: #{name}"
 msgstr "Canal: #{name}"
@@ -7132,6 +7137,11 @@ msgstr "Resgate seu presente para ativar sua assinatura {premiumProductName}!"
 msgid "Claiming to be another person, brand, or organization."
 msgstr "Se passando por outra pessoa, marca ou organização."
 
+#. Forum "hide inactive" option that follows whatever the class configured. {days} is that number of days.
+#: src/features/forum/components/ForumToolbar.tsx:84
+msgid "Class default ({days} days)"
+msgstr "Padrão da turma ({days} dias)"
+
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
 #: src/features/user/components/settings_utils/search_index/ChatSettingsIndex.ts:175
 msgid "Clean link"
@@ -7462,7 +7472,7 @@ msgstr "Fechar conta"
 #. Accessible label for the button that closes the story comments panel.
 #: src/features/social_home/components/SocialHomeStoryCommentsPanel.tsx:28
 msgid "Close comments"
-msgstr ""
+msgstr "Fechar comentários"
 
 #. Accessible label and tooltip for the close-DM button on a DM list row.
 #: src/features/channel/components/direct_message/DMListItem.tsx:83
@@ -7775,12 +7785,12 @@ msgstr "Comandos"
 #. Button on a class-feed card that deep-links to the original post in its channel to comment on it.
 #: src/features/social_home/components/SocialHomeFeedList.tsx:27
 msgid "Comment"
-msgstr ""
+msgstr "Comentar"
 
 #. Header title of the story comments panel opened alongside the fullscreen story viewer.
 #: src/features/social_home/components/SocialHomeStoryCommentsPanel.tsx:24
 msgid "Comments"
-msgstr ""
+msgstr "Comentários"
 
 #. Helper text in the forward modal explaining why the optional comment field is disabled when at least one selected target has slowmode active.
 #: src/features/messaging/components/modals/ForwardModal.tsx:63
@@ -9128,10 +9138,10 @@ msgstr "Não foi possível criar a função"
 #. Error shown when the one-click class channel setup fails.
 #: src/features/social_home/components/pages/SocialHomePage.tsx:52
 msgid "Couldn't create the class channels. Try again."
-msgstr ""
+msgstr "Não foi possível criar os canais da turma. Tente de novo."
 
 #. Error shown when creating a forum post fails.
-#: src/features/forum/components/ForumCreatePostModal.tsx:74
+#: src/features/forum/components/ForumCreatePostModal.tsx:68
 msgid "Couldn't create the post. Try again."
 msgstr "Não foi possível criar a postagem. Tente de novo."
 
@@ -9260,7 +9270,7 @@ msgstr "Não foi possível carregar os banimentos"
 #. Shown when fetching a story’s comments fails.
 #: src/features/social_home/components/SocialHomeStoryCommentTree.tsx:28
 msgid "Couldn't load comments."
-msgstr ""
+msgstr "Não foi possível carregar os comentários."
 
 #. Error modal title shown when fetching invites fails.
 #: src/features/invite/components/alerts/InvitesLoadFailedModal.tsx:9
@@ -9270,7 +9280,7 @@ msgstr "Não foi possível carregar os convites"
 #. Shown when fetching the class feed fails.
 #: src/features/social_home/components/pages/SocialHomePage.tsx:36
 msgid "Couldn't load the feed."
-msgstr ""
+msgstr "Não foi possível carregar o feed."
 
 #: src/features/user/components/modals/tabs/applications_tab/ApplicationDetail.tsx:574
 msgid "Couldn't load this application"
@@ -9679,7 +9689,7 @@ msgstr "Criar canal"
 #. Button that creates the conventional Home channels (stories, professor feed, sketchbooks).
 #: src/features/social_home/components/pages/SocialHomePage.tsx:48
 msgid "Create class channels"
-msgstr ""
+msgstr "Criar canais da turma"
 
 #. Generic action or title label for creating a new community.
 #: src/features/i18n/utils/CommonMessageDescriptors.ts:156
@@ -9759,7 +9769,7 @@ msgid "Create or join a community"
 msgstr "Criar ou entrar em uma comunidade"
 
 #. Primary button in the new forum post modal.
-#: src/features/forum/components/ForumCreatePostModal.tsx:70
+#: src/features/forum/components/ForumCreatePostModal.tsx:64
 msgid "Create post"
 msgstr "Criar postagem"
 
@@ -11076,7 +11086,7 @@ msgstr "Descreva sobre o que é sua comunidade"
 #. Generic form-field label for a free-form description.
 #. Label for the optional description field — becomes the first message of the post.
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
-#: src/features/forum/components/ForumCreatePostModal.tsx:46
+#: src/features/forum/components/ForumCreatePostModal.tsx:44
 #: src/features/guild/components/modals/guild_tabs/GuildDiscoveryTab.tsx:415
 #: src/features/i18n/utils/CommonMessageDescriptors.ts:506
 #: src/features/user/components/settings_utils/search_index/MyProfileIndex.ts:137
@@ -15154,7 +15164,7 @@ msgstr "Fórum"
 #. Short label in the app layout channel list content for the selected Forum sidebar item.
 #: src/features/app/components/layout/ChannelListContent.tsx:93
 msgid "Forum, selected"
-msgstr ""
+msgstr "Fórum, selecionado"
 
 #. has:forward chip label. Always lowercase; matches the typed query value 1:1.
 #: src/features/search/utils/SearchUtils.ts:89
@@ -15461,7 +15471,7 @@ msgstr "Tenha controle"
 
 #. Forum view option: grid of cards with a large cover image.
 #. Generic header / tab label for a guild social home (class feed) page.
-#: src/features/forum/components/ForumToolbar.tsx:70
+#: src/features/forum/components/ForumToolbar.tsx:76
 #: src/features/i18n/utils/CommonMessageDescriptors.ts:494
 msgid "Gallery"
 msgstr "Galeria"
@@ -15822,7 +15832,7 @@ msgid "Give the role a name before saving."
 msgstr "Dê um nome à função antes de salvar."
 
 #. Placeholder for the title field in the new forum post modal.
-#: src/features/forum/components/ForumCreatePostModal.tsx:30
+#: src/features/forum/components/ForumCreatePostModal.tsx:28
 msgid "Give your post a title"
 msgstr "Dê um título à sua postagem"
 
@@ -15957,8 +15967,10 @@ msgstr "Ir para a terceira comunidade"
 msgid "Google lens"
 msgstr "Google Lens"
 
+#. Button that collapses the forum posting-guidelines panel for good ("já li").
 #. Short label in the whats new modal.
 #: src/features/app/components/whats_new/WhatsNewModal.tsx:37
+#: src/features/forum/components/ForumGuidelinesBanner.tsx:32
 msgid "Got it"
 msgstr "Entendi"
 
@@ -16493,6 +16505,11 @@ msgstr "Ocultar favoritos"
 msgid "Hide help center button"
 msgstr "Ocultar botão da central de ajuda"
 
+#. Section heading in the forum sort-and-view menu for the "hide posts nobody wrote in" rule.
+#: src/features/forum/components/ForumToolbar.tsx:80
+msgid "Hide inactive"
+msgstr "Ocultar inativas"
+
 #. Short label in the system welcome section. Keep it concise.
 #: src/features/guild/components/modals/guild_tabs/guild_overview_tab/sections/SystemWelcomeSection.tsx:32
 msgid "Hide join messages"
@@ -16555,6 +16572,11 @@ msgstr "Ocultar janela flutuante picture-in-picture?"
 #: src/features/voice/components/StreamSettingsMenuContent.tsx:715
 msgid "Hide preview thumbnail"
 msgstr "Ocultar miniatura da prévia"
+
+#. Accessible label for the expanded forum posting-guidelines panel header.
+#: src/features/forum/components/ForumGuidelinesBanner.tsx:40
+msgid "Hide the posting guidelines"
+msgstr "Ocultar as diretrizes de postagem"
 
 #. Settings search entry description. One-line summary of what the settings search entry controls.
 #: src/features/user/components/settings_utils/search_index/DesktopSettingsIndex.ts:258
@@ -19050,7 +19072,7 @@ msgid "Linux package"
 msgstr "Pacote Linux"
 
 #. Forum view option: compact one-per-row list.
-#: src/features/forum/components/ForumToolbar.tsx:66
+#: src/features/forum/components/ForumToolbar.tsx:72
 msgid "List"
 msgstr "Lista"
 
@@ -19093,7 +19115,7 @@ msgstr "Região ao vivo"
 #. Button at the bottom of a story’s comment tree that loads the next page of comments.
 #: src/features/social_home/components/SocialHomeStoryCommentTree.tsx:32
 msgid "Load more comments"
-msgstr ""
+msgstr "Carregar mais comentários"
 
 #: src/features/user/components/modals/tabs/component_gallery_tab/ComponentGalleryTabButtonsTab.tsx:448
 msgid "Loading"
@@ -19111,7 +19133,7 @@ msgstr "Carregando usuários banidos"
 #. Loading state shown while a story’s first page of comments is being fetched.
 #: src/features/social_home/components/SocialHomeStoryCommentTree.tsx:24
 msgid "Loading comments…"
-msgstr ""
+msgstr "Carregando comentários…"
 
 #. Screen-reader status text shown while Discovery communities are loading.
 #: src/features/discovery/discovery/DiscoveryPage.tsx:65
@@ -19126,7 +19148,7 @@ msgstr "Carregando destinos…"
 #. Loading state shown while the class feed posts are being fetched.
 #: src/features/social_home/components/pages/SocialHomePage.tsx:28
 msgid "Loading feed…"
-msgstr ""
+msgstr "Carregando o feed…"
 
 #. Short label in the channel and chat embed image. Keep it concise.
 #: src/features/channel/components/embeds/media/EmbedImage.tsx:48
@@ -19147,7 +19169,7 @@ msgstr "Carregando convites..."
 #: src/features/social_home/components/SocialHomeFeedList.tsx:35
 #: src/features/social_home/components/SocialHomeStoryCommentTree.tsx:36
 msgid "Loading more…"
-msgstr ""
+msgstr "Carregando mais…"
 
 #. Placeholder text in the channel and chat embed gifv. Keep it concise.
 #: src/features/channel/components/embeds/media/EmbedGifv.tsx:72
@@ -21683,8 +21705,8 @@ msgstr "Nova senha"
 
 #. Button in the forum toolbar that opens the create-forum-post flow.
 #. Title of the modal where a student creates a new forum post.
-#: src/features/forum/components/ForumCreatePostModal.tsx:22
-#: src/features/forum/components/ForumToolbar.tsx:30
+#: src/features/forum/components/ForumCreatePostModal.tsx:20
+#: src/features/forum/components/ForumToolbar.tsx:36
 msgid "New post"
 msgstr "Nova postagem"
 
@@ -21916,7 +21938,7 @@ msgstr "Nenhum canal encontrado"
 #. Empty state shown under a story when nobody has replied to it yet.
 #: src/features/social_home/components/SocialHomeStoryCommentTree.tsx:20
 msgid "No comments yet."
-msgstr ""
+msgstr "Nenhum comentário ainda."
 
 #. Empty-state text in the discovery page.
 #: src/features/discovery/discovery/DiscoveryPage.tsx:73
@@ -21997,7 +22019,7 @@ msgid "No favorite GIFs yet"
 msgstr "Nenhum GIF favorito ainda"
 
 #. Forum page empty state shown when the forum category exists but has no post channels.
-#: src/features/forum/components/pages/ForumPage.tsx:36
+#: src/features/forum/components/pages/ForumPage.tsx:37
 msgid "No forum posts yet."
 msgstr "Ainda não há postagens no fórum."
 
@@ -22145,14 +22167,14 @@ msgid "No pinned messages"
 msgstr "Nenhuma mensagem fixada"
 
 #. Empty state shown in the forum list when the title search matches nothing.
-#: src/features/forum/components/ForumPostList.tsx:17
+#: src/features/forum/components/ForumPostList.tsx:20
 msgid "No posts match your search."
 msgstr "Nenhuma postagem corresponde à sua busca."
 
 #. Empty state shown when the class feed has no posts to display.
 #: src/features/social_home/components/pages/SocialHomePage.tsx:40
 msgid "No posts yet."
-msgstr ""
+msgstr "Nenhuma publicação ainda."
 
 #. Empty-state text in the mention preference tab.
 #: src/features/user/components/modals/tabs/notifications_tab/MentionPreferenceTab.tsx:16
@@ -22675,10 +22697,10 @@ msgstr "OK"
 msgid "Okay"
 msgstr "Ok"
 
-#. Heading for the collapsed section of forum posts hidden by the inactivity filter.
-#: src/features/forum/components/ForumPostList.tsx:13
-msgid "Older posts"
-msgstr "Postagens mais antigas"
+#. Heading of the collapsed section of forum posts hidden by the inactivity filter. {count} is how many posts are in it.
+#: src/features/forum/components/ForumPostList.tsx:15
+msgid "Older posts ({count})"
+msgstr "Postagens mais antigas ({count})"
 
 #. Sort mode label in the mobile channel search bottom sheet. Sorts results oldest first.
 #: src/features/channel/components/bottomsheets/ChannelSearchBottomSheet.tsx:71
@@ -23208,7 +23230,7 @@ msgid "Open message history threshold"
 msgstr "Abrir limite do histórico de mensagens"
 
 #. Forum toolbar button label shown, instead of "New post", when the one-post-per-student rule is on and the student already has a post.
-#: src/features/forum/components/ForumToolbar.tsx:34
+#: src/features/forum/components/ForumToolbar.tsx:40
 msgid "Open my post"
 msgstr "Abrir minha postagem"
 
@@ -24500,10 +24522,10 @@ msgstr "Cargo"
 #. Accessible label for the "add" circle shown only to whoever can post — professor/admin, and monitors if the class grants it. {featureName} is the feature's display name (see SocialHomeStoriesLabels.ts).
 #: src/features/social_home/components/SocialHomeStoriesBar.tsx:29
 msgid "Post a new {featureName}"
-msgstr ""
+msgstr "Publicar em {featureName}"
 
 #. Forum sort option: newest post (channel creation) first.
-#: src/features/forum/components/ForumToolbar.tsx:54
+#: src/features/forum/components/ForumToolbar.tsx:60
 msgid "Post date"
 msgstr "Data da postagem"
 
@@ -24512,8 +24534,8 @@ msgstr "Data da postagem"
 msgid "Post options"
 msgstr "Opções da postagem"
 
-#. Collapsible section header in the new forum post modal that shows the guidelines channel message.
-#: src/features/forum/components/ForumCreatePostModal.tsx:66
+#. Header of the forum panel that shows the rules message from the guidelines channel.
+#: src/features/forum/components/ForumGuidelinesBanner.tsx:28
 msgid "Posting guidelines"
 msgstr "Diretrizes de postagem"
 
@@ -25134,7 +25156,7 @@ msgstr "O registro público está fechado."
 #. Button that opens the professor feed channel to post directly to the class feed.
 #: src/features/social_home/components/SocialHomePublishBar.tsx:18
 msgid "Publish"
-msgstr ""
+msgstr "Publicar"
 
 #. Field label in the voice connection status popout. Shows technical WebRTC publisher ICE transport details.
 #: src/features/voice/components/voice_connection_status/shared.ts:129
@@ -25581,7 +25603,7 @@ msgid "Recent"
 msgstr "Recentes"
 
 #. Forum sort option: newest message first. The default.
-#: src/features/forum/components/ForumToolbar.tsx:50
+#: src/features/forum/components/ForumToolbar.tsx:56
 msgid "Recent activity"
 msgstr "Atividade recente"
 
@@ -26224,7 +26246,7 @@ msgstr "Remover figurinha"
 #. Accessible label for the button that removes a tag chip. {tag} is the tag text.
 #. Accessible label for the button that removes a tag chip. {tag} is the tag text.
 #. Accessible label for the per-tag X button in the Discovery tag list. {tag} is the tag text. Used by screen readers.
-#: src/features/forum/components/ForumCreatePostModal.tsx:62
+#: src/features/forum/components/ForumCreatePostModal.tsx:60
 #: src/features/forum/components/ForumEditPostModal.tsx:47
 #: src/features/guild/components/modals/guild_tabs/GuildDiscoveryTab.tsx:132
 msgid "Remove tag {tag}"
@@ -28107,7 +28129,7 @@ msgid "Search permissions…"
 msgstr "Pesquisar permissões…"
 
 #. Placeholder for the forum toolbar search field, which filters posts by title.
-#: src/features/forum/components/ForumToolbar.tsx:38
+#: src/features/forum/components/ForumToolbar.tsx:44
 msgid "Search posts"
 msgstr "Buscar postagens"
 
@@ -29134,7 +29156,7 @@ msgstr "Define o nível para todos os efeitos sonoros. As configurações indivi
 #. Shown when the feed search backend is still indexing the class channels.
 #: src/features/social_home/components/pages/SocialHomePage.tsx:32
 msgid "Setting up search for this class for the first time — try again in a moment."
-msgstr ""
+msgstr "Preparando a busca desta turma pela primeira vez — tente de novo em instantes."
 
 #. Generic action label / section header that opens settings.
 #: src/features/i18n/utils/CommonMessageDescriptors.ts:262
@@ -29523,6 +29545,11 @@ msgstr "Mostrar botão de emoji"
 msgid "Show emoji reactions on messages"
 msgstr "Mostrar reações de emoji nas mensagens"
 
+#. Forum "hide inactive" option that turns the rule off, keeping every post in the main list.
+#: src/features/forum/components/ForumToolbar.tsx:89
+msgid "Show every post"
+msgstr "Mostrar todas as postagens"
+
 #. Developer option label for exposing the staff-only Expression packs page in user settings.
 #: src/features/devtools/components/DeveloperOptionsToggleGroups.ts:121
 msgid "Show expression packs settings"
@@ -29792,6 +29819,11 @@ msgstr "Mostrar botão para ocultar mídias incorporadas"
 #: src/features/user/components/modals/tabs/DesktopSettingsTab.tsx:172
 msgid "Show system tray icon"
 msgstr "Mostrar ícone na bandeja do sistema"
+
+#. Accessible label for the collapsed forum posting-guidelines panel header.
+#: src/features/forum/components/ForumGuidelinesBanner.tsx:36
+msgid "Show the posting guidelines"
+msgstr "Mostrar as diretrizes de postagem"
 
 #. Switch label in the role editor (hoist toggle). When on, members with this role appear in their own member-list section.
 #: src/features/guild/components/modals/guild_tabs/guild_roles_tab/RoleEditor.tsx:34
@@ -30533,12 +30565,12 @@ msgid "Sort"
 msgstr "Ordenar"
 
 #. Label of the forum toolbar button that opens the sort-order and list/gallery view menu.
-#: src/features/forum/components/ForumToolbar.tsx:42
+#: src/features/forum/components/ForumToolbar.tsx:48
 msgid "Sort & view"
 msgstr "Ordenar e ver"
 
 #. Section heading in the forum sort-and-view menu.
-#: src/features/forum/components/ForumToolbar.tsx:46
+#: src/features/forum/components/ForumToolbar.tsx:52
 msgid "Sort by"
 msgstr "Ordenar por"
 
@@ -31354,7 +31386,7 @@ msgstr "Impede que o áudio dos seus alto-falantes retorne para o microfone."
 #. Provisional name for the class Stories feature (24h posts from the professor/staff at the top of Home) — CLAUDE.md section 7 notes the client has not confirmed the final name yet.
 #: src/features/social_home/utils/SocialHomeStoriesLabels.ts:14
 msgid "Stories"
-msgstr ""
+msgstr "Stories"
 
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
 #: src/features/user/components/settings_utils/section_registry/NotificationsSections.ts:235
@@ -31968,7 +32000,7 @@ msgstr "Tag"
 #. Label for the optional tags field in the new forum post modal.
 #. Label for the tags field in the edit forum post modal.
 #. Short label in the theme studio library section. Keep it concise.
-#: src/features/forum/components/ForumCreatePostModal.tsx:54
+#: src/features/forum/components/ForumCreatePostModal.tsx:52
 #: src/features/forum/components/ForumEditPostModal.tsx:39
 #: src/features/theme_studio/sections/LibrarySection.tsx:117
 msgid "Tags"
@@ -32293,7 +32325,7 @@ msgstr "Essa mensagem sumiu ou você perdeu o acesso à conversa."
 
 #. Validation error when the forum post title exceeds the length limit.
 #. Validation error when the forum post title exceeds the length limit.
-#: src/features/forum/components/ForumCreatePostModal.tsx:38
+#: src/features/forum/components/ForumCreatePostModal.tsx:36
 #: src/features/forum/components/ForumEditPostModal.tsx:31
 msgid "That title is too long."
 msgstr "Esse título é muito longo."
@@ -32753,19 +32785,19 @@ msgid "This channel no longer exists. It may have already been deleted."
 msgstr "Este canal não existe mais. Ele pode já ter sido excluído."
 
 #. Forum page empty state shown to ordinary members when no forum category exists yet.
-#: src/features/forum/components/pages/ForumPage.tsx:32
+#: src/features/forum/components/pages/ForumPage.tsx:33
 msgid "This class doesn't have a forum yet."
 msgstr "Esta turma ainda não tem um fórum."
 
 #. Forum page empty state shown to staff (can manage channels) when no forum category exists yet.
-#: src/features/forum/components/pages/ForumPage.tsx:27
+#: src/features/forum/components/pages/ForumPage.tsx:28
 msgid "This class doesn't have a forum yet. Create a channel category whose name starts with 'Forum' and the discussion channels inside it show up here."
 msgstr "Esta turma ainda não tem um fórum. Crie uma categoria de canais cujo nome comece com 'Fórum' e os canais de discussão dentro dela aparecerão aqui."
 
 #. Empty state shown to admins of a class whose conventional Home channels are missing.
 #: src/features/social_home/components/pages/SocialHomePage.tsx:44
 msgid "This class doesn't have its Home channels yet. One click creates them: #stories, #feed-do-professor and a sketchbooks category."
-msgstr ""
+msgstr "Esta turma ainda não tem os canais da Galeria. Um clique cria todos: #stories, #feed-do-professor e uma categoria de sketchbooks."
 
 #. Description text in the theme studio settings section.
 #: src/features/theme_studio/sections/ThemeStudioSettingsSection.tsx:73
@@ -33589,9 +33621,9 @@ msgstr "Dica"
 #. Forum sort option: alphabetical by post title.
 #. Label for the required title field in the new forum post modal.
 #. Label for the title field in the edit forum post modal.
-#: src/features/forum/components/ForumCreatePostModal.tsx:26
+#: src/features/forum/components/ForumCreatePostModal.tsx:24
 #: src/features/forum/components/ForumEditPostModal.tsx:23
-#: src/features/forum/components/ForumToolbar.tsx:58
+#: src/features/forum/components/ForumToolbar.tsx:64
 msgid "Title"
 msgstr "Título"
 
@@ -36679,7 +36711,7 @@ msgid "View and regenerate client secrets and bot tokens"
 msgstr "Ver e gerar novamente segredos do cliente e tokens de bot"
 
 #. Section heading in the forum sort-and-view menu.
-#: src/features/forum/components/ForumToolbar.tsx:62
+#: src/features/forum/components/ForumToolbar.tsx:68
 msgid "View as"
 msgstr "Ver como"
 
@@ -36807,7 +36839,7 @@ msgstr "Ver reações"
 #. Accessible label for a circle in the class Stories bar that opens that person’s story.
 #: src/features/social_home/components/SocialHomeStoriesBar.tsx:25
 msgid "View story from {name}"
-msgstr ""
+msgstr "Ver o story de {name}"
 
 #. Short label in the app constants.
 #: src/features/app/constants/AppConstants.ts:21
@@ -37983,7 +38015,7 @@ msgid "Write a short bio (max 280 characters)"
 msgstr "Escreva uma breve biografia (máx. 280 caracteres)"
 
 #. Placeholder for the description field in the new forum post modal.
-#: src/features/forum/components/ForumCreatePostModal.tsx:50
+#: src/features/forum/components/ForumCreatePostModal.tsx:48
 msgid "Write the first message of your post"
 msgstr "Escreva a primeira mensagem da sua postagem"
 
