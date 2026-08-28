@@ -6,7 +6,7 @@
  * no-Meilisearch fallback) — plus the store's search-unavailable TTL. Two boundaries are stubbed,
  * same as social_home's fallback test: `RestTransport` (the network call) and `MessagingMessage`
  * (constructing a real `Message` needs `RuntimeConfig`, a module singleton that pulls in most of the
- * app). The fake mirrors the `id`/`channel_id`/`attachments` mapping this feature reads.
+ * app). `FakeMessage` mirrors the `id`/`channel_id`/`attachments` mapping this feature reads.
  */
 
 vi.mock('@app/features/platform/transport/RestTransport', () => ({http: {get: vi.fn()}}));
@@ -24,37 +24,19 @@ vi.mock('@app/features/messaging/models/MessagingMessage', () => {
 	return {Message: FakeMessage};
 });
 
-import {fromTimestamp} from '@fluxer/snowflake/src/SnowflakeUtils';
+import {
+	buildWireImageMessage,
+	buildWireTextMessage,
+	fixtureSnowflake,
+} from '@app/features/forum/__fixtures__/ForumWireMessageFixtures';
 import {afterEach, describe, expect, it, type Mock, vi} from 'vitest';
 
 const {http} = await import('@app/features/platform/transport/RestTransport');
-const {Message} = await import('@app/features/messaging/models/MessagingMessage');
 const {firstMessagePerChannel} = await import('@app/features/forum/utils/ForumCoverGrouping');
 const {fetchCoversByChannel} = await import('@app/features/forum/utils/ForumCoverFallback');
 const ForumCovers = (await import('@app/features/forum/state/ForumCovers')).default;
 
 const getMock = http.get as unknown as Mock;
-const BASE_MS = Date.UTC(2026, 0, 15, 12, 0, 0);
-
-function snowflake(offsetMs: number): string {
-	return fromTimestamp(BASE_MS + offsetMs);
-}
-
-function image(overrides: {id: string; channelId: string}): {
-	id: string;
-	channel_id: string;
-	attachments: Array<{content_type: string}>;
-} {
-	return {id: overrides.id, channel_id: overrides.channelId, attachments: [{content_type: 'image/png'}]};
-}
-
-function textOnly(overrides: {id: string; channelId: string}): {
-	id: string;
-	channel_id: string;
-	attachments: Array<{content_type: string}>;
-} {
-	return {id: overrides.id, channel_id: overrides.channelId, attachments: []};
-}
 
 afterEach(() => {
 	getMock.mockReset();
@@ -64,16 +46,16 @@ afterEach(() => {
 describe('firstMessagePerChannel — newest image per channel', () => {
 	it('keeps the first message seen for each channel and drops the rest', () => {
 		const messages = [
-			new Message(image({id: snowflake(5_000), channelId: 'a'})),
-			new Message(image({id: snowflake(4_000), channelId: 'b'})),
-			new Message(image({id: snowflake(3_000), channelId: 'a'})),
-		] as never[];
+			{id: fixtureSnowflake(5_000), channelId: 'a'},
+			{id: fixtureSnowflake(4_000), channelId: 'b'},
+			{id: fixtureSnowflake(3_000), channelId: 'a'},
+		];
 
 		const byChannel = firstMessagePerChannel(messages);
 
 		expect(byChannel.size).toBe(2);
-		expect((byChannel.get('a') as unknown as {id: string}).id).toBe(snowflake(5_000));
-		expect((byChannel.get('b') as unknown as {id: string}).id).toBe(snowflake(4_000));
+		expect(byChannel.get('a')?.id).toBe(fixtureSnowflake(5_000));
+		expect(byChannel.get('b')?.id).toBe(fixtureSnowflake(4_000));
 	});
 });
 
@@ -83,19 +65,21 @@ describe('fetchCoversByChannel — fallback without a search backend', () => {
 			if (path.includes('chan-with-images')) {
 				return Promise.resolve({
 					body: [
-						textOnly({id: snowflake(9_000), channelId: 'chan-with-images'}),
-						image({id: snowflake(8_000), channelId: 'chan-with-images'}),
-						image({id: snowflake(2_000), channelId: 'chan-with-images'}),
+						buildWireTextMessage({id: fixtureSnowflake(9_000), channelId: 'chan-with-images'}),
+						buildWireImageMessage({id: fixtureSnowflake(8_000), channelId: 'chan-with-images'}),
+						buildWireImageMessage({id: fixtureSnowflake(2_000), channelId: 'chan-with-images'}),
 					],
 				});
 			}
-			return Promise.resolve({body: [textOnly({id: snowflake(1_000), channelId: 'chan-text-only'})]});
+			return Promise.resolve({
+				body: [buildWireTextMessage({id: fixtureSnowflake(1_000), channelId: 'chan-text-only'})],
+			});
 		});
 
 		const covers = await fetchCoversByChannel(['chan-with-images', 'chan-text-only']);
 
 		expect(covers.size).toBe(1);
-		expect((covers.get('chan-with-images') as unknown as {id: string}).id).toBe(snowflake(8_000));
+		expect((covers.get('chan-with-images') as unknown as {id: string}).id).toBe(fixtureSnowflake(8_000));
 		expect(covers.has('chan-text-only')).toBe(false);
 	});
 
