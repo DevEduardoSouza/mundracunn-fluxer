@@ -108,7 +108,8 @@ export const ForumEditPostModal: React.FC<{channel: Channel}> = observer(({chann
 
 	return (
 		<Modal.Root size="small" centered data-flx="forum.forum-edit-post-modal.modal-root">
-			<form onSubmit={handleSubmit} data-flx="forum.forum-edit-post-modal.form">
+			{/* display:contents — see ForumCreatePostModal for why. */}
+			<form onSubmit={handleSubmit} style={{display: 'contents'}} data-flx="forum.forum-edit-post-modal.form">
 				<Modal.Header title={i18n._(MODAL_TITLE_DESCRIPTOR)} data-flx="forum.forum-edit-post-modal.modal-header" />
 				<Modal.Content data-flx="forum.forum-edit-post-modal.modal-content">
 					<Input

@@ -166,7 +166,9 @@ export const ForumCreatePostModal: React.FC<ForumCreatePostModalProps> = observe
 
 	return (
 		<Modal.Root size="small" centered data-flx="forum.forum-create-post-modal.modal-root">
-			<form onSubmit={handleSubmit} data-flx="forum.forum-create-post-modal.form">
+			{/* display:contents keeps the modal's flex column layout (Content flex:1 + Footer pinned)
+			    intact while still giving us native submit / Enter — same trick as the app's <Form>. */}
+			<form onSubmit={handleSubmit} style={{display: 'contents'}} data-flx="forum.forum-create-post-modal.form">
 				<Modal.Header
 					title={i18n._(MODAL_TITLE_DESCRIPTOR)}
 					data-flx="forum.forum-create-post-modal.modal-header"
