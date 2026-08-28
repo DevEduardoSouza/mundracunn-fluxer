@@ -15,6 +15,7 @@ import {ChannelLayout} from '@app/features/channel/components/ChannelLayout';
 import {DMLayout} from '@app/features/channel/components/direct_message/DirectMessageLayout';
 import Channels from '@app/features/channel/state/Channels';
 import {canAccessDiscovery} from '@app/features/discovery/utils/DiscoveryAccess';
+import {shouldRedirectAwayFromRawGuidelinesChannel} from '@app/features/forum/utils/ForumChannelDiscovery';
 import {setPathQueryParams} from '@app/features/messaging/utils/MessagingUrlUtils';
 import SelectedChannel from '@app/features/navigation/state/SelectedChannel';
 import {navigateToLinkedUserProfile} from '@app/features/navigation/utils/DeepLinkUtils';
@@ -27,7 +28,6 @@ import {createRoute} from '@app/features/platform/components/router/RouterBuilde
 import {useParams} from '@app/features/platform/components/router/RouterReact';
 import {Redirect} from '@app/features/platform/components/router/RouterTypes';
 import SessionManager from '@app/features/platform/state/AuthSession';
-import {shouldRedirectAwayFromRawGuidelinesChannel} from '@app/features/forum/utils/ForumChannelDiscovery';
 import {shouldRedirectAwayFromRawStoriesChannel} from '@app/features/social_home/utils/SocialHomeChannelDiscovery';
 import MobileLayout from '@app/features/ui/state/MobileLayout';
 import {ME} from '@fluxer/constants/src/AppConstants';
