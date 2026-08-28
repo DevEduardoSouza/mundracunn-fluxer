@@ -12,17 +12,22 @@
 import {ChannelTypes, Permissions} from '@fluxer/constants/src/ChannelConstants';
 import {afterEach, describe, expect, it, type Mock, vi} from 'vitest';
 
-vi.mock('@app/features/channel/state/Channels', () => ({default: {getGuildChannels: vi.fn()}}));
+vi.mock('@app/features/channel/state/Channels', () => ({default: {getGuildChannels: vi.fn(), getChannel: vi.fn()}}));
 vi.mock('@app/features/permissions/state/Permission', () => ({default: {getChannelPermissions: vi.fn()}}));
 vi.mock('@app/features/guild/state/Guilds', () => ({default: {getGuildRoles: vi.fn(() => [])}}));
 
 const Channels = (await import('@app/features/channel/state/Channels')).default;
 const Permission = (await import('@app/features/permissions/state/Permission')).default;
-const {getForumCategories, getGuidelinesChannel, getForumPostChannels, isForumHiddenChannel} = await import(
-	'@app/features/forum/utils/ForumChannelDiscovery'
-);
+const {
+	getForumCategories,
+	getGuidelinesChannel,
+	getForumPostChannels,
+	isForumHiddenChannel,
+	shouldRedirectAwayFromRawGuidelinesChannel,
+} = await import('@app/features/forum/utils/ForumChannelDiscovery');
 
 const getGuildChannelsMock = Channels.getGuildChannels as unknown as Mock;
+const getChannelMock = Channels.getChannel as unknown as Mock;
 const getChannelPermissionsMock = Permission.getChannelPermissions as unknown as Mock;
 
 const GUILD_ID = 'guild-turma-a';
@@ -45,6 +50,7 @@ function textChannel(overrides: Partial<FakeChannel> & {id: string}): FakeChanne
 
 function seed(channels: ReadonlyArray<FakeChannel>): void {
 	getGuildChannelsMock.mockImplementation((guildId: string) => (guildId === GUILD_ID ? channels : []));
+	getChannelMock.mockImplementation((channelId: string) => channels.find((c) => c.id === channelId));
 }
 
 function stubViewable(channelIds: ReadonlyArray<string>): void {
@@ -134,5 +140,47 @@ describe('isForumHiddenChannel — the forum category and everything under it', 
 		expect(isForumHiddenChannel(GUILD_ID, forumCategory as never)).toBe(true);
 		expect(isForumHiddenChannel(GUILD_ID, forumChild as never)).toBe(true);
 		expect(isForumHiddenChannel(GUILD_ID, otherChannel as never)).toBe(false);
+	});
+});
+
+describe('shouldRedirectAwayFromRawGuidelinesChannel — the rules channel is a panel, not a chat', () => {
+	function seedGuidelines(): void {
+		seed([
+			category({id: 'cat', name: 'Fórum'}),
+			textChannel({id: 'ch-rules', name: 'diretrizes', parentId: 'cat'}),
+			textChannel({id: 'ch-post', name: 'Apresentações', parentId: 'cat'}),
+		]);
+	}
+
+	it('sends a student who cannot write there to the forum page', () => {
+		seedGuidelines();
+		getChannelPermissionsMock.mockReturnValue(VIEW);
+
+		expect(shouldRedirectAwayFromRawGuidelinesChannel(GUILD_ID, 'ch-rules')).toBe(true);
+	});
+
+	it('leaves whoever writes the rules in the real channel', () => {
+		seedGuidelines();
+		getChannelPermissionsMock.mockReturnValue(VIEW | Permissions.SEND_MESSAGES);
+
+		expect(shouldRedirectAwayFromRawGuidelinesChannel(GUILD_ID, 'ch-rules')).toBe(false);
+	});
+
+	it('never touches an ordinary forum post or a channel outside the forum', () => {
+		seedGuidelines();
+		getChannelPermissionsMock.mockReturnValue(VIEW);
+
+		expect(shouldRedirectAwayFromRawGuidelinesChannel(GUILD_ID, 'ch-post')).toBe(false);
+		expect(shouldRedirectAwayFromRawGuidelinesChannel(GUILD_ID, 'ch-inexistente')).toBe(false);
+	});
+
+	it('does nothing in a guild with no forum at all', () => {
+		seed([
+			category({id: 'cat', name: 'Sketchbooks'}),
+			textChannel({id: 'ch-rules', name: 'diretrizes', parentId: 'cat'}),
+		]);
+		getChannelPermissionsMock.mockReturnValue(VIEW);
+
+		expect(shouldRedirectAwayFromRawGuidelinesChannel(GUILD_ID, 'ch-rules')).toBe(false);
 	});
 });

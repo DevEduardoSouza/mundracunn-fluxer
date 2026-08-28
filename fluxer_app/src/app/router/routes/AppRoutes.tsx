@@ -15,6 +15,7 @@ import {ChannelLayout} from '@app/features/channel/components/ChannelLayout';
 import {DMLayout} from '@app/features/channel/components/direct_message/DirectMessageLayout';
 import Channels from '@app/features/channel/state/Channels';
 import {canAccessDiscovery} from '@app/features/discovery/utils/DiscoveryAccess';
+import {shouldRedirectAwayFromRawGuidelinesChannel} from '@app/features/forum/utils/ForumChannelDiscovery';
 import {setPathQueryParams} from '@app/features/messaging/utils/MessagingUrlUtils';
 import SelectedChannel from '@app/features/navigation/state/SelectedChannel';
 import {navigateToLinkedUserProfile} from '@app/features/navigation/utils/DeepLinkUtils';
@@ -319,6 +320,9 @@ const channelRoute = createRoute({
 		if (shouldRedirectAwayFromRawStoriesChannel(guildId, channelId)) {
 			return new Redirect(Routes.guildHome(guildId));
 		}
+		if (shouldRedirectAwayFromRawGuidelinesChannel(guildId, channelId)) {
+			return new Redirect(Routes.guildForum(guildId));
+		}
 		return undefined;
 	},
 	component: () => (
@@ -342,6 +346,9 @@ const messageRoute = createRoute({
 		}
 		if (shouldRedirectAwayFromRawStoriesChannel(guildId, channelId)) {
 			return new Redirect(Routes.guildHome(guildId));
+		}
+		if (shouldRedirectAwayFromRawGuidelinesChannel(guildId, channelId)) {
+			return new Redirect(Routes.guildForum(guildId));
 		}
 		return undefined;
 	},

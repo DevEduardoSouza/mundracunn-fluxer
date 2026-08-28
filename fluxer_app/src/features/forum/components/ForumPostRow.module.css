@@ -20,6 +20,11 @@
 	background: var(--background-modifier-hover);
 }
 
+.row:focus-visible {
+	outline: 0.125rem solid var(--focus-primary);
+	outline-offset: -0.125rem;
+}
+
 .main {
 	flex: 1;
 	min-width: 0;

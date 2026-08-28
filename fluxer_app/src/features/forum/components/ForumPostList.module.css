@@ -8,7 +8,11 @@
 
 .inner {
 	padding: 1rem;
+	/* O Scroller é um contêiner flex, então sem width:100% este bloco encolhe até o conteúdo e as
+	   postagens ficam numa coluna estreita no meio da tela em telas largas. */
+	width: 100%;
 	max-width: 72rem;
+	box-sizing: border-box;
 	margin: 0 auto;
 	display: flex;
 	flex-direction: column;
@@ -42,6 +46,45 @@
 	text-transform: uppercase;
 	letter-spacing: 0.02em;
 	color: var(--text-primary-muted);
+}
+
+.olderToggle {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	/* Full-width row so the whole heading is the touch target, 44px tall on touch screens. */
+	width: 100%;
+	min-height: 2.75rem;
+	padding: 0.25rem 0.25rem;
+	border-radius: 0.25rem;
+	background: none;
+	border: none;
+	cursor: pointer;
+	font: inherit;
+	color: inherit;
+	text-align: left;
+	text-transform: inherit;
+	letter-spacing: inherit;
+}
+
+.olderToggle:hover {
+	color: var(--text-primary);
+}
+
+.olderToggle:focus-visible {
+	outline: 0.125rem solid var(--focus-primary);
+	outline-offset: 0.125rem;
+}
+
+.olderCaret {
+	flex-shrink: 0;
+	transition: transform 0.15s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.olderCaret {
+		transition: none;
+	}
 }
 
 .emptyText {

@@ -1,0 +1,98 @@
+/* SPDX-License-Identifier: AGPL-3.0-or-later */
+
+.banner {
+	border: 1px solid var(--background-modifier-accent);
+	border-radius: 0.5rem;
+	background: var(--background-secondary);
+	padding: 0.5rem 0.75rem;
+}
+
+.header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.5rem;
+}
+
+.toggle {
+	display: flex;
+	align-items: center;
+	gap: 0.375rem;
+	flex: 1;
+	/* 44px touch target — the header is the whole hit area on mobile. */
+	min-height: 2.75rem;
+	appearance: none;
+	border: none;
+	background: none;
+	cursor: pointer;
+	color: var(--text-secondary);
+	font: inherit;
+	font-weight: 600;
+	font-size: 0.8125rem;
+	text-align: left;
+	padding: 0;
+}
+
+.toggle:hover {
+	color: var(--text-primary);
+}
+
+.toggle:focus-visible,
+.dismiss:focus-visible {
+	outline: 0.125rem solid var(--focus-primary);
+	outline-offset: 0.125rem;
+	border-radius: 0.25rem;
+}
+
+.caret {
+	flex-shrink: 0;
+	width: 0.875rem;
+	height: 0.875rem;
+	transition: transform 0.15s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.caret {
+		transition: none;
+	}
+}
+
+.dismiss {
+	flex-shrink: 0;
+	min-height: 2.75rem;
+	padding: 0 0.5rem;
+	appearance: none;
+	border: none;
+	background: none;
+	cursor: pointer;
+	color: var(--text-link);
+	font: inherit;
+	font-size: 0.8125rem;
+	font-weight: 600;
+}
+
+.dismiss:hover {
+	text-decoration: underline;
+}
+
+.body {
+	margin-top: 0.25rem;
+	max-height: 12rem;
+	overflow-y: auto;
+	overflow-wrap: anywhere;
+	font-size: 0.875rem;
+	color: var(--text-primary-muted);
+}
+
+.modalPanel {
+	margin-top: 0.75rem;
+	border-top: 1px solid var(--background-modifier-accent);
+	padding-top: 0.75rem;
+}
+
+.modalHeading {
+	margin: 0;
+	color: var(--text-secondary);
+	font-weight: 600;
+	font-size: 0.8125rem;
+}

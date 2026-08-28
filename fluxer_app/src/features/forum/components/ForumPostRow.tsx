@@ -7,12 +7,12 @@ import styles from '@app/features/forum/components/ForumPostRow.module.css';
 import {useForumCoverLazyLoad} from '@app/features/forum/components/useForumCoverLazyLoad';
 import type {ForumPost} from '@app/features/forum/state/Forum';
 import ForumCovers from '@app/features/forum/state/ForumCovers';
+import {formatForumRelativeTime} from '@app/features/forum/utils/ForumRelativeTime';
 import {isKeyboardActivationKey} from '@app/features/input/utils/KeyboardUtils';
 import * as RouterUtils from '@app/features/navigation/utils/RouterUtils';
 import {remFromPx} from '@app/features/theme/layout/RemFromPx';
 import {Tooltip} from '@app/features/ui/tooltip/Tooltip';
 import Users from '@app/features/user/state/Users';
-import {formatShortRelativeTime} from '@fluxer/date_utils/src/DateDuration';
 import {msg} from '@lingui/core/macro';
 import {useLingui} from '@lingui/react/macro';
 import {BellRingingIcon} from '@phosphor-icons/react';
@@ -30,7 +30,8 @@ const BY_AUTHOR_DESCRIPTOR = msg({
 });
 const LAST_ACTIVITY_DESCRIPTOR = msg({
 	message: 'active {time}',
-	comment: 'Relative last-activity label on a forum post row. {time} is a short relative time like "5m" or "3d".',
+	comment:
+		'Relative last-activity label on a forum post row. {time} is an already localized relative phrase such as "3 days ago" / "há 3 dias", so the translation should read naturally around it.',
 });
 
 interface ForumPostRowProps {
@@ -85,7 +86,7 @@ export const ForumPostRow: React.FC<ForumPostRowProps> = observer(({guildId, pos
 						<span data-flx="forum.forum-post-row.author">{i18n._(BY_AUTHOR_DESCRIPTOR, {author: authorName})}</span>
 					)}
 					<span data-flx="forum.forum-post-row.activity">
-						{i18n._(LAST_ACTIVITY_DESCRIPTOR, {time: formatShortRelativeTime(post.lastActivityAt, '1m')})}
+						{i18n._(LAST_ACTIVITY_DESCRIPTOR, {time: formatForumRelativeTime(i18n.locale, post.lastActivityAt)})}
 					</span>
 				</div>
 				{post.tags.length > 0 && (

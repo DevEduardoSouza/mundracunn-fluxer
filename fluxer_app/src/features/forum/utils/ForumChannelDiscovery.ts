@@ -126,12 +126,37 @@ export function getStudentRole(guildId: string): GuildRole | undefined {
 	return Guilds.getGuildRoles(guildId).find((role) => STUDENT_ROLE_NAMES.has(normalizeChannelName(role.name)));
 }
 
-/** Whether any forum category in the guild opts into the "one post per student" rule via its topic. */
+/**
+ * Where a class writes the forum's configuration markers.
+ *
+ * The intended place is the forum category's topic, but the API's category serializer
+ * (`serializeGuildCategoryChannel` in fluxer_api/src/api/channel/ChannelMappers.ts) omits `topic`
+ * entirely — the value is stored server-side and never sent to the client, so `category.topic` is
+ * always undefined here. The guidelines channel is a GUILD_TEXT, whose topic *is* serialized, so it
+ * is read as well and is the one that actually works today.
+ *
+ * Both are scanned: the category first, so the markers start working from the category topic the
+ * day that serializer gains the field (a one-line upstream fix worth sending) with nothing to change
+ * in any class.
+ */
+function getForumConfigTopics(guildId: string): Array<string> {
+	const topics = getForumCategories(guildId).map((category) => category.topic ?? '');
+	const guidelines = getGuidelinesChannel(guildId);
+	if (guidelines?.topic) topics.push(guidelines.topic);
+	return topics.filter((topic) => topic.length > 0);
+}
+
+/** Whether the class opts into the "one post per student" rule via a forum configuration topic. */
 export function isSinglePostRuleEnabled(guildId: string): boolean {
-	return getForumCategories(guildId).some((category) => {
-		const topic = normalizeChannelName(category.topic ?? undefined);
+	return getForumConfigTopics(guildId).some((raw) => {
+		const topic = normalizeChannelName(raw);
 		return SINGLE_POST_RULE_MARKERS.some((marker) => topic.includes(marker));
 	});
+}
+
+/** The raw topics ForumActivity scans for the `inativas: Nd` marker. */
+export function getForumConfigTopicList(guildId: string): ReadonlyArray<string> {
+	return getForumConfigTopics(guildId);
 }
 
 /** The forum post channel the given user already owns in this guild, if any (used by the rule above). */
@@ -164,6 +189,24 @@ export function isForumPostChannel(guildId: string, channel: Channel): boolean {
 	if (channel.type !== ChannelTypes.GUILD_TEXT || channel.parentId == null) return false;
 	if (isGuidelinesChannel(channel)) return false;
 	return getForumCategories(guildId).some((category) => category.id === channel.parentId);
+}
+
+/**
+ * The guidelines channel is a rules panel, not a conversation: reading it as a raw chat shows a
+ * single message in an otherwise empty channel, and the forum page already renders that message as
+ * its banner. So a visitor who lands on the channel by URL is sent to the forum instead — unless
+ * they can post there, since whoever writes the rules still needs the real channel to edit them.
+ *
+ * A client-side routing nudge, exactly like social_home's shouldRedirectAwayFromRawStoriesChannel:
+ * nothing here changes permissions, which is what actually gates access.
+ */
+export function shouldRedirectAwayFromRawGuidelinesChannel(guildId: string, channelId: string): boolean {
+	const channel = Channels.getChannel(channelId);
+	if (!channel || !isGuidelinesChannel(channel)) return false;
+	const guidelinesChannel = getGuidelinesChannel(guildId);
+	if (!guidelinesChannel || guidelinesChannel.id !== channelId) return false;
+	const permissions = Permission.getChannelPermissions(channelId) ?? 0n;
+	return (permissions & Permissions.SEND_MESSAGES) !== Permissions.SEND_MESSAGES;
 }
 
 /**

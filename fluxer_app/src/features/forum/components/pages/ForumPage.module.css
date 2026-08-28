@@ -27,6 +27,25 @@
 	min-height: 0;
 }
 
+.guidelines {
+	flex-shrink: 0;
+	padding: 0 1rem;
+	max-width: 72rem;
+	width: 100%;
+	margin: 0 auto;
+	box-sizing: border-box;
+}
+
+.guidelines:empty {
+	display: none;
+}
+
+@media (max-width: 720px) {
+	.guidelines {
+		padding: 0 0.75rem;
+	}
+}
+
 .content {
 	display: flex;
 	align-items: center;
@@ -37,6 +56,20 @@
 	min-width: 0;
 	box-sizing: border-box;
 	padding: 1rem;
+}
+
+.emptyState {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 1rem;
+}
+
+.setupError {
+	margin: 0;
+	color: var(--status-danger);
+	font-size: 0.8125rem;
+	text-align: center;
 }
 
 .placeholderText {

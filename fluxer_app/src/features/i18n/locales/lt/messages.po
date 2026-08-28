@@ -1448,6 +1448,18 @@ msgstr "@"
 msgid "@mention"
 msgstr "@mention"
 
+#. Starter message written into the guidelines channel when staff creates the forum structure. The professor is expected to edit it; markdown is intentional.
+#: src/features/forum/commands/ForumSetupCommands.ts:26
+msgid ""
+"**Posting guidelines**\n"
+"\n"
+"Edit this message to set the rules for this class. It is what everyone sees at the top of the forum and inside the new-post window.\n"
+"\n"
+"- One sketchbook post per person.\n"
+"- Post your process, not only the finished piece.\n"
+"- Keep feedback constructive."
+msgstr ""
+
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
 #: src/features/user/components/settings_utils/section_registry/NotificationsSections.ts:243
 msgid "/tts"
@@ -2007,7 +2019,7 @@ msgstr "Kažkas rašo..."
 
 #. Validation error when the forum post title is empty.
 #. Validation error when the forum post title is empty.
-#: src/features/forum/components/ForumCreatePostModal.tsx:34
+#: src/features/forum/components/ForumCreatePostModal.tsx:32
 #: src/features/forum/components/ForumEditPostModal.tsx:27
 msgid "A title is required."
 msgstr ""
@@ -2269,7 +2281,7 @@ msgstr "Suaktyvinimo paspaudimas"
 msgid "Active"
 msgstr "Aktyvus"
 
-#. Relative last-activity label on a forum post row. {time} is a short relative time like "5m" or "3d".
+#. Relative last-activity label on a forum post row. {time} is an already localized relative phrase such as "3 days ago" / "há 3 dias", so the translation should read naturally around it.
 #: src/features/forum/components/ForumPostRow.tsx:31
 msgid "active {time}"
 msgstr ""
@@ -2439,7 +2451,7 @@ msgstr "Pridėti žymę"
 #. Placeholder for the tag input in the edit forum post modal.
 #. Placeholder for the tag input in the new forum post modal.
 #. Placeholder in the tag input on the Discovery application form. "Enter" refers to the Enter/Return key.
-#: src/features/forum/components/ForumCreatePostModal.tsx:58
+#: src/features/forum/components/ForumCreatePostModal.tsx:56
 #: src/features/forum/components/ForumEditPostModal.tsx:43
 #: src/features/guild/components/modals/guild_tabs/GuildDiscoveryTab.tsx:137
 msgid "Add a tag and press Enter"
@@ -2885,6 +2897,11 @@ msgstr "AFK / neaktyvus kanalas"
 #: src/features/guild/components/modals/guild_tabs/guild_overview_tab/sections/IdleSettingsSection.tsx:32
 msgid "AFK timeout"
 msgstr "AFK skirtasis laikas"
+
+#. Forum "hide inactive" option: move a post to "Older posts" after {days} days without a message.
+#: src/features/forum/components/ForumToolbar.tsx:93
+msgid "After {days} days"
+msgstr ""
 
 #: src/features/auth/components/modals/AccountDeleteModal.tsx:53
 msgid "After 14 days, your account will be permanently deleted"
@@ -6577,7 +6594,7 @@ msgstr "Kanalas: {0}."
 
 #. Preview showing the channel name the post will get after renaming. {name} is the sanitized slug.
 #. Preview under the title field showing the channel name the post will get. {name} is the sanitized slug.
-#: src/features/forum/components/ForumCreatePostModal.tsx:42
+#: src/features/forum/components/ForumCreatePostModal.tsx:40
 #: src/features/forum/components/ForumEditPostModal.tsx:35
 msgid "Channel: #{name}"
 msgstr ""
@@ -7131,6 +7148,11 @@ msgstr "Panaudokite savo dovaną, kad aktyvuotumėte {premiumProductName} prenum
 #: src/features/moderation/components/report_modal/IARModalCopy.ts:339
 msgid "Claiming to be another person, brand, or organization."
 msgstr "Apsimetinėjimas kitu asmeniu, prekės ženklu ar organizacija."
+
+#. Forum "hide inactive" option that follows whatever the class configured. {days} is that number of days.
+#: src/features/forum/components/ForumToolbar.tsx:84
+msgid "Class default ({days} days)"
+msgstr ""
 
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
 #: src/features/user/components/settings_utils/search_index/ChatSettingsIndex.ts:175
@@ -9130,8 +9152,13 @@ msgstr "Nepavyko sukurti vaidmens"
 msgid "Couldn't create the class channels. Try again."
 msgstr ""
 
+#. Error shown when the one-click forum setup fails.
+#: src/features/forum/components/pages/ForumPage.tsx:39
+msgid "Couldn't create the forum. Try again."
+msgstr ""
+
 #. Error shown when creating a forum post fails.
-#: src/features/forum/components/ForumCreatePostModal.tsx:74
+#: src/features/forum/components/ForumCreatePostModal.tsx:68
 msgid "Couldn't create the post. Try again."
 msgstr ""
 
@@ -9759,7 +9786,7 @@ msgid "Create or join a community"
 msgstr "Sukurti arba prisijungti prie bendruomenės"
 
 #. Primary button in the new forum post modal.
-#: src/features/forum/components/ForumCreatePostModal.tsx:70
+#: src/features/forum/components/ForumCreatePostModal.tsx:64
 msgid "Create post"
 msgstr ""
 
@@ -9780,6 +9807,11 @@ msgstr "Kurti lipdukų paketą"
 #: src/features/app/components/setup/SetupWizardSteps.tsx:48
 msgid "Create the administrator account"
 msgstr "Sukurti administratoriaus paskyrą"
+
+#. Button in the forum empty state that creates the forum category and its guidelines channel.
+#: src/features/forum/components/pages/ForumPage.tsx:35
+msgid "Create the forum"
+msgstr ""
 
 #: src/features/channel/components/modals/UnaddableRecipientsConfirmModal.tsx:93
 msgid "Create the group DM with the remaining {addableCount} recipient(s) and skip the others?"
@@ -11076,7 +11108,7 @@ msgstr "Apibūdinkite, apie ką yra jūsų bendruomenė"
 #. Generic form-field label for a free-form description.
 #. Label for the optional description field — becomes the first message of the post.
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
-#: src/features/forum/components/ForumCreatePostModal.tsx:46
+#: src/features/forum/components/ForumCreatePostModal.tsx:44
 #: src/features/guild/components/modals/guild_tabs/GuildDiscoveryTab.tsx:415
 #: src/features/i18n/utils/CommonMessageDescriptors.ts:506
 #: src/features/user/components/settings_utils/search_index/MyProfileIndex.ts:137
@@ -15461,7 +15493,7 @@ msgstr "Valdykite"
 
 #. Forum view option: grid of cards with a large cover image.
 #. Generic header / tab label for a guild social home (class feed) page.
-#: src/features/forum/components/ForumToolbar.tsx:70
+#: src/features/forum/components/ForumToolbar.tsx:76
 #: src/features/i18n/utils/CommonMessageDescriptors.ts:494
 msgid "Gallery"
 msgstr ""
@@ -15822,7 +15854,7 @@ msgid "Give the role a name before saving."
 msgstr "Prieš išsaugant, suteikite vaidmeniui pavadinimą."
 
 #. Placeholder for the title field in the new forum post modal.
-#: src/features/forum/components/ForumCreatePostModal.tsx:30
+#: src/features/forum/components/ForumCreatePostModal.tsx:28
 msgid "Give your post a title"
 msgstr ""
 
@@ -15957,8 +15989,10 @@ msgstr "Eiti į trečią bendruomenę"
 msgid "Google lens"
 msgstr "\"Google Lens\""
 
+#. Button that collapses the forum posting-guidelines panel for good ("já li").
 #. Short label in the whats new modal.
 #: src/features/app/components/whats_new/WhatsNewModal.tsx:37
+#: src/features/forum/components/ForumGuidelinesBanner.tsx:32
 msgid "Got it"
 msgstr "Supratau"
 
@@ -16493,6 +16527,11 @@ msgstr "Slėpti parankinius"
 msgid "Hide help center button"
 msgstr "Slėpti pagalbos centro mygtuką"
 
+#. Section heading in the forum sort-and-view menu for the "hide posts nobody wrote in" rule.
+#: src/features/forum/components/ForumToolbar.tsx:80
+msgid "Hide inactive"
+msgstr ""
+
 #. Short label in the system welcome section. Keep it concise.
 #: src/features/guild/components/modals/guild_tabs/guild_overview_tab/sections/SystemWelcomeSection.tsx:32
 msgid "Hide join messages"
@@ -16555,6 +16594,11 @@ msgstr "Slėpti paveikslėlį paveikslėlyje iššokantįjį langą?"
 #: src/features/voice/components/StreamSettingsMenuContent.tsx:715
 msgid "Hide preview thumbnail"
 msgstr "Slėpti peržiūros miniatiūrą"
+
+#. Accessible label for the expanded forum posting-guidelines panel header.
+#: src/features/forum/components/ForumGuidelinesBanner.tsx:40
+msgid "Hide the posting guidelines"
+msgstr ""
 
 #. Settings search entry description. One-line summary of what the settings search entry controls.
 #: src/features/user/components/settings_utils/search_index/DesktopSettingsIndex.ts:258
@@ -19050,7 +19094,7 @@ msgid "Linux package"
 msgstr "Linux paketas"
 
 #. Forum view option: compact one-per-row list.
-#: src/features/forum/components/ForumToolbar.tsx:66
+#: src/features/forum/components/ForumToolbar.tsx:72
 msgid "List"
 msgstr ""
 
@@ -21683,8 +21727,8 @@ msgstr "Naujas slaptažodis"
 
 #. Button in the forum toolbar that opens the create-forum-post flow.
 #. Title of the modal where a student creates a new forum post.
-#: src/features/forum/components/ForumCreatePostModal.tsx:22
-#: src/features/forum/components/ForumToolbar.tsx:30
+#: src/features/forum/components/ForumCreatePostModal.tsx:20
+#: src/features/forum/components/ForumToolbar.tsx:36
 msgid "New post"
 msgstr ""
 
@@ -21997,7 +22041,7 @@ msgid "No favorite GIFs yet"
 msgstr "Kol kas nėra mėgstamų GIF"
 
 #. Forum page empty state shown when the forum category exists but has no post channels.
-#: src/features/forum/components/pages/ForumPage.tsx:36
+#: src/features/forum/components/pages/ForumPage.tsx:47
 msgid "No forum posts yet."
 msgstr ""
 
@@ -22145,7 +22189,7 @@ msgid "No pinned messages"
 msgstr "Nėra prisegtų žinučių"
 
 #. Empty state shown in the forum list when the title search matches nothing.
-#: src/features/forum/components/ForumPostList.tsx:17
+#: src/features/forum/components/ForumPostList.tsx:20
 msgid "No posts match your search."
 msgstr ""
 
@@ -22675,9 +22719,9 @@ msgstr "OK"
 msgid "Okay"
 msgstr "Gerai"
 
-#. Heading for the collapsed section of forum posts hidden by the inactivity filter.
-#: src/features/forum/components/ForumPostList.tsx:13
-msgid "Older posts"
+#. Heading of the collapsed section of forum posts hidden by the inactivity filter. {count} is how many posts are in it.
+#: src/features/forum/components/ForumPostList.tsx:15
+msgid "Older posts ({count})"
 msgstr ""
 
 #. Sort mode label in the mobile channel search bottom sheet. Sorts results oldest first.
@@ -23208,7 +23252,7 @@ msgid "Open message history threshold"
 msgstr "Atidaryti pranešimų istorijos slenkstį"
 
 #. Forum toolbar button label shown, instead of "New post", when the one-post-per-student rule is on and the student already has a post.
-#: src/features/forum/components/ForumToolbar.tsx:34
+#: src/features/forum/components/ForumToolbar.tsx:40
 msgid "Open my post"
 msgstr ""
 
@@ -24503,7 +24547,7 @@ msgid "Post a new {featureName}"
 msgstr ""
 
 #. Forum sort option: newest post (channel creation) first.
-#: src/features/forum/components/ForumToolbar.tsx:54
+#: src/features/forum/components/ForumToolbar.tsx:60
 msgid "Post date"
 msgstr ""
 
@@ -24512,8 +24556,8 @@ msgstr ""
 msgid "Post options"
 msgstr ""
 
-#. Collapsible section header in the new forum post modal that shows the guidelines channel message.
-#: src/features/forum/components/ForumCreatePostModal.tsx:66
+#. Header of the forum panel that shows the rules message from the guidelines channel.
+#: src/features/forum/components/ForumGuidelinesBanner.tsx:28
 msgid "Posting guidelines"
 msgstr ""
 
@@ -25581,7 +25625,7 @@ msgid "Recent"
 msgstr "Naujausi"
 
 #. Forum sort option: newest message first. The default.
-#: src/features/forum/components/ForumToolbar.tsx:50
+#: src/features/forum/components/ForumToolbar.tsx:56
 msgid "Recent activity"
 msgstr ""
 
@@ -26224,7 +26268,7 @@ msgstr "Pašalinti lipduką"
 #. Accessible label for the button that removes a tag chip. {tag} is the tag text.
 #. Accessible label for the button that removes a tag chip. {tag} is the tag text.
 #. Accessible label for the per-tag X button in the Discovery tag list. {tag} is the tag text. Used by screen readers.
-#: src/features/forum/components/ForumCreatePostModal.tsx:62
+#: src/features/forum/components/ForumCreatePostModal.tsx:60
 #: src/features/forum/components/ForumEditPostModal.tsx:47
 #: src/features/guild/components/modals/guild_tabs/GuildDiscoveryTab.tsx:132
 msgid "Remove tag {tag}"
@@ -28107,7 +28151,7 @@ msgid "Search permissions…"
 msgstr "Ieškoti leidimų…"
 
 #. Placeholder for the forum toolbar search field, which filters posts by title.
-#: src/features/forum/components/ForumToolbar.tsx:38
+#: src/features/forum/components/ForumToolbar.tsx:44
 msgid "Search posts"
 msgstr ""
 
@@ -29523,6 +29567,11 @@ msgstr "Rodyti jaustukų mygtuką"
 msgid "Show emoji reactions on messages"
 msgstr "Rodyti jaustukų reakcijas prie žinučių"
 
+#. Forum "hide inactive" option that turns the rule off, keeping every post in the main list.
+#: src/features/forum/components/ForumToolbar.tsx:89
+msgid "Show every post"
+msgstr ""
+
 #. Developer option label for exposing the staff-only Expression packs page in user settings.
 #: src/features/devtools/components/DeveloperOptionsToggleGroups.ts:121
 msgid "Show expression packs settings"
@@ -29792,6 +29841,11 @@ msgstr "Rodyti įdėtųjų elementų slopinimo mygtuką"
 #: src/features/user/components/modals/tabs/DesktopSettingsTab.tsx:172
 msgid "Show system tray icon"
 msgstr "Rodyti sistemos dėklo piktogramą"
+
+#. Accessible label for the collapsed forum posting-guidelines panel header.
+#: src/features/forum/components/ForumGuidelinesBanner.tsx:36
+msgid "Show the posting guidelines"
+msgstr ""
 
 #. Switch label in the role editor (hoist toggle). When on, members with this role appear in their own member-list section.
 #: src/features/guild/components/modals/guild_tabs/guild_roles_tab/RoleEditor.tsx:34
@@ -30533,12 +30587,12 @@ msgid "Sort"
 msgstr "Rūšiuoti"
 
 #. Label of the forum toolbar button that opens the sort-order and list/gallery view menu.
-#: src/features/forum/components/ForumToolbar.tsx:42
+#: src/features/forum/components/ForumToolbar.tsx:48
 msgid "Sort & view"
 msgstr ""
 
 #. Section heading in the forum sort-and-view menu.
-#: src/features/forum/components/ForumToolbar.tsx:46
+#: src/features/forum/components/ForumToolbar.tsx:52
 msgid "Sort by"
 msgstr ""
 
@@ -31968,7 +32022,7 @@ msgstr "Žyma"
 #. Label for the optional tags field in the new forum post modal.
 #. Label for the tags field in the edit forum post modal.
 #. Short label in the theme studio library section. Keep it concise.
-#: src/features/forum/components/ForumCreatePostModal.tsx:54
+#: src/features/forum/components/ForumCreatePostModal.tsx:52
 #: src/features/forum/components/ForumEditPostModal.tsx:39
 #: src/features/theme_studio/sections/LibrarySection.tsx:117
 msgid "Tags"
@@ -32293,7 +32347,7 @@ msgstr "Šis pranešimas dingo arba praradote prieigą prie pokalbio."
 
 #. Validation error when the forum post title exceeds the length limit.
 #. Validation error when the forum post title exceeds the length limit.
-#: src/features/forum/components/ForumCreatePostModal.tsx:38
+#: src/features/forum/components/ForumCreatePostModal.tsx:36
 #: src/features/forum/components/ForumEditPostModal.tsx:31
 msgid "That title is too long."
 msgstr ""
@@ -32753,13 +32807,13 @@ msgid "This channel no longer exists. It may have already been deleted."
 msgstr "Šis kanalas nebeegzistuoja. Gali būti, kad jis jau buvo ištrintas."
 
 #. Forum page empty state shown to ordinary members when no forum category exists yet.
-#: src/features/forum/components/pages/ForumPage.tsx:32
+#: src/features/forum/components/pages/ForumPage.tsx:43
 msgid "This class doesn't have a forum yet."
 msgstr ""
 
 #. Forum page empty state shown to staff (can manage channels) when no forum category exists yet.
-#: src/features/forum/components/pages/ForumPage.tsx:27
-msgid "This class doesn't have a forum yet. Create a channel category whose name starts with 'Forum' and the discussion channels inside it show up here."
+#: src/features/forum/components/pages/ForumPage.tsx:30
+msgid "This class doesn't have a forum yet. One click creates it: a “Fórum” category and a #diretrizes channel for the posting rules."
 msgstr ""
 
 #. Empty state shown to admins of a class whose conventional Home channels are missing.
@@ -33589,9 +33643,9 @@ msgstr "Patarimas"
 #. Forum sort option: alphabetical by post title.
 #. Label for the required title field in the new forum post modal.
 #. Label for the title field in the edit forum post modal.
-#: src/features/forum/components/ForumCreatePostModal.tsx:26
+#: src/features/forum/components/ForumCreatePostModal.tsx:24
 #: src/features/forum/components/ForumEditPostModal.tsx:23
-#: src/features/forum/components/ForumToolbar.tsx:58
+#: src/features/forum/components/ForumToolbar.tsx:64
 msgid "Title"
 msgstr ""
 
@@ -36679,7 +36733,7 @@ msgid "View and regenerate client secrets and bot tokens"
 msgstr "Peržiūrėti ir iš naujo sugeneruoti kliento paslaptis ir roboto prieigos raktus"
 
 #. Section heading in the forum sort-and-view menu.
-#: src/features/forum/components/ForumToolbar.tsx:62
+#: src/features/forum/components/ForumToolbar.tsx:68
 msgid "View as"
 msgstr ""
 
@@ -37983,7 +38037,7 @@ msgid "Write a short bio (max 280 characters)"
 msgstr "Parašykite trumpą biografiją (iki 280 simbolių)"
 
 #. Placeholder for the description field in the new forum post modal.
-#: src/features/forum/components/ForumCreatePostModal.tsx:50
+#: src/features/forum/components/ForumCreatePostModal.tsx:48
 msgid "Write the first message of your post"
 msgstr ""
 
