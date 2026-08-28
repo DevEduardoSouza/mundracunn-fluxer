@@ -495,6 +495,10 @@ export const SOCIAL_HOME_DESCRIPTOR = msg({
 	message: 'Gallery',
 	comment: 'Generic header / tab label for a guild social home (class feed) page.',
 });
+export const FORUM_DESCRIPTOR = msg({
+	message: 'Forum',
+	comment: 'Generic header / tab / sidebar label for a guild forum page (aggregated forum-category discussion channels).',
+});
 export const JUMP_DESCRIPTOR = msg({
 	message: 'Jump',
 	comment: 'Generic short action label that scrolls/navigates to a specific message.',
