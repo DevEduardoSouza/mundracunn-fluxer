@@ -41,10 +41,11 @@ import {CreateDMModal} from '@app/features/channel/components/modals/CreateDMMod
 import {EditGroupModal} from '@app/features/channel/components/modals/EditGroupModal';
 import type {Channel} from '@app/features/channel/models/Channel';
 import * as ChannelUtils from '@app/features/channel/utils/ChannelUtils';
-// MUNDRACUNN (feature forum): menu editar/apagar da postagem no header do canal. Componente
-// se auto-oculta se o canal nao for uma postagem de forum ou o usuario nao puder gerencia-la.
-import {ForumPostHeaderMenuButton} from '@app/features/forum/components/ForumPostMenuButton';
 import {isGroupDmFull} from '@app/features/channel/utils/GroupDmUtils';
+// MUNDRACUNN (feature forum): menu editar/apagar da postagem no header. Carregado sob demanda pra
+// nao puxar o codigo do forum pro bundle de todo canal; o componente ja se auto-oculta quando o
+// canal nao e uma postagem de forum ou o usuario nao pode gerencia-la.
+import {createNamedLoadableComponent} from '@app/features/platform/components/loadable/LoadableComponent';
 import {
 	ADD_TO_FAVORITES_DESCRIPTOR,
 	CHANNEL_ADDED_TO_FAVORITES_DESCRIPTOR,
@@ -115,6 +116,12 @@ import type React from 'react';
 import {useCallback, useEffect, useRef, useState} from 'react';
 
 const {VoiceCallButton, VideoCallButton} = CallButtons;
+
+const ForumPostHeaderMenuButton = createNamedLoadableComponent<{guildId: string; channel: Channel}>({
+	displayName: 'ForumPostHeaderMenuButton',
+	load: async () =>
+		(await import('@app/features/forum/components/ForumPostMenuButton')).ForumPostHeaderMenuButton,
+});
 
 interface ChannelHeaderProps {
 	channel?: Channel;
