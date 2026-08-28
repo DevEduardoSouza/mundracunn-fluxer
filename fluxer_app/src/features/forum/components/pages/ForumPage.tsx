@@ -2,14 +2,19 @@
 
 import {ChannelHeader} from '@app/features/channel/components/ChannelHeader';
 import {ChannelViewScaffold} from '@app/features/channel/components/channel_view/ChannelViewScaffold';
+import * as ForumCoverCommands from '@app/features/forum/commands/ForumCoverCommands';
+import {ForumPostList} from '@app/features/forum/components/ForumPostList';
+import {ForumToolbar} from '@app/features/forum/components/ForumToolbar';
 import styles from '@app/features/forum/components/pages/ForumPage.module.css';
 import Forum from '@app/features/forum/state/Forum';
+import ForumCovers from '@app/features/forum/state/ForumCovers';
 import {getForumCategories} from '@app/features/forum/utils/ForumChannelDiscovery';
 import Guilds from '@app/features/guild/state/Guilds';
 import {FORUM_DESCRIPTOR} from '@app/features/i18n/utils/CommonMessageDescriptors';
 import * as NavigationCommands from '@app/features/navigation/commands/NavigationCommands';
 import Permission from '@app/features/permissions/state/Permission';
 import {remFromPx} from '@app/features/theme/layout/RemFromPx';
+import Users from '@app/features/user/state/Users';
 import {useFluxerDocumentTitle} from '@app/features/window/hooks/useFluxerDocumentTitle';
 import {Permissions} from '@fluxer/constants/src/ChannelConstants';
 import {msg} from '@lingui/core/macro';
@@ -43,18 +48,17 @@ export const ForumPage: React.FC<ForumPageProps> = observer(({guildId}) => {
 	useFluxerDocumentTitle(useMemo(() => [i18n._(FORUM_DESCRIPTOR), guild?.name], [guild?.name, i18n.locale]));
 	useEffect(() => {
 		Forum.setGuildId(guildId);
+		Forum.loadPrefs(Users.currentUserId ?? '');
+		void ForumCoverCommands.fetchCovers(i18n, guildId);
 		return () => {
 			Forum.reset();
+			ForumCovers.reset();
 		};
-	}, [guildId]);
+	}, [i18n, guildId]);
 	const headerLeftContent = useMemo(
 		() => (
 			<div className={styles.headerLeftContent} data-flx="forum.forum-page.header-left-content">
-				<ChatCircleIcon
-					className={styles.headerIcon}
-					size={remFromPx(20)}
-					data-flx="forum.forum-page.header-icon"
-				/>
+				<ChatCircleIcon className={styles.headerIcon} size={remFromPx(20)} data-flx="forum.forum-page.header-icon" />
 				<span className={styles.headerLabel} data-flx="forum.forum-page.header-label">
 					{i18n._(FORUM_DESCRIPTOR)}
 				</span>
@@ -67,8 +71,11 @@ export const ForumPage: React.FC<ForumPageProps> = observer(({guildId}) => {
 	const handleBackClick = useCallback(() => {
 		NavigationCommands.selectChannel(guildId);
 	}, [guildId]);
-	const posts = Forum.getPosts();
+	const activePosts = Forum.getActivePosts();
+	const olderPosts = Forum.getOlderPosts();
+	const viewMode = Forum.getViewMode();
 	const hasForumStructure = getForumCategories(guildId).length > 0;
+	const hasAnyPosts = Forum.getGuildPostChannelIds(guildId).length > 0;
 	const canManageChannels =
 		((Permission.getGuildPermissions(guildId) ?? 0n) & Permissions.MANAGE_CHANNELS) !== 0n;
 	const emptyStateText = !hasForumStructure
@@ -89,46 +96,24 @@ export const ForumPage: React.FC<ForumPageProps> = observer(({guildId}) => {
 			}
 			chatArea={
 				<div className={styles.chatArea} data-flx="forum.forum-page.chat-area">
-					<div className={styles.body} data-flx="forum.forum-page.body">
-						{posts.length > 0 ? (
-							<ul className={styles.postList} data-flx="forum.forum-page.post-list">
-								{posts.map((post) => (
-									<li key={post.channel.id} className={styles.postItem} data-flx="forum.forum-page.post-item">
-										<button
-											type="button"
-											className={styles.postButton}
-											onClick={() => NavigationCommands.selectChannel(guildId, post.channel.id)}
-											data-flx="forum.forum-page.post-button.click"
-										>
-											<span className={styles.postTitleRow} data-flx="forum.forum-page.post-title-row">
-												{post.unread && (
-													<span
-														className={styles.unreadDot}
-														aria-hidden="true"
-														data-flx="forum.forum-page.unread-dot"
-													/>
-												)}
-												<span className={styles.postTitle} data-flx="forum.forum-page.post-title">
-													{post.title}
-												</span>
-											</span>
-											{post.topic && (
-												<p className={styles.postTopic} data-flx="forum.forum-page.post-topic">
-													{post.topic}
-												</p>
-											)}
-										</button>
-									</li>
-								))}
-							</ul>
-						) : (
-							<div className={styles.content} data-flx="forum.forum-page.content">
-								<p className={styles.placeholderText} data-flx="forum.forum-page.empty-text">
-									{emptyStateText}
-								</p>
-							</div>
-						)}
-					</div>
+					{hasForumStructure && hasAnyPosts ? (
+						<>
+							<ForumToolbar data-flx="forum.forum-page.toolbar" />
+							<ForumPostList
+								guildId={guildId}
+								viewMode={viewMode}
+								activePosts={activePosts}
+								olderPosts={olderPosts}
+								data-flx="forum.forum-page.post-list"
+							/>
+						</>
+					) : (
+						<div className={styles.content} data-flx="forum.forum-page.content">
+							<p className={styles.placeholderText} data-flx="forum.forum-page.empty-text">
+								{emptyStateText}
+							</p>
+						</div>
+					)}
 				</div>
 			}
 			data-flx="forum.forum-page.channel-view-scaffold"
