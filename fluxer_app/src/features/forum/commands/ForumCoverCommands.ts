@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import ForumCovers from '@app/features/forum/state/ForumCovers';
 import {getForumPostChannels} from '@app/features/forum/utils/ForumChannelDiscovery';
 import {fetchCoversByChannel} from '@app/features/forum/utils/ForumCoverFallback';
 import {firstMessagePerChannel} from '@app/features/forum/utils/ForumCoverGrouping';
-import ForumCovers from '@app/features/forum/state/ForumCovers';
+import type {Message} from '@app/features/messaging/models/MessagingMessage';
 import {failureCode} from '@app/features/platform/utils/ResponseInspection';
 import {isIndexing, searchMessages} from '@app/features/search/utils/SearchUtils';
 import {APIErrorCodes} from '@fluxer/constants/src/ApiErrorCodes';
-import type {Message} from '@app/features/messaging/models/MessagingMessage';
 import type {I18n} from '@lingui/core';
 
 /**
@@ -16,8 +16,9 @@ import type {I18n} from '@lingui/core';
  * one or two pages. Without it, {@link ensureCoverLazy} fetches covers one channel at a time as
  * cards scroll into view.
  */
-const COVER_HITS_PER_PAGE = 200;
-const MAX_COVER_PAGES = 5;
+// The search API caps hits_per_page at 25 (MessageRequestSchemas) — anything above is a 400.
+const COVER_HITS_PER_PAGE = 25;
+const MAX_COVER_PAGES = 20;
 
 function isSearchUnavailableError(error: unknown): boolean {
 	return failureCode(error) === APIErrorCodes.FEATURE_TEMPORARILY_DISABLED;
@@ -84,9 +85,12 @@ export async function fetchCovers(i18n: I18n, guildId: string): Promise<void> {
 	try {
 		await fetchCoversViaSearch(i18n, guildId, channelIds);
 	} catch (error) {
-		if (isSearchUnavailableError(error)) {
-			ForumCovers.markSearchUnavailable();
+		// Search down (FEATURE_TEMPORARILY_DISABLED) or any other failure: don't leave the grid
+		// without covers — switch to the per-channel lazy fallback for this guild.
+		if (!isSearchUnavailableError(error)) {
+			console.warn('[forum] cover search failed, falling back to per-channel fetch', error);
 		}
+		ForumCovers.markSearchUnavailable();
 	} finally {
 		ForumCovers.setLoading(false);
 	}
