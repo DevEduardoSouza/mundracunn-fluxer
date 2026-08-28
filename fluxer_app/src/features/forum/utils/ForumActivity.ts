@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import type {Channel} from '@app/features/channel/models/Channel';
-import {getForumCategories, normalizeChannelName} from '@app/features/forum/utils/ForumChannelDiscovery';
+import {getForumConfigTopicList, normalizeChannelName} from '@app/features/forum/utils/ForumChannelDiscovery';
 import * as SnowflakeUtils from '@fluxer/snowflake/src/SnowflakeUtils';
 
 /**
@@ -60,13 +60,14 @@ export function parseInactiveDaysFromTopic(topic: string | null | undefined): nu
 }
 
 /**
- * The class-wide window: the first forum category that configures one via its topic wins, otherwise
- * the 7-day default. A per-user override lives in the Forum store's persisted preferences and is
- * applied there, on top of this value.
+ * The class-wide window: the first forum configuration topic that sets one wins, otherwise the
+ * 7-day default. See getForumConfigTopicList for which topics those are and why the guidelines
+ * channel is one of them. A per-user override lives in the Forum store's persisted preferences and
+ * is applied there, on top of this value.
  */
 export function getClassInactiveDays(guildId: string): number {
-	for (const category of getForumCategories(guildId)) {
-		const days = parseInactiveDaysFromTopic(category.topic);
+	for (const topic of getForumConfigTopicList(guildId)) {
+		const days = parseInactiveDaysFromTopic(topic);
 		if (days != null) return days;
 	}
 	return DEFAULT_FORUM_INACTIVE_DAYS;

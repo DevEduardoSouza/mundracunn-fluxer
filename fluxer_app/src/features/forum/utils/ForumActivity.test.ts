@@ -32,18 +32,24 @@ function post(options: {createdAt: number; lastMessageAt?: number | null}) {
 	} as never;
 }
 
-function seedCategories(topics: ReadonlyArray<string | null>): void {
-	getGuildChannelsMock.mockImplementation((guildId: string) =>
-		guildId === GUILD_ID
-			? topics.map((topic, index) => ({
-					id: `category-${index}`,
-					type: ChannelTypes.GUILD_CATEGORY,
-					name: 'Forum',
-					parentId: null,
-					topic,
-				}))
-			: [],
-	);
+function seedCategories(topics: ReadonlyArray<string | null>, guidelinesTopic?: string | null): void {
+	const channels: Array<unknown> = topics.map((topic, index) => ({
+		id: `category-${index}`,
+		type: ChannelTypes.GUILD_CATEGORY,
+		name: 'Forum',
+		parentId: null,
+		topic,
+	}));
+	if (guidelinesTopic !== undefined && topics.length > 0) {
+		channels.push({
+			id: 'channel-diretrizes',
+			type: ChannelTypes.GUILD_TEXT,
+			name: 'diretrizes',
+			parentId: 'category-0',
+			topic: guidelinesTopic,
+		});
+	}
+	getGuildChannelsMock.mockImplementation((guildId: string) => (guildId === GUILD_ID ? channels : []));
 }
 
 afterEach(() => {
@@ -144,5 +150,22 @@ describe('getClassInactiveDays — topic of the forum category, else the default
 	it('falls back to the default for a guild with no forum at all', () => {
 		seedCategories([]);
 		expect(getClassInactiveDays('guild-sem-forum')).toBe(DEFAULT_FORUM_INACTIVE_DAYS);
+	});
+
+	// A API não serializa o topic de categoria (serializeGuildCategoryChannel omite o campo), então
+	// na prática o marcador vive no topic do canal #diretrizes, que é GUILD_TEXT.
+	it('reads the marker from the guidelines channel topic, which is the one the API actually sends', () => {
+		seedCategories([null], 'Regras da turma. inativas: 14d');
+		expect(getClassInactiveDays(GUILD_ID)).toBe(14);
+	});
+
+	it('prefers the category topic when the API does send one', () => {
+		seedCategories(['inativas: 3d'], 'inativas: 14d');
+		expect(getClassInactiveDays(GUILD_ID)).toBe(3);
+	});
+
+	it('still defaults when neither topic carries the marker', () => {
+		seedCategories([null], 'Leia as regras antes de postar');
+		expect(getClassInactiveDays(GUILD_ID)).toBe(DEFAULT_FORUM_INACTIVE_DAYS);
 	});
 });
