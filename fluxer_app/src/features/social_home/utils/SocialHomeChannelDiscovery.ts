@@ -2,7 +2,6 @@
 
 import type {Channel} from '@app/features/channel/models/Channel';
 import Channels from '@app/features/channel/state/Channels';
-import {getForumPostChannels} from '@app/features/forum/utils/ForumChannelDiscovery';
 import Permission from '@app/features/permissions/state/Permission';
 import {ChannelTypes, Permissions} from '@fluxer/constants/src/ChannelConstants';
 
@@ -58,14 +57,6 @@ export function discoverFeedChannelIds(guildId: string): Array<string> {
 		if (!isSketchbookChannel && !isProfessorFeedChannel) continue;
 		if (!canViewChannel(channel.id)) continue;
 		channelIds.push(channel.id);
-	}
-	// (4.1) The class Gallery also aggregates forum posts: every discussion channel in a "forum*"
-	// category is a Feed source too. Forum discovery already drops the guidelines channel and
-	// filters by view permission, so its ids append as-is (deduped against the ids above).
-	for (const forumChannel of getForumPostChannels(guildId)) {
-		if (!channelIds.includes(forumChannel.id)) {
-			channelIds.push(forumChannel.id);
-		}
 	}
 	return channelIds;
 }
