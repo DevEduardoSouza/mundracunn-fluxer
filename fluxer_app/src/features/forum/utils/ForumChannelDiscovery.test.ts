@@ -14,6 +14,7 @@ import {afterEach, describe, expect, it, type Mock, vi} from 'vitest';
 
 vi.mock('@app/features/channel/state/Channels', () => ({default: {getGuildChannels: vi.fn()}}));
 vi.mock('@app/features/permissions/state/Permission', () => ({default: {getChannelPermissions: vi.fn()}}));
+vi.mock('@app/features/guild/state/Guilds', () => ({default: {getGuildRoles: vi.fn(() => [])}}));
 
 const Channels = (await import('@app/features/channel/state/Channels')).default;
 const Permission = (await import('@app/features/permissions/state/Permission')).default;

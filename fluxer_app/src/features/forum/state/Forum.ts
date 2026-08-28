@@ -2,6 +2,7 @@
 
 import type {Channel} from '@app/features/channel/models/Channel';
 import {getForumPostAuthorId, getForumPostChannels} from '@app/features/forum/utils/ForumChannelDiscovery';
+import {parseForumTopic} from '@app/features/forum/utils/ForumTopic';
 import Favorites from '@app/features/messaging/state/Favorites';
 import AppStorage from '@app/features/platform/state/PersistentStorage';
 import ReadStates from '@app/features/read_state/state/ReadStates';
@@ -25,8 +26,9 @@ function prefsStorageKey(userId: string): string {
 
 export interface ForumPost {
 	channel: Channel;
+	/** The "pretty" title: line 1 of the topic if set, else the sanitized channel name. */
 	title: string;
-	topic: string | null;
+	tags: ReadonlyArray<string>;
 	authorId: string | null;
 	createdAt: number;
 	lastActivityAt: number;
@@ -78,10 +80,11 @@ class Forum {
 		const posts = getForumPostChannels(guildId)
 			.map((channel): ForumPost => {
 				const id = channel.id;
+				const parsed = parseForumTopic(channel.topic);
 				return {
 					channel,
-					title: channel.name ?? '',
-					topic: channel.topic,
+					title: parsed.title ?? channel.name ?? '',
+					tags: parsed.tags,
 					authorId: getForumPostAuthorId(channel),
 					createdAt: SnowflakeUtils.extractTimestamp(channel.id),
 					lastActivityAt: SnowflakeUtils.extractTimestamp(channel.lastMessageId ?? channel.id),
@@ -93,7 +96,7 @@ class Forum {
 				(post) =>
 					query.length === 0 ||
 					post.title.toLowerCase().includes(query) ||
-					(post.topic ?? '').toLowerCase().includes(query),
+					post.tags.some((tag) => tag.includes(query)),
 			);
 		const sortBy = this.sortBy;
 		posts.sort((a, b) => {

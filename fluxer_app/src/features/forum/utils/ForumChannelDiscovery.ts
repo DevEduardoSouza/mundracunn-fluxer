@@ -2,6 +2,8 @@
 
 import type {Channel} from '@app/features/channel/models/Channel';
 import Channels from '@app/features/channel/state/Channels';
+import type {GuildRole} from '@app/features/guild/models/GuildRole';
+import Guilds from '@app/features/guild/state/Guilds';
 import Permission from '@app/features/permissions/state/Permission';
 import {ChannelOverwriteTypes, ChannelTypes, Permissions} from '@fluxer/constants/src/ChannelConstants';
 
@@ -18,7 +20,13 @@ import {ChannelOverwriteTypes, ChannelTypes, Permissions} from '@fluxer/constant
 
 const FORUM_CATEGORY_NAME_PREFIX = 'forum';
 const GUIDELINES_CHANNEL_NAMES: ReadonlySet<string> = new Set(['diretrizes', 'guidelines']);
+const STUDENT_ROLE_NAMES: ReadonlySet<string> = new Set(['aluno', 'alunos', 'estudante', 'estudantes', 'student', 'students']);
 const FORUM_CHANNEL_VIEW_PERMISSIONS = Permissions.VIEW_CHANNEL | Permissions.READ_MESSAGE_HISTORY;
+/**
+ * Marker a class owner can drop anywhere in a forum category's topic to switch on the "one post per
+ * student" rule (the Artwod class uses it). Matched accent-insensitively against the raw topic.
+ */
+const SINGLE_POST_RULE_MARKERS: ReadonlyArray<string> = ['uma-postagem-por-aluno', 'one-post-per-student'];
 
 /**
  * Real class categories are decorated with emoji and written with Portuguese accents ("🗣️ Fórum
@@ -106,6 +114,45 @@ export function getForumPostAuthorId(channel: Channel): string | null {
 		}
 	}
 	return null;
+}
+
+/**
+ * The class's "student" role, matched by normalized name (same technique as the category). Used to
+ * add a `deny MANAGE_CHANNELS` overwrite when a student creates a post, so only the post's author
+ * (and staff) can rename/delete it. Returns undefined when the class has no such role — the caller
+ * then just skips that overwrite.
+ */
+export function getStudentRole(guildId: string): GuildRole | undefined {
+	return Guilds.getGuildRoles(guildId).find((role) => STUDENT_ROLE_NAMES.has(normalizeChannelName(role.name)));
+}
+
+/** Whether any forum category in the guild opts into the "one post per student" rule via its topic. */
+export function isSinglePostRuleEnabled(guildId: string): boolean {
+	return getForumCategories(guildId).some((category) => {
+		const topic = normalizeChannelName(category.topic ?? undefined);
+		return SINGLE_POST_RULE_MARKERS.some((marker) => topic.includes(marker));
+	});
+}
+
+/** The forum post channel the given user already owns in this guild, if any (used by the rule above). */
+export function findOwnForumPostChannel(guildId: string, userId: string): Channel | undefined {
+	return getForumPostChannels(guildId).find((channel) => getForumPostAuthorId(channel) === userId);
+}
+
+/** Whether the current user may rename/delete this forum post — MANAGE_CHANNELS on the channel (author or staff). */
+export function canManageForumPost(channelId: string): boolean {
+	return ((Permission.getChannelPermissions(channelId) ?? 0n) & Permissions.MANAGE_CHANNELS) === Permissions.MANAGE_CHANNELS;
+}
+
+/**
+ * Whether a channel is a forum post (a text channel under a forum category, not the guidelines
+ * channel). Unlike {@link getForumPostChannels} this doesn't filter by view permission — the caller
+ * already has the channel — so it's safe to use from the channel header.
+ */
+export function isForumPostChannel(guildId: string, channel: Channel): boolean {
+	if (channel.type !== ChannelTypes.GUILD_TEXT || channel.parentId == null) return false;
+	if (isGuidelinesChannel(channel)) return false;
+	return getForumCategories(guildId).some((category) => category.id === channel.parentId);
 }
 
 /**
