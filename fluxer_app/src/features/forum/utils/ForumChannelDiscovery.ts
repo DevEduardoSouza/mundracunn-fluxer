@@ -3,7 +3,7 @@
 import type {Channel} from '@app/features/channel/models/Channel';
 import Channels from '@app/features/channel/state/Channels';
 import Permission from '@app/features/permissions/state/Permission';
-import {ChannelTypes, Permissions} from '@fluxer/constants/src/ChannelConstants';
+import {ChannelOverwriteTypes, ChannelTypes, Permissions} from '@fluxer/constants/src/ChannelConstants';
 
 /**
  * The forum is discovered by convention, not by a new channel type — see docs/analise-forum.md in
@@ -87,6 +87,25 @@ export function getForumPostChannels(guildId: string): Array<Channel> {
 			!isGuidelinesChannel(channel) &&
 			canViewChannel(channel.id),
 	);
+}
+
+/**
+ * The "author" of a forum post — a forum post is a channel, so its author is whoever owns it.
+ * `ownerId` is filled by the "Nova postagem" flow when it creates the channel; for channels created
+ * by hand it falls back to the first member (not role) permission-overwrite that grants
+ * MANAGE_CHANNELS, which is what that flow also sets. Returns null when neither is present.
+ */
+export function getForumPostAuthorId(channel: Channel): string | null {
+	if (channel.ownerId) return channel.ownerId;
+	for (const overwrite of Object.values(channel.permissionOverwrites)) {
+		if (
+			overwrite.type === ChannelOverwriteTypes.MEMBER &&
+			(overwrite.allow & Permissions.MANAGE_CHANNELS) === Permissions.MANAGE_CHANNELS
+		) {
+			return overwrite.id;
+		}
+	}
+	return null;
 }
 
 /**
