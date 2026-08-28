@@ -1,9 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import * as ChannelCommands from '@app/features/channel/commands/ChannelCommands';
-import {getForumCategories, getGuidelinesChannel} from '@app/features/forum/utils/ForumChannelDiscovery';
+import {
+	getForumCategories,
+	getGuidelinesChannel,
+	getStudentRole,
+} from '@app/features/forum/utils/ForumChannelDiscovery';
 import * as MessageCommands from '@app/features/messaging/commands/MessageCommands';
-import {ChannelTypes} from '@fluxer/constants/src/ChannelConstants';
+import {ChannelOverwriteTypes, ChannelTypes, Permissions} from '@fluxer/constants/src/ChannelConstants';
 import * as SnowflakeUtils from '@fluxer/snowflake/src/SnowflakeUtils';
 import type {I18n} from '@lingui/core';
 import {msg} from '@lingui/core/macro';
@@ -33,6 +37,44 @@ const SEED_GUIDELINES_DESCRIPTOR = msg({
 export interface ForumSetupResult {
 	createdCategory: boolean;
 	createdGuidelines: boolean;
+	/** False when the class has no "Aluno" role yet — students can't create posts until it exists. */
+	studentRoleFound: boolean;
+}
+
+interface ForumOverwrite {
+	id: string;
+	type: 0 | 1;
+	allow: string;
+	deny: string;
+}
+
+const MANAGE_BITS = (Permissions.MANAGE_CHANNELS | Permissions.MANAGE_ROLES).toString();
+const GUIDELINES_DENY = (Permissions.SEND_MESSAGES | Permissions.MANAGE_CHANNELS | Permissions.MANAGE_ROLES).toString();
+
+/**
+ * Category overwrites that let students create their own post channel inside it — the backend
+ * honours MANAGE_CHANNELS/MANAGE_ROLES granted on the parent category (fork PR #18) — while
+ * @everyone stays without them. Mirrors the manual setup in /opt/mundracunn/README-forum.md.
+ */
+function categoryOverwrites(guildId: string, studentRoleId: string | undefined): Array<ForumOverwrite> {
+	const overwrites: Array<ForumOverwrite> = [
+		{id: guildId, type: ChannelOverwriteTypes.ROLE, allow: '0', deny: MANAGE_BITS},
+	];
+	if (studentRoleId) {
+		overwrites.push({id: studentRoleId, type: ChannelOverwriteTypes.ROLE, allow: MANAGE_BITS, deny: '0'});
+	}
+	return overwrites;
+}
+
+/** The guidelines channel is a rules panel: only staff (guild-level permissions) write in it. */
+function guidelinesOverwrites(guildId: string, studentRoleId: string | undefined): Array<ForumOverwrite> {
+	const overwrites: Array<ForumOverwrite> = [
+		{id: guildId, type: ChannelOverwriteTypes.ROLE, allow: '0', deny: GUIDELINES_DENY},
+	];
+	if (studentRoleId) {
+		overwrites.push({id: studentRoleId, type: ChannelOverwriteTypes.ROLE, allow: '0', deny: GUIDELINES_DENY});
+	}
+	return overwrites;
 }
 
 /** Whether the guild is missing the forum structure entirely (what the empty state keys off). */
@@ -41,7 +83,12 @@ export function isForumStructureMissing(guildId: string): boolean {
 }
 
 export async function setupForumChannels(guildId: string, i18n: I18n): Promise<ForumSetupResult> {
-	const result: ForumSetupResult = {createdCategory: false, createdGuidelines: false};
+	const studentRole = getStudentRole(guildId);
+	const result: ForumSetupResult = {
+		createdCategory: false,
+		createdGuidelines: false,
+		studentRoleFound: studentRole != null,
+	};
 
 	let category = getForumCategories(guildId)[0];
 	if (category == null) {
@@ -52,6 +99,7 @@ export async function setupForumChannels(guildId: string, i18n: I18n): Promise<F
 			parent_id: null,
 			bitrate: null,
 			user_limit: null,
+			permission_overwrites: categoryOverwrites(guildId, studentRole?.id),
 		});
 		result.createdCategory = true;
 		// `create` writes through the Channels store, so the category is readable right away.
@@ -67,6 +115,7 @@ export async function setupForumChannels(guildId: string, i18n: I18n): Promise<F
 			parent_id: category.id,
 			bitrate: null,
 			user_limit: null,
+			permission_overwrites: guidelinesOverwrites(guildId, studentRole?.id),
 		});
 		const guidelines = getGuidelinesChannel(guildId);
 		if (guidelines) {
