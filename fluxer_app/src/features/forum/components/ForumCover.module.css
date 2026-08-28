@@ -1,0 +1,32 @@
+/* SPDX-License-Identifier: AGPL-3.0-or-later */
+
+.cover {
+	display: block;
+	object-fit: cover;
+	background: var(--background-secondary);
+	flex-shrink: 0;
+}
+
+.thumb {
+	width: 3.5rem;
+	height: 3.5rem;
+	border-radius: 0.375rem;
+}
+
+.large {
+	width: 100%;
+	aspect-ratio: 16 / 10;
+	border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.placeholder {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--text-tertiary);
+}
+
+.placeholderIcon {
+	width: 1.75rem;
+	height: 1.75rem;
+}
