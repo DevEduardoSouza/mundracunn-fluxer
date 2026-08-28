@@ -1,15 +1,24 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import {Routes} from '@app/app/Routes';
 import styles from '@app/features/forum/components/ForumToolbar.module.css';
 import Forum, {type ForumSortBy, type ForumViewMode} from '@app/features/forum/state/Forum';
+import {
+	findOwnForumPostChannel,
+	getForumCategories,
+	isSinglePostRuleEnabled,
+} from '@app/features/forum/utils/ForumChannelDiscovery';
+import * as RouterUtils from '@app/features/navigation/utils/RouterUtils';
 import {remFromPx} from '@app/features/theme/layout/RemFromPx';
 import {ContextMenuCloseProvider, MenuGroupLabel} from '@app/features/ui/action_menu/ContextMenu';
 import {MenuGroup} from '@app/features/ui/action_menu/MenuGroup';
 import {MenuItemRadio} from '@app/features/ui/action_menu/MenuItemRadio';
 import {Button} from '@app/features/ui/button/Button';
 import * as ContextMenuCommands from '@app/features/ui/commands/ContextMenuCommands';
+import {modal, push as pushModal} from '@app/features/ui/commands/ModalCommands';
 import {Input} from '@app/features/ui/components/form/FormInput';
 import {useContextMenuTrigger} from '@app/features/ui/hooks/useContextMenuTrigger';
+import Users from '@app/features/user/state/Users';
 import {msg} from '@lingui/core/macro';
 import {useLingui} from '@lingui/react/macro';
 import {CaretDownIcon, MagnifyingGlassIcon, PlusIcon, SlidersHorizontalIcon} from '@phosphor-icons/react';
@@ -20,6 +29,10 @@ import {useCallback} from 'react';
 const NEW_POST_DESCRIPTOR = msg({
 	message: 'New post',
 	comment: 'Button in the forum toolbar that opens the create-forum-post flow.',
+});
+const OPEN_MY_POST_DESCRIPTOR = msg({
+	message: 'Open my post',
+	comment: 'Forum toolbar button label shown, instead of "New post", when the one-post-per-student rule is on and the student already has a post.',
 });
 const SEARCH_PLACEHOLDER_DESCRIPTOR = msg({
 	message: 'Search posts',
@@ -116,10 +129,10 @@ const ForumSortMenu: React.FC<{onClose: () => void}> = observer(({onClose}) => {
 });
 
 interface ForumToolbarProps {
-	onNewPost?: () => void;
+	guildId: string;
 }
 
-export const ForumToolbar: React.FC<ForumToolbarProps> = observer(({onNewPost}) => {
+export const ForumToolbar: React.FC<ForumToolbarProps> = observer(({guildId}) => {
 	const {i18n} = useLingui();
 	const {isOpen, withTracking} = useContextMenuTrigger();
 	const query = Forum.getQuery();
@@ -136,19 +149,40 @@ export const ForumToolbar: React.FC<ForumToolbarProps> = observer(({onNewPost}) 
 		},
 		[withTracking],
 	);
-	// The create flow itself ships with the "New post" card — this button is the affordance for it.
-	const handleNewPost = useCallback(() => {
-		onNewPost?.();
-	}, [onNewPost]);
+	// "One post per student" (opt-in via a marker in a forum category topic): when the student
+	// already has a post, the button opens it instead of the create modal.
+	const category = getForumCategories(guildId)[0];
+	const ownPost =
+		isSinglePostRuleEnabled(guildId) && Users.currentUserId
+			? findOwnForumPostChannel(guildId, Users.currentUserId)
+			: undefined;
+	const handleNewPost = useCallback(async () => {
+		if (ownPost) {
+			RouterUtils.transitionTo(Routes.guildChannel(guildId, ownPost.id));
+			return;
+		}
+		if (!category) return;
+		const {ForumCreatePostModal} = await import('@app/features/forum/components/ForumCreatePostModal');
+		pushModal(
+			modal(() => (
+				<ForumCreatePostModal
+					guildId={guildId}
+					categoryId={category.id}
+					data-flx="forum.forum-toolbar.create-post-modal"
+				/>
+			)),
+		);
+	}, [category, guildId, ownPost]);
 	return (
 		<div className={styles.toolbar} data-flx="forum.forum-toolbar.toolbar">
 			<Button
 				variant="primary"
 				onClick={handleNewPost}
+				disabled={!category && !ownPost}
 				leftIcon={<PlusIcon size={remFromPx(16)} data-flx="forum.forum-toolbar.new-post-icon" />}
 				data-flx="forum.forum-toolbar.new-post"
 			>
-				{i18n._(NEW_POST_DESCRIPTOR)}
+				{i18n._(ownPost ? OPEN_MY_POST_DESCRIPTOR : NEW_POST_DESCRIPTOR)}
 			</Button>
 			<Input
 				value={query}

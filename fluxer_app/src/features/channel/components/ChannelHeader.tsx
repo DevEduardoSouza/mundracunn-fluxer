@@ -41,6 +41,9 @@ import {CreateDMModal} from '@app/features/channel/components/modals/CreateDMMod
 import {EditGroupModal} from '@app/features/channel/components/modals/EditGroupModal';
 import type {Channel} from '@app/features/channel/models/Channel';
 import * as ChannelUtils from '@app/features/channel/utils/ChannelUtils';
+// MUNDRACUNN (feature forum): menu editar/apagar da postagem no header do canal. Componente
+// se auto-oculta se o canal nao for uma postagem de forum ou o usuario nao puder gerencia-la.
+import {ForumPostHeaderMenuButton} from '@app/features/forum/components/ForumPostMenuButton';
 import {isGroupDmFull} from '@app/features/channel/utils/GroupDmUtils';
 import {
 	ADD_TO_FAVORITES_DESCRIPTOR,
@@ -914,6 +917,13 @@ export const ChannelHeader = observer(
 								<ChannelNotificationSettingsButton
 									channel={channel}
 									data-flx="channel.channel-header.channel-notification-settings-button"
+								/>
+							)}
+							{channel?.guildId && isGuildChannel && !isMobile && (
+								<ForumPostHeaderMenuButton
+									guildId={channel.guildId}
+									channel={channel}
+									data-flx="channel.channel-header.forum-post-header-menu-button"
 								/>
 							)}
 							{(isDM || isGroupDM) && channel && !isMobile && !(isDM && isBotDMRecipient) && (

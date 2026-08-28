@@ -2,10 +2,12 @@
 
 import {Routes} from '@app/app/Routes';
 import {ForumCover} from '@app/features/forum/components/ForumCover';
-import {useForumCoverLazyLoad} from '@app/features/forum/components/useForumCoverLazyLoad';
+import {ForumPostMenuButton} from '@app/features/forum/components/ForumPostMenuButton';
 import styles from '@app/features/forum/components/ForumPostRow.module.css';
-import ForumCovers from '@app/features/forum/state/ForumCovers';
+import {useForumCoverLazyLoad} from '@app/features/forum/components/useForumCoverLazyLoad';
 import type {ForumPost} from '@app/features/forum/state/Forum';
+import ForumCovers from '@app/features/forum/state/ForumCovers';
+import {isKeyboardActivationKey} from '@app/features/input/utils/KeyboardUtils';
 import * as RouterUtils from '@app/features/navigation/utils/RouterUtils';
 import {remFromPx} from '@app/features/theme/layout/RemFromPx';
 import {Tooltip} from '@app/features/ui/tooltip/Tooltip';
@@ -38,18 +40,28 @@ interface ForumPostRowProps {
 
 export const ForumPostRow: React.FC<ForumPostRowProps> = observer(({guildId, post}) => {
 	const {i18n} = useLingui();
-	const rootRef = useForumCoverLazyLoad<HTMLButtonElement>(guildId, post.channel.id);
+	const rootRef = useForumCoverLazyLoad<HTMLDivElement>(guildId, post.channel.id);
 	const cover = ForumCovers.getCover(post.channel.id);
 	const authorName = post.authorId ? (Users.getUser(post.authorId)?.displayName ?? null) : null;
-	const handleOpen = useCallback(() => {
+	const open = useCallback(() => {
 		RouterUtils.transitionTo(Routes.guildChannel(guildId, post.channel.id));
 	}, [guildId, post.channel.id]);
+	const handleKeyDown = useCallback(
+		(event: React.KeyboardEvent) => {
+			if (!isKeyboardActivationKey(event.key)) return;
+			event.preventDefault();
+			open();
+		},
+		[open],
+	);
 	return (
-		<button
-			type="button"
+		<div
 			ref={rootRef}
+			role="button"
+			tabIndex={0}
 			className={styles.row}
-			onClick={handleOpen}
+			onClick={open}
+			onKeyDown={handleKeyDown}
 			data-flx="forum.forum-post-row.open"
 		>
 			<div className={styles.main} data-flx="forum.forum-post-row.main">
@@ -69,18 +81,25 @@ export const ForumPostRow: React.FC<ForumPostRowProps> = observer(({guildId, pos
 					)}
 				</div>
 				<div className={styles.meta} data-flx="forum.forum-post-row.meta">
-					{authorName && <span data-flx="forum.forum-post-row.author">{i18n._(BY_AUTHOR_DESCRIPTOR, {author: authorName})}</span>}
+					{authorName && (
+						<span data-flx="forum.forum-post-row.author">{i18n._(BY_AUTHOR_DESCRIPTOR, {author: authorName})}</span>
+					)}
 					<span data-flx="forum.forum-post-row.activity">
 						{i18n._(LAST_ACTIVITY_DESCRIPTOR, {time: formatShortRelativeTime(post.lastActivityAt, '1m')})}
 					</span>
 				</div>
-				{post.topic && (
-					<p className={styles.preview} data-flx="forum.forum-post-row.preview">
-						{post.topic}
-					</p>
+				{post.tags.length > 0 && (
+					<div className={styles.tags} data-flx="forum.forum-post-row.tags">
+						{post.tags.map((tag) => (
+							<span key={tag} className={styles.tag} data-flx="forum.forum-post-row.tag">
+								#{tag}
+							</span>
+						))}
+					</div>
 				)}
 			</div>
+			<ForumPostMenuButton channel={post.channel} data-flx="forum.forum-post-row.menu-button" />
 			<ForumCover message={cover} variant="thumb" data-flx="forum.forum-post-row.cover" />
-		</button>
+		</div>
 	);
 });

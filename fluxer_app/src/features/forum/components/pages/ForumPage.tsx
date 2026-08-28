@@ -98,7 +98,7 @@ export const ForumPage: React.FC<ForumPageProps> = observer(({guildId}) => {
 				<div className={styles.chatArea} data-flx="forum.forum-page.chat-area">
 					{hasForumStructure && hasAnyPosts ? (
 						<>
-							<ForumToolbar data-flx="forum.forum-page.toolbar" />
+							<ForumToolbar guildId={guildId} data-flx="forum.forum-page.toolbar" />
 							<ForumPostList
 								guildId={guildId}
 								viewMode={viewMode}

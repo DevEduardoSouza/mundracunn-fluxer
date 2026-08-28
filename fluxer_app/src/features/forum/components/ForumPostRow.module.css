@@ -65,11 +65,16 @@
 	color: var(--text-primary-muted);
 }
 
-.preview {
-	margin: 0;
-	font-size: 0.875rem;
-	color: var(--text-primary-muted);
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
+.tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.25rem;
+}
+
+.tag {
+	font-size: 0.75rem;
+	color: var(--text-link);
+	background: var(--background-secondary);
+	border-radius: 0.25rem;
+	padding: 0.0625rem 0.3125rem;
 }
