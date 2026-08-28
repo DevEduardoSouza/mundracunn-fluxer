@@ -1448,6 +1448,18 @@ msgstr "@"
 msgid "@mention"
 msgstr "@mention"
 
+#. Starter message written into the guidelines channel when staff creates the forum structure. The professor is expected to edit it; markdown is intentional.
+#: src/features/forum/commands/ForumSetupCommands.ts:26
+msgid ""
+"**Posting guidelines**\n"
+"\n"
+"Edit this message to set the rules for this class. It is what everyone sees at the top of the forum and inside the new-post window.\n"
+"\n"
+"- One sketchbook post per person.\n"
+"- Post your process, not only the finished piece.\n"
+"- Keep feedback constructive."
+msgstr ""
+
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
 #: src/features/user/components/settings_utils/section_registry/NotificationsSections.ts:243
 msgid "/tts"
@@ -9140,6 +9152,11 @@ msgstr "Kunne ikke oprette rolle"
 msgid "Couldn't create the class channels. Try again."
 msgstr ""
 
+#. Error shown when the one-click forum setup fails.
+#: src/features/forum/components/pages/ForumPage.tsx:39
+msgid "Couldn't create the forum. Try again."
+msgstr ""
+
 #. Error shown when creating a forum post fails.
 #: src/features/forum/components/ForumCreatePostModal.tsx:68
 msgid "Couldn't create the post. Try again."
@@ -9790,6 +9807,11 @@ msgstr "Opret stickerpakke"
 #: src/features/app/components/setup/SetupWizardSteps.tsx:48
 msgid "Create the administrator account"
 msgstr "Opret administratorkontoen"
+
+#. Button in the forum empty state that creates the forum category and its guidelines channel.
+#: src/features/forum/components/pages/ForumPage.tsx:35
+msgid "Create the forum"
+msgstr ""
 
 #: src/features/channel/components/modals/UnaddableRecipientsConfirmModal.tsx:93
 msgid "Create the group DM with the remaining {addableCount} recipient(s) and skip the others?"
@@ -22019,7 +22041,7 @@ msgid "No favorite GIFs yet"
 msgstr "Ingen foretrukne GIF'er endnu"
 
 #. Forum page empty state shown when the forum category exists but has no post channels.
-#: src/features/forum/components/pages/ForumPage.tsx:37
+#: src/features/forum/components/pages/ForumPage.tsx:47
 msgid "No forum posts yet."
 msgstr ""
 
@@ -32785,13 +32807,13 @@ msgid "This channel no longer exists. It may have already been deleted."
 msgstr "Denne kanal findes ikke længere. Den er muligvis allerede blevet slettet."
 
 #. Forum page empty state shown to ordinary members when no forum category exists yet.
-#: src/features/forum/components/pages/ForumPage.tsx:33
+#: src/features/forum/components/pages/ForumPage.tsx:43
 msgid "This class doesn't have a forum yet."
 msgstr ""
 
 #. Forum page empty state shown to staff (can manage channels) when no forum category exists yet.
-#: src/features/forum/components/pages/ForumPage.tsx:28
-msgid "This class doesn't have a forum yet. Create a channel category whose name starts with 'Forum' and the discussion channels inside it show up here."
+#: src/features/forum/components/pages/ForumPage.tsx:30
+msgid "This class doesn't have a forum yet. One click creates it: a “Fórum” category and a #diretrizes channel for the posting rules."
 msgstr ""
 
 #. Empty state shown to admins of a class whose conventional Home channels are missing.

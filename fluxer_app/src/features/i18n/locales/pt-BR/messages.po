@@ -1448,6 +1448,25 @@ msgstr "@"
 msgid "@mention"
 msgstr "@mention"
 
+#. Starter message written into the guidelines channel when staff creates the forum structure. The professor is expected to edit it; markdown is intentional.
+#: src/features/forum/commands/ForumSetupCommands.ts:26
+msgid ""
+"**Posting guidelines**\n"
+"\n"
+"Edit this message to set the rules for this class. It is what everyone sees at the top of the forum and inside the new-post window.\n"
+"\n"
+"- One sketchbook post per person.\n"
+"- Post your process, not only the finished piece.\n"
+"- Keep feedback constructive."
+msgstr ""
+"**Diretrizes de Postagem**\n"
+"\n"
+"Edite esta mensagem para definir as regras da turma. É o que todo mundo vê no topo do fórum e dentro da janela de nova postagem.\n"
+"\n"
+"- Uma postagem de sketchbook por pessoa.\n"
+"- Poste o seu processo, não só o trabalho pronto.\n"
+"- Feedback construtivo: diga o que funcionou antes do que não funcionou."
+
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
 #: src/features/user/components/settings_utils/section_registry/NotificationsSections.ts:243
 msgid "/tts"
@@ -9140,6 +9159,11 @@ msgstr "Não foi possível criar a função"
 msgid "Couldn't create the class channels. Try again."
 msgstr "Não foi possível criar os canais da turma. Tente de novo."
 
+#. Error shown when the one-click forum setup fails.
+#: src/features/forum/components/pages/ForumPage.tsx:39
+msgid "Couldn't create the forum. Try again."
+msgstr "Não foi possível criar o fórum. Tente de novo."
+
 #. Error shown when creating a forum post fails.
 #: src/features/forum/components/ForumCreatePostModal.tsx:68
 msgid "Couldn't create the post. Try again."
@@ -9790,6 +9814,11 @@ msgstr "Criar pacote de figurinhas"
 #: src/features/app/components/setup/SetupWizardSteps.tsx:48
 msgid "Create the administrator account"
 msgstr "Criar a conta de administrador"
+
+#. Button in the forum empty state that creates the forum category and its guidelines channel.
+#: src/features/forum/components/pages/ForumPage.tsx:35
+msgid "Create the forum"
+msgstr "Criar o fórum"
 
 #: src/features/channel/components/modals/UnaddableRecipientsConfirmModal.tsx:93
 msgid "Create the group DM with the remaining {addableCount} recipient(s) and skip the others?"
@@ -22019,7 +22048,7 @@ msgid "No favorite GIFs yet"
 msgstr "Nenhum GIF favorito ainda"
 
 #. Forum page empty state shown when the forum category exists but has no post channels.
-#: src/features/forum/components/pages/ForumPage.tsx:37
+#: src/features/forum/components/pages/ForumPage.tsx:47
 msgid "No forum posts yet."
 msgstr "Ainda não há postagens no fórum."
 
@@ -32785,14 +32814,14 @@ msgid "This channel no longer exists. It may have already been deleted."
 msgstr "Este canal não existe mais. Ele pode já ter sido excluído."
 
 #. Forum page empty state shown to ordinary members when no forum category exists yet.
-#: src/features/forum/components/pages/ForumPage.tsx:33
+#: src/features/forum/components/pages/ForumPage.tsx:43
 msgid "This class doesn't have a forum yet."
 msgstr "Esta turma ainda não tem um fórum."
 
 #. Forum page empty state shown to staff (can manage channels) when no forum category exists yet.
-#: src/features/forum/components/pages/ForumPage.tsx:28
-msgid "This class doesn't have a forum yet. Create a channel category whose name starts with 'Forum' and the discussion channels inside it show up here."
-msgstr "Esta turma ainda não tem um fórum. Crie uma categoria de canais cujo nome comece com 'Fórum' e os canais de discussão dentro dela aparecerão aqui."
+#: src/features/forum/components/pages/ForumPage.tsx:30
+msgid "This class doesn't have a forum yet. One click creates it: a “Fórum” category and a #diretrizes channel for the posting rules."
+msgstr "Esta turma ainda não tem fórum. Um clique cria tudo: uma categoria “Fórum” e um canal #diretrizes para as regras de postagem."
 
 #. Empty state shown to admins of a class whose conventional Home channels are missing.
 #: src/features/social_home/components/pages/SocialHomePage.tsx:44

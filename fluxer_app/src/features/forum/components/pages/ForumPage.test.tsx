@@ -27,6 +27,9 @@ vi.mock('@app/features/navigation/commands/NavigationCommands', () => ({selectCh
 vi.mock('@app/features/permissions/state/Permission', () => ({default: {getGuildPermissions: vi.fn(() => 0n)}}));
 vi.mock('@app/features/user/state/Users', () => ({default: {currentUserId: 'user-1'}}));
 vi.mock('@app/features/forum/commands/ForumCoverCommands', () => ({fetchCovers: vi.fn(() => Promise.resolve())}));
+vi.mock('@app/features/forum/commands/ForumSetupCommands', () => ({
+	setupForumChannels: vi.fn(() => Promise.resolve()),
+}));
 vi.mock('@app/features/forum/utils/ForumChannelDiscovery', () => ({getForumCategories: vi.fn(() => [])}));
 vi.mock('@app/features/forum/components/ForumToolbar', () => ({
 	ForumToolbar: () => <div data-testid="stub-toolbar" />,
@@ -45,7 +48,9 @@ vi.mock('@app/features/forum/components/ForumPostList', () => ({
 		olderPosts: ReadonlyArray<unknown>;
 	}) => (
 		<div data-testid="stub-list">
-			{olderPosts.length > 0 ? `${viewMode}:${activePosts.length}:${olderPosts.length}` : `${viewMode}:${activePosts.length}`}
+			{olderPosts.length > 0
+				? `${viewMode}:${activePosts.length}:${olderPosts.length}`
+				: `${viewMode}:${activePosts.length}`}
 		</div>
 	),
 }));
@@ -83,8 +88,11 @@ vi.mock('@lingui/react/macro', () => {
 import type React from 'react';
 
 const {getForumCategories} = await import('@app/features/forum/utils/ForumChannelDiscovery');
+const {setupForumChannels} = await import('@app/features/forum/commands/ForumSetupCommands');
+const Permission = (await import('@app/features/permissions/state/Permission')).default;
 const {ForumPage} = await import('@app/features/forum/components/pages/ForumPage');
 
+import {Permissions} from '@fluxer/constants/src/ChannelConstants';
 import {act} from 'react';
 import {createRoot, type Root} from 'react-dom/client';
 import {afterEach, beforeEach, describe, expect, it, type Mock, vi} from 'vitest';
@@ -92,8 +100,16 @@ import {afterEach, beforeEach, describe, expect, it, type Mock, vi} from 'vitest
 (globalThis as {IS_REACT_ACT_ENVIRONMENT?: boolean}).IS_REACT_ACT_ENVIRONMENT = true;
 
 const getForumCategoriesMock = getForumCategories as unknown as Mock;
+const getGuildPermissionsMock = Permission.getGuildPermissions as unknown as Mock;
 
 let roots: Array<{container: HTMLDivElement; root: Root}> = [];
+
+/** The app's Button replaces the caller's data-flx with its own, so it is found by its label. */
+function setupButton(container: HTMLElement): HTMLButtonElement | null {
+	return (
+		[...container.querySelectorAll('button')].find((node) => node.textContent?.includes('Create the forum')) ?? null
+	);
+}
 
 async function mount(): Promise<HTMLDivElement> {
 	const container = document.createElement('div');
@@ -112,6 +128,7 @@ beforeEach(() => {
 	forumState.olderPosts = [];
 	forumState.postChannelIds = [];
 	getForumCategoriesMock.mockReturnValue([]);
+	getGuildPermissionsMock.mockReturnValue(0n);
 });
 
 afterEach(() => {
@@ -128,6 +145,38 @@ describe('ForumPage', () => {
 		const container = await mount();
 		expect(container.textContent).toContain("doesn't have a forum yet");
 		expect(container.querySelector('[data-testid="stub-list"]')).toBeNull();
+	});
+
+	it('offers staff a one-click button to create the forum, and creates it on click', async () => {
+		getGuildPermissionsMock.mockReturnValue(Permissions.MANAGE_CHANNELS);
+		const container = await mount();
+		const button = setupButton(container);
+		expect(button).not.toBeNull();
+
+		await act(async () => {
+			button!.dispatchEvent(new MouseEvent('click', {bubbles: true}));
+		});
+		expect(setupForumChannels).toHaveBeenCalledWith('guild-a', expect.anything());
+	});
+
+	it('does not offer that button to an ordinary member', async () => {
+		expect(setupButton(await mount())).toBeNull();
+	});
+
+	it('does not offer it once the forum exists, even for staff', async () => {
+		getGuildPermissionsMock.mockReturnValue(Permissions.MANAGE_CHANNELS);
+		getForumCategoriesMock.mockReturnValue([{id: 'cat'}]);
+		expect(setupButton(await mount())).toBeNull();
+	});
+
+	it('reports a failed setup instead of failing silently', async () => {
+		getGuildPermissionsMock.mockReturnValue(Permissions.MANAGE_CHANNELS);
+		(setupForumChannels as unknown as Mock).mockRejectedValueOnce(new Error('403'));
+		const container = await mount();
+		await act(async () => {
+			setupButton(container)!.dispatchEvent(new MouseEvent('click', {bubbles: true}));
+		});
+		expect(container.textContent).toContain("Couldn't create the forum.");
 	});
 
 	it('shows the "no posts" empty state — with the toolbar still visible so the first post can be created', async () => {

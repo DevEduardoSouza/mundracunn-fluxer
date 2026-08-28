@@ -3,6 +3,7 @@
 import {ChannelHeader} from '@app/features/channel/components/ChannelHeader';
 import {ChannelViewScaffold} from '@app/features/channel/components/channel_view/ChannelViewScaffold';
 import * as ForumCoverCommands from '@app/features/forum/commands/ForumCoverCommands';
+import {setupForumChannels} from '@app/features/forum/commands/ForumSetupCommands';
 import {ForumGuidelinesBanner} from '@app/features/forum/components/ForumGuidelinesBanner';
 import {ForumPostList} from '@app/features/forum/components/ForumPostList';
 import {ForumToolbar} from '@app/features/forum/components/ForumToolbar';
@@ -15,6 +16,7 @@ import {FORUM_DESCRIPTOR} from '@app/features/i18n/utils/CommonMessageDescriptor
 import * as NavigationCommands from '@app/features/navigation/commands/NavigationCommands';
 import Permission from '@app/features/permissions/state/Permission';
 import {remFromPx} from '@app/features/theme/layout/RemFromPx';
+import {Button} from '@app/features/ui/button/Button';
 import Users from '@app/features/user/state/Users';
 import {useFluxerDocumentTitle} from '@app/features/window/hooks/useFluxerDocumentTitle';
 import {Permissions} from '@fluxer/constants/src/ChannelConstants';
@@ -23,12 +25,20 @@ import {useLingui} from '@lingui/react/macro';
 import {ChatCircleIcon} from '@phosphor-icons/react';
 import {observer} from 'mobx-react-lite';
 import type React from 'react';
-import {useCallback, useEffect, useMemo} from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 
 const NO_STRUCTURE_STAFF_DESCRIPTOR = msg({
 	message:
-		"This class doesn't have a forum yet. Create a channel category whose name starts with 'Forum' and the discussion channels inside it show up here.",
+		"This class doesn't have a forum yet. One click creates it: a \u201CFórum\u201D category and a #diretrizes channel for the posting rules.",
 	comment: 'Forum page empty state shown to staff (can manage channels) when no forum category exists yet.',
+});
+const SETUP_BUTTON_DESCRIPTOR = msg({
+	message: 'Create the forum',
+	comment: 'Button in the forum empty state that creates the forum category and its guidelines channel.',
+});
+const SETUP_FAILED_DESCRIPTOR = msg({
+	message: "Couldn't create the forum. Try again.",
+	comment: 'Error shown when the one-click forum setup fails.',
 });
 const NO_STRUCTURE_MEMBER_DESCRIPTOR = msg({
 	message: "This class doesn't have a forum yet.",
@@ -72,6 +82,19 @@ export const ForumPage: React.FC<ForumPageProps> = observer(({guildId}) => {
 	const handleBackClick = useCallback(() => {
 		NavigationCommands.selectChannel(guildId);
 	}, [guildId]);
+	const [isSettingUp, setIsSettingUp] = useState(false);
+	const [setupFailed, setSetupFailed] = useState(false);
+	const handleSetup = useCallback(async () => {
+		setIsSettingUp(true);
+		setSetupFailed(false);
+		try {
+			await setupForumChannels(guildId, i18n);
+		} catch (_error) {
+			setSetupFailed(true);
+		} finally {
+			setIsSettingUp(false);
+		}
+	}, [guildId, i18n]);
 	const activePosts = Forum.getActivePosts();
 	const olderPosts = Forum.getOlderPosts();
 	const viewMode = Forum.getViewMode();
@@ -113,9 +136,25 @@ export const ForumPage: React.FC<ForumPageProps> = observer(({guildId}) => {
 						/>
 					) : (
 						<div className={styles.content} data-flx="forum.forum-page.content">
-							<p className={styles.placeholderText} data-flx="forum.forum-page.empty-text">
-								{emptyStateText}
-							</p>
+							<div className={styles.emptyState} data-flx="forum.forum-page.empty-state">
+								<p className={styles.placeholderText} data-flx="forum.forum-page.empty-text">
+									{emptyStateText}
+								</p>
+								{!hasForumStructure && canManageChannels && (
+									<Button
+										onClick={handleSetup}
+										submitting={isSettingUp}
+										data-flx="forum.forum-page.setup-button"
+									>
+										{i18n._(SETUP_BUTTON_DESCRIPTOR)}
+									</Button>
+								)}
+								{setupFailed && (
+									<p className={styles.setupError} data-flx="forum.forum-page.setup-error">
+										{i18n._(SETUP_FAILED_DESCRIPTOR)}
+									</p>
+								)}
+							</div>
 						</div>
 					)}
 				</div>

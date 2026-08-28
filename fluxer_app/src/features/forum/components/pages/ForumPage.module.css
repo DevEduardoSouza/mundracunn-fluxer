@@ -58,6 +58,20 @@
 	padding: 1rem;
 }
 
+.emptyState {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 1rem;
+}
+
+.setupError {
+	margin: 0;
+	color: var(--status-danger);
+	font-size: 0.8125rem;
+	text-align: center;
+}
+
 .placeholderText {
 	margin: 0;
 	max-width: 420px;
