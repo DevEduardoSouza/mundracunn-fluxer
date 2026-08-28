@@ -119,10 +119,12 @@ describe('ForumPage', () => {
 		expect(container.querySelector('[data-testid="stub-list"]')).toBeNull();
 	});
 
-	it('shows the "no posts" empty state when a forum category exists but has no post channels', async () => {
+	it('shows the "no posts" empty state — with the toolbar still visible so the first post can be created', async () => {
 		getForumCategoriesMock.mockReturnValue([{id: 'cat'}]);
 		const container = await mount();
 		expect(container.textContent).toContain('No forum posts yet.');
+		expect(container.querySelector('[data-testid="stub-toolbar"]')).not.toBeNull();
+		expect(container.querySelector('[data-testid="stub-list"]')).toBeNull();
 	});
 
 	it('renders the toolbar and list once there are posts', async () => {

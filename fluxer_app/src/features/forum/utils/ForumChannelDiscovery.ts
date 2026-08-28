@@ -145,6 +145,17 @@ export function canManageForumPost(channelId: string): boolean {
 }
 
 /**
+ * Whether the current user may create a post in a forum category — needs MANAGE_CHANNELS on the
+ * category (the class owner grants it to the student role there so the create-with-overwrites call
+ * is allowed; staff have it guild-wide). Without it the API answers 403, so the button is hidden.
+ */
+export function canCreateForumPostInCategory(categoryId: string): boolean {
+	return (
+		((Permission.getChannelPermissions(categoryId) ?? 0n) & Permissions.MANAGE_CHANNELS) === Permissions.MANAGE_CHANNELS
+	);
+}
+
+/**
  * Whether a channel is a forum post (a text channel under a forum category, not the guidelines
  * channel). Unlike {@link getForumPostChannels} this doesn't filter by view permission — the caller
  * already has the channel — so it's safe to use from the channel header.

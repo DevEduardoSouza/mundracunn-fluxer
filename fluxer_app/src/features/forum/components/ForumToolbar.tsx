@@ -4,6 +4,7 @@ import {Routes} from '@app/app/Routes';
 import styles from '@app/features/forum/components/ForumToolbar.module.css';
 import Forum, {type ForumSortBy, type ForumViewMode} from '@app/features/forum/state/Forum';
 import {
+	canCreateForumPostInCategory,
 	findOwnForumPostChannel,
 	getForumCategories,
 	isSinglePostRuleEnabled,
@@ -156,6 +157,10 @@ export const ForumToolbar: React.FC<ForumToolbarProps> = observer(({guildId}) =>
 		isSinglePostRuleEnabled(guildId) && Users.currentUserId
 			? findOwnForumPostChannel(guildId, Users.currentUserId)
 			: undefined;
+	// Only offer the create button to people who can actually create — without MANAGE_CHANNELS on
+	// the category the API answers 403 and the user just sees an error.
+	const canCreate = category != null && canCreateForumPostInCategory(category.id);
+	const showNewPostButton = ownPost != null || canCreate;
 	const handleNewPost = useCallback(async () => {
 		if (ownPost) {
 			RouterUtils.transitionTo(Routes.guildChannel(guildId, ownPost.id));
@@ -175,15 +180,16 @@ export const ForumToolbar: React.FC<ForumToolbarProps> = observer(({guildId}) =>
 	}, [category, guildId, ownPost]);
 	return (
 		<div className={styles.toolbar} data-flx="forum.forum-toolbar.toolbar">
-			<Button
-				variant="primary"
-				onClick={handleNewPost}
-				disabled={!category && !ownPost}
-				leftIcon={<PlusIcon size={remFromPx(16)} data-flx="forum.forum-toolbar.new-post-icon" />}
-				data-flx="forum.forum-toolbar.new-post"
-			>
-				{i18n._(ownPost ? OPEN_MY_POST_DESCRIPTOR : NEW_POST_DESCRIPTOR)}
-			</Button>
+			{showNewPostButton && (
+				<Button
+					variant="primary"
+					onClick={handleNewPost}
+					leftIcon={<PlusIcon size={remFromPx(16)} data-flx="forum.forum-toolbar.new-post-icon" />}
+					data-flx="forum.forum-toolbar.new-post"
+				>
+					{i18n._(ownPost ? OPEN_MY_POST_DESCRIPTOR : NEW_POST_DESCRIPTOR)}
+				</Button>
+			)}
 			<Input
 				value={query}
 				onChange={handleQueryChange}
