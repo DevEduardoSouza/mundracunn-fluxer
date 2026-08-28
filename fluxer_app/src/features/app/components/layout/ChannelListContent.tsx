@@ -25,9 +25,15 @@ import {getChannelUnreadState} from '@app/features/app/components/layout/utils/C
 import {VoiceParticipantsList} from '@app/features/app/components/layout/VoiceParticipantsList';
 import {useRovingFocusList} from '@app/features/app/hooks/useRovingFocusList';
 import Channels from '@app/features/channel/state/Channels';
+import Forum from '@app/features/forum/state/Forum';
+import {isForumHiddenChannel} from '@app/features/forum/utils/ForumChannelDiscovery';
 import * as GuildCommands from '@app/features/guild/commands/GuildCommands';
 import type {Guild} from '@app/features/guild/models/Guild';
-import {MEMBERS_DESCRIPTOR, SOCIAL_HOME_DESCRIPTOR} from '@app/features/i18n/utils/CommonMessageDescriptors';
+import {
+	FORUM_DESCRIPTOR,
+	MEMBERS_DESCRIPTOR,
+	SOCIAL_HOME_DESCRIPTOR,
+} from '@app/features/i18n/utils/CommonMessageDescriptors';
 import {isKeyboardActivationKey} from '@app/features/input/utils/KeyboardUtils';
 import * as RouterUtils from '@app/features/navigation/utils/RouterUtils';
 import Permission from '@app/features/permissions/state/Permission';
@@ -36,6 +42,7 @@ import {failureCode} from '@app/features/platform/utils/ResponseInspection';
 import ReadStates from '@app/features/read_state/state/ReadStates';
 import {remFromPx} from '@app/features/theme/layout/RemFromPx';
 import {ChannelListContextMenu} from '@app/features/ui/action_menu/ChannelListContextMenu';
+import {MentionBadge} from '@app/features/ui/components/MentionBadge';
 import * as ContextMenuCommands from '@app/features/ui/commands/ContextMenuCommands';
 import * as DimensionCommands from '@app/features/ui/commands/DimensionCommands';
 import * as LayoutCommands from '@app/features/ui/commands/LayoutCommands';
@@ -54,7 +61,7 @@ import {Permissions} from '@fluxer/constants/src/ChannelConstants';
 import {MAX_CHANNELS_PER_CATEGORY} from '@fluxer/constants/src/LimitConstants';
 import {msg} from '@lingui/core/macro';
 import {useLingui} from '@lingui/react/macro';
-import {HouseIcon, UsersIcon} from '@phosphor-icons/react';
+import {ChatCircleIcon, HouseIcon, UsersIcon} from '@phosphor-icons/react';
 import {clsx} from 'clsx';
 import {observer} from 'mobx-react-lite';
 import type {MotionValue} from 'motion';
@@ -82,6 +89,10 @@ const MEMBERS_SELECTED_DESCRIPTOR = msg({
 const HOME_SELECTED_DESCRIPTOR = msg({
 	message: 'Gallery, selected',
 	comment: 'Short label in the app layout channel list content.',
+});
+const FORUM_SELECTED_DESCRIPTOR = msg({
+	message: 'Forum, selected',
+	comment: 'Short label in the app layout channel list content for the selected Forum sidebar item.',
 });
 const NEW_MESSAGES_DESCRIPTOR = msg({
 	message: 'New messages',
@@ -136,12 +147,15 @@ export const ChannelListContent = observer(({guild, scrollY}: {guild: Guild; scr
 	let selectedChannelInGuildId: string | null = null;
 	let isMembersSelected = false;
 	let isHomeSelected = false;
+	let isForumSelected = false;
 	if (location.pathname.startsWith(guildPrefix)) {
 		const tail = location.pathname.slice(guildPrefix.length);
 		const slash = tail.indexOf('/');
 		const segment = slash === -1 ? tail : tail.slice(0, slash);
 		if (segment === 'home') {
 			isHomeSelected = true;
+		} else if (segment === 'forum') {
+			isForumSelected = true;
 		} else if (segment === 'members') {
 			isMembersSelected = true;
 		} else if (segment.length > 0) {
@@ -178,6 +192,23 @@ export const ChannelListContent = observer(({guild, scrollY}: {guild: Guild; scr
 		},
 		[handleHomeClick],
 	);
+	const handleForumClick = useCallback(() => {
+		RouterUtils.transitionTo(Routes.guildForum(guild.id));
+		// Mobile: same pane switch the Galeria item does, otherwise the channel list stays open on
+		// top of the forum page (this was the Galeria mobile bug, fork PRs #16/#17).
+		if (MobileLayout.isMobileLayout()) {
+			LayoutCommands.updateMobileLayoutState(false, true);
+		}
+	}, [guild.id]);
+	const handleForumKeyDown = useCallback(
+		(event: React.KeyboardEvent) => {
+			if (!isKeyboardActivationKey(event.key)) return;
+			event.preventDefault();
+			handleForumClick();
+		},
+		[handleForumClick],
+	);
+	const forumUnreadCount = Forum.getGuildUnreadCount(guild.id);
 	const collapsedCategories = useMemo(() => {
 		const overrides = userGuildSettings?.channel_overrides;
 		if (!overrides) return null;
@@ -196,7 +227,12 @@ export const ChannelListContent = observer(({guild, scrollY}: {guild: Guild; scr
 		},
 		[guild.id],
 	);
-	const channelGroups = useMemo(() => organizeChannels(channels), [channels]);
+	// MUNDRACUNN (feature forum): a categoria "forum*" e seus canais somem da sidebar — o acesso e
+	// pelo item "Forum" / rota /forum. Os canais seguem acessiveis por URL (e assim que a postagem abre).
+	const channelGroups = useMemo(
+		() => organizeChannels(channels.filter((channel) => !isForumHiddenChannel(guild.id, channel))),
+		[channels, guild.id],
+	);
 	const showTrailingDropZone = channelGroups.length > 0;
 	const channelIndicatorDependencies = useMemo(
 		() => [channels.length, ReadStates.version, userGuildSettings, hideMutedChannels, showFadedUnreadOnMutedChannels],
@@ -377,6 +413,47 @@ export const ChannelListContent = observer(({guild, scrollY}: {guild: Guild; scr
 								}
 								name={i18n._(SOCIAL_HOME_DESCRIPTOR)}
 								data-flx="app.channel-list-content.channel-item-content--home"
+							/>
+						</GenericChannelItem>
+						<GenericChannelItem
+							containerClassName={channelItemStyles.container}
+							className={clsx(
+								channelItemStyles.channelItem,
+								channelItemStyles.channelItemRegular,
+								isForumSelected && channelItemStyles.channelItemSelected,
+								!isForumSelected && channelItemStyles.channelItemHoverable,
+							)}
+							isSelected={isForumSelected}
+							aria-label={isForumSelected ? i18n._(FORUM_SELECTED_DESCRIPTOR) : i18n._(FORUM_DESCRIPTOR)}
+							aria-current={isForumSelected ? 'page' : undefined}
+							onClick={handleForumClick}
+							onKeyDown={handleForumKeyDown}
+							data-flx="app.channel-list-content.generic-channel-item.forum-click"
+						>
+							<ChannelItemContent
+								icon={
+									<ChatCircleIcon
+										size={remFromPx(20)}
+										className={clsx(
+											channelItemStyles.channelItemIcon,
+											isForumSelected
+												? channelItemStyles.channelItemIconSelected
+												: channelItemStyles.channelItemIconUnselected,
+										)}
+										data-flx="app.channel-list-content.chat-circle-icon"
+									/>
+								}
+								name={i18n._(FORUM_DESCRIPTOR)}
+								actions={
+									forumUnreadCount > 0 ? (
+										<MentionBadge
+											mentionCount={forumUnreadCount}
+											size="small"
+											data-flx="app.channel-list-content.forum-unread-badge"
+										/>
+									) : undefined
+								}
+								data-flx="app.channel-list-content.channel-item-content--forum"
 							/>
 						</GenericChannelItem>
 					</div>

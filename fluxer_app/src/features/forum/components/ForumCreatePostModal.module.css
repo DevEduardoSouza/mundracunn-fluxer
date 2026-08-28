@@ -1,0 +1,109 @@
+/* SPDX-License-Identifier: AGPL-3.0-or-later */
+
+.namePreview {
+	margin: 0.25rem 0 0;
+	font-size: 0.75rem;
+	color: var(--text-primary-muted);
+}
+
+.tagsField {
+	display: flex;
+	flex-direction: column;
+	gap: 0.375rem;
+	margin-top: 0.75rem;
+}
+
+.fieldLabel {
+	font-size: 0.8125rem;
+	font-weight: 600;
+	color: var(--text-secondary);
+}
+
+.tagList {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.375rem;
+	padding: 0.375rem 0.5rem;
+	border-radius: 0.375rem;
+	background: var(--background-secondary);
+	border: 1px solid var(--background-modifier-accent);
+}
+
+.tagChip {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.25rem;
+	padding: 0.125rem 0.375rem;
+	border-radius: 0.25rem;
+	background: var(--background-modifier-accent);
+	font-size: 0.8125rem;
+}
+
+.tagChip button {
+	display: inline-flex;
+	align-items: center;
+	appearance: none;
+	border: none;
+	background: none;
+	cursor: pointer;
+	color: var(--text-primary-muted);
+	padding: 0;
+}
+
+.tagChip button svg {
+	width: 0.75rem;
+	height: 0.75rem;
+}
+
+.tagInput {
+	flex: 1;
+	min-width: 6rem;
+	appearance: none;
+	border: none;
+	background: none;
+	color: var(--text-primary);
+	font: inherit;
+	outline: none;
+	padding: 0.125rem 0;
+}
+
+.guidelines {
+	margin-top: 0.75rem;
+	border-top: 1px solid var(--background-modifier-accent);
+	padding-top: 0.75rem;
+}
+
+.guidelinesToggle {
+	display: flex;
+	align-items: center;
+	gap: 0.375rem;
+	appearance: none;
+	border: none;
+	background: none;
+	cursor: pointer;
+	color: var(--text-secondary);
+	font: inherit;
+	font-weight: 600;
+	font-size: 0.8125rem;
+	padding: 0;
+}
+
+.guidelinesToggle svg {
+	width: 0.875rem;
+	height: 0.875rem;
+}
+
+.guidelinesBody {
+	margin-top: 0.5rem;
+	max-height: 12rem;
+	overflow-y: auto;
+	font-size: 0.875rem;
+	color: var(--text-primary-muted);
+}
+
+.submitError {
+	margin: 0.75rem 0 0;
+	color: var(--status-danger);
+	font-size: 0.8125rem;
+}

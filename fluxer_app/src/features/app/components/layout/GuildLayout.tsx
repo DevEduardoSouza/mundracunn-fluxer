@@ -338,7 +338,9 @@ export const GuildLayout = observer(({children}: {children: React.ReactNode}) =>
 	// Guild sub-pages without a channelId (social home "Galeria", members) still
 	// carry content: on mobile they must open the content pane like a channel does.
 	const isGuildSubpage =
-		location.pathname === Routes.guildHome(guildId) || location.pathname === Routes.guildMembers(guildId);
+		location.pathname === Routes.guildHome(guildId) ||
+		location.pathname === Routes.guildForum(guildId) ||
+		location.pathname === Routes.guildMembers(guildId);
 	const hasMobileContent = Boolean(channelId) || isGuildSubpage;
 	const mobileLayout = MobileLayout;
 	const guild = Guilds.getGuild(guildId);

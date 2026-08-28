@@ -42,6 +42,10 @@ import {EditGroupModal} from '@app/features/channel/components/modals/EditGroupM
 import type {Channel} from '@app/features/channel/models/Channel';
 import * as ChannelUtils from '@app/features/channel/utils/ChannelUtils';
 import {isGroupDmFull} from '@app/features/channel/utils/GroupDmUtils';
+// MUNDRACUNN (feature forum): menu editar/apagar da postagem no header. Carregado sob demanda pra
+// nao puxar o codigo do forum pro bundle de todo canal; o componente ja se auto-oculta quando o
+// canal nao e uma postagem de forum ou o usuario nao pode gerencia-la.
+import {createNamedLoadableComponent} from '@app/features/platform/components/loadable/LoadableComponent';
 import {
 	ADD_TO_FAVORITES_DESCRIPTOR,
 	CHANNEL_ADDED_TO_FAVORITES_DESCRIPTOR,
@@ -112,6 +116,12 @@ import type React from 'react';
 import {useCallback, useEffect, useRef, useState} from 'react';
 
 const {VoiceCallButton, VideoCallButton} = CallButtons;
+
+const ForumPostHeaderMenuButton = createNamedLoadableComponent<{guildId: string; channel: Channel}>({
+	displayName: 'ForumPostHeaderMenuButton',
+	load: async () =>
+		(await import('@app/features/forum/components/ForumPostMenuButton')).ForumPostHeaderMenuButton,
+});
 
 interface ChannelHeaderProps {
 	channel?: Channel;
@@ -914,6 +924,13 @@ export const ChannelHeader = observer(
 								<ChannelNotificationSettingsButton
 									channel={channel}
 									data-flx="channel.channel-header.channel-notification-settings-button"
+								/>
+							)}
+							{channel?.guildId && isGuildChannel && !isMobile && (
+								<ForumPostHeaderMenuButton
+									guildId={channel.guildId}
+									channel={channel}
+									data-flx="channel.channel-header.forum-post-header-menu-button"
 								/>
 							)}
 							{(isDM || isGroupDM) && channel && !isMobile && !(isDM && isBotDMRecipient) && (

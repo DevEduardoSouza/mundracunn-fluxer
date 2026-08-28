@@ -46,6 +46,7 @@ export const Routes = {
 	favoritesChannel: (channelId: string) => `/channels/@favorites/${channelId}`,
 	guildMembers: (guildId: string) => `/channels/${guildId}/members`,
 	guildHome: (guildId: string) => `/channels/${guildId}/home`,
+	guildForum: (guildId: string) => `/channels/${guildId}/forum`,
 	guildChannel: (guildId: string, channelId?: string) =>
 		channelId ? `/channels/${guildId}/${channelId}` : `/channels/${guildId}`,
 	channelMessage: (guildId: string, channelId: string, messageId: string) =>

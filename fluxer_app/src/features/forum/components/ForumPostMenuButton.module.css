@@ -1,0 +1,26 @@
+/* SPDX-License-Identifier: AGPL-3.0-or-later */
+
+.button {
+	appearance: none;
+	border: none;
+	background: none;
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.5rem;
+	height: 1.5rem;
+	border-radius: 0.25rem;
+	color: var(--text-primary-muted);
+	flex-shrink: 0;
+}
+
+.button:hover {
+	background: var(--background-modifier-hover);
+	color: var(--text-primary);
+}
+
+.button svg {
+	width: 1.125rem;
+	height: 1.125rem;
+}

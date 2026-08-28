@@ -1,0 +1,80 @@
+/* SPDX-License-Identifier: AGPL-3.0-or-later */
+
+.row {
+	appearance: none;
+	border: none;
+	background: none;
+	font: inherit;
+	cursor: pointer;
+	width: 100%;
+	text-align: left;
+	display: flex;
+	align-items: flex-start;
+	gap: 0.75rem;
+	padding: 0.75rem;
+	border-radius: 0.5rem;
+	color: var(--text-primary);
+}
+
+.row:hover {
+	background: var(--background-modifier-hover);
+}
+
+.main {
+	flex: 1;
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+}
+
+.titleRow {
+	display: flex;
+	align-items: center;
+	gap: 0.375rem;
+	min-width: 0;
+}
+
+.title {
+	font-weight: 600;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.unreadDot {
+	width: 0.5rem;
+	height: 0.5rem;
+	border-radius: 50%;
+	background: var(--text-primary);
+	flex-shrink: 0;
+}
+
+.followingIcon {
+	display: inline-flex;
+	align-items: center;
+	color: var(--text-tertiary);
+	flex-shrink: 0;
+}
+
+.meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	font-size: 0.75rem;
+	color: var(--text-primary-muted);
+}
+
+.tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.25rem;
+}
+
+.tag {
+	font-size: 0.75rem;
+	color: var(--text-link);
+	background: var(--background-secondary);
+	border-radius: 0.25rem;
+	padding: 0.0625rem 0.3125rem;
+}

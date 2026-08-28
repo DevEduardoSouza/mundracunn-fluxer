@@ -1,0 +1,78 @@
+/* SPDX-License-Identifier: AGPL-3.0-or-later */
+
+.card {
+	appearance: none;
+	border: 1px solid var(--background-modifier-accent);
+	background: var(--background-secondary);
+	font: inherit;
+	cursor: pointer;
+	text-align: left;
+	color: var(--text-primary);
+	border-radius: 0.5rem;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+}
+
+.card:hover {
+	border-color: var(--background-modifier-active);
+}
+
+.coverWrap {
+	position: relative;
+}
+
+.menuOverlay {
+	position: absolute;
+	top: 0.375rem;
+	right: 0.375rem;
+	opacity: 0;
+	transition: opacity 0.1s ease;
+}
+
+.card:hover .menuOverlay,
+.card:focus-within .menuOverlay {
+	opacity: 1;
+}
+
+.menuOverlay button {
+	background: var(--background-primary);
+}
+
+.body {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+	padding: 0.625rem 0.75rem 0.75rem;
+	min-width: 0;
+}
+
+.titleRow {
+	display: flex;
+	align-items: center;
+	gap: 0.375rem;
+	min-width: 0;
+}
+
+.title {
+	font-weight: 600;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.unreadDot {
+	width: 0.5rem;
+	height: 0.5rem;
+	border-radius: 50%;
+	background: var(--text-primary);
+	flex-shrink: 0;
+}
+
+.author {
+	font-size: 0.75rem;
+	color: var(--text-primary-muted);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
