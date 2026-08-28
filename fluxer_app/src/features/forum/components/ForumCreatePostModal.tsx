@@ -3,21 +3,19 @@
 import * as Modal from '@app/features/app/components/dialogs/Modal';
 import * as ForumPostCommands from '@app/features/forum/commands/ForumPostCommands';
 import styles from '@app/features/forum/components/ForumCreatePostModal.module.css';
-import {getGuidelinesChannel} from '@app/features/forum/utils/ForumChannelDiscovery';
+import {ForumGuidelinesBanner} from '@app/features/forum/components/ForumGuidelinesBanner';
 import {forumChannelNameFromTitle, getForumTitleError, normalizeForumTags} from '@app/features/forum/utils/ForumTopic';
 import {CANCEL_DESCRIPTOR} from '@app/features/i18n/utils/CommonMessageDescriptors';
-import type {Message} from '@app/features/messaging/models/MessagingMessage';
-import {SafeMarkdown} from '@app/features/messaging/components/markdown';
 import {Button} from '@app/features/ui/button/Button';
 import * as ModalCommands from '@app/features/ui/commands/ModalCommands';
 import {Input, Textarea} from '@app/features/ui/components/form/FormInput';
 import Users from '@app/features/user/state/Users';
 import {msg} from '@lingui/core/macro';
 import {useLingui} from '@lingui/react/macro';
-import {CaretDownIcon, XIcon} from '@phosphor-icons/react';
+import {XIcon} from '@phosphor-icons/react';
 import {observer} from 'mobx-react-lite';
 import type React from 'react';
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useState} from 'react';
 
 const MODAL_TITLE_DESCRIPTOR = msg({
 	message: 'New post',
@@ -63,10 +61,6 @@ const REMOVE_TAG_DESCRIPTOR = msg({
 	message: 'Remove tag {tag}',
 	comment: 'Accessible label for the button that removes a tag chip. {tag} is the tag text.',
 });
-const GUIDELINES_DESCRIPTOR = msg({
-	message: 'Posting guidelines',
-	comment: 'Collapsible section header in the new forum post modal that shows the guidelines channel message.',
-});
 const CREATE_DESCRIPTOR = msg({
 	message: 'Create post',
 	comment: 'Primary button in the new forum post modal.',
@@ -90,25 +84,6 @@ export const ForumCreatePostModal: React.FC<ForumCreatePostModalProps> = observe
 	const [titleError, setTitleError] = useState<string | null>(null);
 	const [submitError, setSubmitError] = useState<string | null>(null);
 	const [isSubmitting, setIsSubmitting] = useState(false);
-	const [guidelines, setGuidelines] = useState<Message | null>(null);
-	const [guidelinesOpen, setGuidelinesOpen] = useState(true);
-
-	const guidelinesChannel = getGuidelinesChannel(guildId);
-	const guidelinesChannelId = guidelinesChannel?.id;
-	useEffect(() => {
-		if (!guidelinesChannelId) return;
-		let cancelled = false;
-		void ForumPostCommands.fetchGuidelinesMessage(guidelinesChannelId)
-			.then((message) => {
-				if (!cancelled) setGuidelines(message);
-			})
-			.catch(() => {
-				// The guidelines block is optional decoration — a failed fetch just hides it.
-			});
-		return () => {
-			cancelled = true;
-		};
-	}, [guidelinesChannelId]);
 
 	const namePreview = forumChannelNameFromTitle(title);
 
@@ -228,29 +203,11 @@ export const ForumCreatePostModal: React.FC<ForumCreatePostModalProps> = observe
 							/>
 						</div>
 					</div>
-					{guidelinesChannel && guidelines && (
-						<div className={styles.guidelines} data-flx="forum.forum-create-post-modal.guidelines">
-							<button
-								type="button"
-								className={styles.guidelinesToggle}
-								onClick={() => setGuidelinesOpen((open) => !open)}
-								aria-expanded={guidelinesOpen}
-								data-flx="forum.forum-create-post-modal.guidelines-toggle"
-							>
-								<CaretDownIcon
-									weight="bold"
-									style={{transform: guidelinesOpen ? undefined : 'rotate(-90deg)'}}
-									data-flx="forum.forum-create-post-modal.guidelines-caret"
-								/>
-								{i18n._(GUIDELINES_DESCRIPTOR)}
-							</button>
-							{guidelinesOpen && (
-								<div className={styles.guidelinesBody} data-flx="forum.forum-create-post-modal.guidelines-body">
-									<SafeMarkdown content={guidelines.content} />
-								</div>
-							)}
-						</div>
-					)}
+					<ForumGuidelinesBanner
+						guildId={guildId}
+						variant="modal"
+						data-flx="forum.forum-create-post-modal.guidelines"
+					/>
 					{submitError && (
 						<p className={styles.submitError} data-flx="forum.forum-create-post-modal.submit-error">
 							{submitError}

@@ -1,6 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import type {Channel} from '@app/features/channel/models/Channel';
+import {
+	DEFAULT_FORUM_INACTIVE_DAYS,
+	getClassInactiveDays,
+	getLastActivityAt,
+	isInactive,
+} from '@app/features/forum/utils/ForumActivity';
 import {getForumPostAuthorId, getForumPostChannels} from '@app/features/forum/utils/ForumChannelDiscovery';
 import {parseForumTopic} from '@app/features/forum/utils/ForumTopic';
 import Favorites from '@app/features/messaging/state/Favorites';
@@ -15,9 +21,19 @@ export type ForumSortBy = 'activity' | 'created' | 'title';
 const VIEW_MODES: ReadonlySet<string> = new Set<ForumViewMode>(['list', 'grid']);
 const SORT_BYS: ReadonlySet<string> = new Set<ForumSortBy>(['activity', 'created', 'title']);
 
+/**
+ * Per-user override for the class-wide "hide inactive posts" window. `null` (the default) follows
+ * whatever the forum category's topic configures; a number overrides it, and 0 shows every post.
+ */
+export type ForumInactiveDaysOverride = number | null;
+
+/** Windows offered in the "Sort & view" menu, besides "follow the class default". */
+export const FORUM_INACTIVE_DAYS_OPTIONS: ReadonlyArray<number> = [0, 3, 7, 30];
+
 interface ForumPrefs {
 	viewMode: ForumViewMode;
 	sortBy: ForumSortBy;
+	inactiveDays: ForumInactiveDaysOverride;
 }
 
 function prefsStorageKey(userId: string): string {
@@ -50,6 +66,7 @@ class Forum {
 	guildId: string | null = null;
 	viewMode: ForumViewMode = 'list';
 	sortBy: ForumSortBy = 'activity';
+	inactiveDaysOverride: ForumInactiveDaysOverride = null;
 	query = '';
 	private prefsUserId: string | null = null;
 
@@ -73,6 +90,14 @@ class Forum {
 		return this.query;
 	}
 
+	getInactiveDays(): number {
+		return this.inactiveDays;
+	}
+
+	getInactiveDaysOverride(): ForumInactiveDaysOverride {
+		return this.inactiveDaysOverride;
+	}
+
 	private get allPosts(): ReadonlyArray<ForumPost> {
 		const guildId = this.guildId;
 		if (!guildId) return [];
@@ -87,7 +112,7 @@ class Forum {
 					tags: parsed.tags,
 					authorId: getForumPostAuthorId(channel),
 					createdAt: SnowflakeUtils.extractTimestamp(channel.id),
-					lastActivityAt: SnowflakeUtils.extractTimestamp(channel.lastMessageId ?? channel.id),
+					lastActivityAt: getLastActivityAt(channel),
 					unread: ReadStates.hasUnread(id),
 					isFollowed: Favorites.getChannel(id) != null,
 				};
@@ -113,16 +138,42 @@ class Forum {
 	}
 
 	/**
-	 * Posts still shown in the main list. The "hide by inactivity" rule that moves stale posts into
-	 * {@link olderPosts} lands with the "Seguir/ocultar" card — for now every post is active.
+	 * The inactivity window actually in force: the user's own override when they picked one in the
+	 * "Sort & view" menu, otherwise whatever the forum category's topic configures (7 days by
+	 * default). 0 means "don't hide anything".
 	 */
-	get activePosts(): ReadonlyArray<ForumPost> {
-		return this.allPosts;
+	get inactiveDays(): number {
+		if (this.inactiveDaysOverride != null) return this.inactiveDaysOverride;
+		const guildId = this.guildId;
+		return guildId ? getClassInactiveDays(guildId) : DEFAULT_FORUM_INACTIVE_DAYS;
 	}
 
-	/** Slot for the "Postagens mais antigas" section — populated by the "Seguir/ocultar" card. */
+	/**
+	 * Posts split by the inactivity rule. `Date.now()` is read once per recomputation rather than
+	 * ticked on a timer: the split only has to be right when the list is (re)built, and any message
+	 * anywhere in the forum already invalidates this computed through the channel's `lastMessageId`.
+	 */
+	private get postsByActivity(): {active: ReadonlyArray<ForumPost>; older: ReadonlyArray<ForumPost>} {
+		const days = this.inactiveDays;
+		const posts = this.allPosts;
+		if (days <= 0) return {active: posts, older: []};
+		const now = Date.now();
+		const active: Array<ForumPost> = [];
+		const older: Array<ForumPost> = [];
+		for (const post of posts) {
+			(isInactive(post.channel, days, now) ? older : active).push(post);
+		}
+		return {active, older};
+	}
+
+	/** Posts shown in the main list — everything still inside the inactivity window. */
+	get activePosts(): ReadonlyArray<ForumPost> {
+		return this.postsByActivity.active;
+	}
+
+	/** Posts behind the collapsed "Postagens mais antigas" heading. Nothing is ever deleted. */
 	get olderPosts(): ReadonlyArray<ForumPost> {
-		return [];
+		return this.postsByActivity.older;
 	}
 
 	getActivePosts(): ReadonlyArray<ForumPost> {
@@ -157,6 +208,12 @@ class Forum {
 		this.persistPrefs();
 	}
 
+	/** `null` goes back to following the class default configured in the category topic. */
+	setInactiveDaysOverride(days: ForumInactiveDaysOverride): void {
+		this.inactiveDaysOverride = days;
+		this.persistPrefs();
+	}
+
 	setQuery(query: string): void {
 		this.query = query;
 	}
@@ -171,6 +228,10 @@ class Forum {
 		if (stored?.sortBy && SORT_BYS.has(stored.sortBy)) {
 			this.sortBy = stored.sortBy;
 		}
+		this.inactiveDaysOverride =
+			typeof stored?.inactiveDays === 'number' && Number.isFinite(stored.inactiveDays) && stored.inactiveDays >= 0
+				? stored.inactiveDays
+				: null;
 	}
 
 	private persistPrefs(): void {
@@ -178,6 +239,7 @@ class Forum {
 		AppStorage.setJSON<ForumPrefs>(prefsStorageKey(this.prefsUserId), {
 			viewMode: this.viewMode,
 			sortBy: this.sortBy,
+			inactiveDays: this.inactiveDaysOverride,
 		});
 	}
 

@@ -27,6 +27,7 @@ import {createRoute} from '@app/features/platform/components/router/RouterBuilde
 import {useParams} from '@app/features/platform/components/router/RouterReact';
 import {Redirect} from '@app/features/platform/components/router/RouterTypes';
 import SessionManager from '@app/features/platform/state/AuthSession';
+import {shouldRedirectAwayFromRawGuidelinesChannel} from '@app/features/forum/utils/ForumChannelDiscovery';
 import {shouldRedirectAwayFromRawStoriesChannel} from '@app/features/social_home/utils/SocialHomeChannelDiscovery';
 import MobileLayout from '@app/features/ui/state/MobileLayout';
 import {ME} from '@fluxer/constants/src/AppConstants';
@@ -319,6 +320,9 @@ const channelRoute = createRoute({
 		if (shouldRedirectAwayFromRawStoriesChannel(guildId, channelId)) {
 			return new Redirect(Routes.guildHome(guildId));
 		}
+		if (shouldRedirectAwayFromRawGuidelinesChannel(guildId, channelId)) {
+			return new Redirect(Routes.guildForum(guildId));
+		}
 		return undefined;
 	},
 	component: () => (
@@ -342,6 +346,9 @@ const messageRoute = createRoute({
 		}
 		if (shouldRedirectAwayFromRawStoriesChannel(guildId, channelId)) {
 			return new Redirect(Routes.guildHome(guildId));
+		}
+		if (shouldRedirectAwayFromRawGuidelinesChannel(guildId, channelId)) {
+			return new Redirect(Routes.guildForum(guildId));
 		}
 		return undefined;
 	},

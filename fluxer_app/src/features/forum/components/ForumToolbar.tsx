@@ -2,7 +2,13 @@
 
 import {Routes} from '@app/app/Routes';
 import styles from '@app/features/forum/components/ForumToolbar.module.css';
-import Forum, {type ForumSortBy, type ForumViewMode} from '@app/features/forum/state/Forum';
+import Forum, {
+	FORUM_INACTIVE_DAYS_OPTIONS,
+	type ForumInactiveDaysOverride,
+	type ForumSortBy,
+	type ForumViewMode,
+} from '@app/features/forum/state/Forum';
+import {getClassInactiveDays} from '@app/features/forum/utils/ForumActivity';
 import {
 	canCreateForumPostInCategory,
 	findOwnForumPostChannel,
@@ -71,13 +77,36 @@ const VIEW_GALLERY_DESCRIPTOR = msg({
 	message: 'Gallery',
 	comment: 'Forum view option: grid of cards with a large cover image.',
 });
+const HIDE_INACTIVE_DESCRIPTOR = msg({
+	message: 'Hide inactive',
+	comment: 'Section heading in the forum sort-and-view menu for the "hide posts nobody wrote in" rule.',
+});
+const HIDE_INACTIVE_DEFAULT_DESCRIPTOR = msg({
+	message: 'Class default ({days} days)',
+	comment:
+		'Forum "hide inactive" option that follows whatever the class configured. {days} is that number of days.',
+});
+const HIDE_INACTIVE_NEVER_DESCRIPTOR = msg({
+	message: 'Show every post',
+	comment: 'Forum "hide inactive" option that turns the rule off, keeping every post in the main list.',
+});
+const HIDE_INACTIVE_DAYS_DESCRIPTOR = msg({
+	message: 'After {days} days',
+	comment: 'Forum "hide inactive" option: move a post to "Older posts" after {days} days without a message.',
+});
 
-const ForumSortMenu: React.FC<{onClose: () => void}> = observer(({onClose}) => {
+const ForumSortMenu: React.FC<{guildId: string; onClose: () => void}> = observer(({guildId, onClose}) => {
 	const {i18n} = useLingui();
 	const sortBy = Forum.getSortBy();
 	const viewMode = Forum.getViewMode();
+	const inactiveDaysOverride = Forum.getInactiveDaysOverride();
+	const classInactiveDays = getClassInactiveDays(guildId);
 	const selectSort = useCallback((value: ForumSortBy) => Forum.setSortBy(value), []);
 	const selectView = useCallback((value: ForumViewMode) => Forum.setViewMode(value), []);
+	const selectInactiveDays = useCallback(
+		(value: ForumInactiveDaysOverride) => Forum.setInactiveDaysOverride(value),
+		[],
+	);
 	return (
 		<ContextMenuCloseProvider value={onClose} data-flx="forum.forum-toolbar.sort-menu.close-provider">
 			<MenuGroup data-flx="forum.forum-toolbar.sort-menu.sort-group">
@@ -125,6 +154,30 @@ const ForumSortMenu: React.FC<{onClose: () => void}> = observer(({onClose}) => {
 					{i18n._(VIEW_GALLERY_DESCRIPTOR)}
 				</MenuItemRadio>
 			</MenuGroup>
+			<MenuGroup data-flx="forum.forum-toolbar.sort-menu.inactive-group">
+				<MenuGroupLabel data-flx="forum.forum-toolbar.sort-menu.inactive-label">
+					{i18n._(HIDE_INACTIVE_DESCRIPTOR)}
+				</MenuGroupLabel>
+				<MenuItemRadio
+					selected={inactiveDaysOverride == null}
+					onSelect={() => selectInactiveDays(null)}
+					data-flx="forum.forum-toolbar.sort-menu.inactive-default"
+				>
+					{i18n._(HIDE_INACTIVE_DEFAULT_DESCRIPTOR, {days: classInactiveDays})}
+				</MenuItemRadio>
+				{FORUM_INACTIVE_DAYS_OPTIONS.map((days) => (
+					<MenuItemRadio
+						key={days}
+						selected={inactiveDaysOverride === days}
+						onSelect={() => selectInactiveDays(days)}
+						data-flx="forum.forum-toolbar.sort-menu.inactive-option"
+					>
+						{days === 0
+							? i18n._(HIDE_INACTIVE_NEVER_DESCRIPTOR)
+							: i18n._(HIDE_INACTIVE_DAYS_DESCRIPTOR, {days})}
+					</MenuItemRadio>
+				))}
+			</MenuGroup>
 		</ContextMenuCloseProvider>
 	);
 });
@@ -144,11 +197,13 @@ export const ForumToolbar: React.FC<ForumToolbarProps> = observer(({guildId}) =>
 		(event: React.MouseEvent<HTMLButtonElement>) => {
 			ContextMenuCommands.openFromElementBottomRight(
 				event,
-				({onClose}) => <ForumSortMenu onClose={onClose} data-flx="forum.forum-toolbar.open-sort-menu.menu" />,
+				({onClose}) => (
+					<ForumSortMenu guildId={guildId} onClose={onClose} data-flx="forum.forum-toolbar.open-sort-menu.menu" />
+				),
 				withTracking(),
 			);
 		},
-		[withTracking],
+		[guildId, withTracking],
 	);
 	// "One post per student" (opt-in via a marker in a forum category topic): when the student
 	// already has a post, the button opens it instead of the create modal.

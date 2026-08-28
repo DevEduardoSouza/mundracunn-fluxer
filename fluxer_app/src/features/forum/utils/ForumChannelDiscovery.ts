@@ -167,6 +167,24 @@ export function isForumPostChannel(guildId: string, channel: Channel): boolean {
 }
 
 /**
+ * The guidelines channel is a rules panel, not a conversation: reading it as a raw chat shows a
+ * single message in an otherwise empty channel, and the forum page already renders that message as
+ * its banner. So a visitor who lands on the channel by URL is sent to the forum instead — unless
+ * they can post there, since whoever writes the rules still needs the real channel to edit them.
+ *
+ * A client-side routing nudge, exactly like social_home's shouldRedirectAwayFromRawStoriesChannel:
+ * nothing here changes permissions, which is what actually gates access.
+ */
+export function shouldRedirectAwayFromRawGuidelinesChannel(guildId: string, channelId: string): boolean {
+	const channel = Channels.getChannel(channelId);
+	if (!channel || !isGuidelinesChannel(channel)) return false;
+	const guidelinesChannel = getGuidelinesChannel(guildId);
+	if (!guidelinesChannel || guidelinesChannel.id !== channelId) return false;
+	const permissions = Permission.getChannelPermissions(channelId) ?? 0n;
+	return (permissions & Permissions.SEND_MESSAGES) !== Permissions.SEND_MESSAGES;
+}
+
+/**
  * True for a forum category and every channel inside it. The sidebar filters these out of the raw
  * channel list so the forum is reached only through the "Forum" item / the /forum route; the
  * channels stay fully accessible by URL, which is how opening a post works.

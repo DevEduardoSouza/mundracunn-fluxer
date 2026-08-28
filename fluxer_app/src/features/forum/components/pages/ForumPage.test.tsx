@@ -31,14 +31,23 @@ vi.mock('@app/features/forum/utils/ForumChannelDiscovery', () => ({getForumCateg
 vi.mock('@app/features/forum/components/ForumToolbar', () => ({
 	ForumToolbar: () => <div data-testid="stub-toolbar" />,
 }));
+vi.mock('@app/features/forum/components/ForumGuidelinesBanner', () => ({
+	ForumGuidelinesBanner: () => <div data-testid="stub-guidelines" />,
+}));
 vi.mock('@app/features/forum/components/ForumPostList', () => ({
 	ForumPostList: ({
 		viewMode,
 		activePosts,
+		olderPosts,
 	}: {
 		viewMode: string;
 		activePosts: ReadonlyArray<unknown>;
-	}) => <div data-testid="stub-list">{`${viewMode}:${activePosts.length}`}</div>,
+		olderPosts: ReadonlyArray<unknown>;
+	}) => (
+		<div data-testid="stub-list">
+			{olderPosts.length > 0 ? `${viewMode}:${activePosts.length}:${olderPosts.length}` : `${viewMode}:${activePosts.length}`}
+		</div>
+	),
 }));
 vi.mock('@app/features/forum/state/ForumCovers', () => ({
 	default: {reset: vi.fn(), getIsIndexing: vi.fn(() => false)},
@@ -47,6 +56,7 @@ vi.mock('@app/features/forum/state/ForumCovers', () => ({
 const forumState = {
 	viewMode: 'list' as 'list' | 'grid',
 	activePosts: [] as ReadonlyArray<unknown>,
+	olderPosts: [] as ReadonlyArray<unknown>,
 	postChannelIds: [] as ReadonlyArray<string>,
 };
 vi.mock('@app/features/forum/state/Forum', () => ({
@@ -55,7 +65,7 @@ vi.mock('@app/features/forum/state/Forum', () => ({
 		loadPrefs: vi.fn(),
 		reset: vi.fn(),
 		getActivePosts: () => forumState.activePosts,
-		getOlderPosts: () => [],
+		getOlderPosts: () => forumState.olderPosts,
 		getViewMode: () => forumState.viewMode,
 		getGuildPostChannelIds: () => forumState.postChannelIds,
 	},
@@ -99,6 +109,7 @@ async function mount(): Promise<HTMLDivElement> {
 beforeEach(() => {
 	forumState.viewMode = 'list';
 	forumState.activePosts = [];
+	forumState.olderPosts = [];
 	forumState.postChannelIds = [];
 	getForumCategoriesMock.mockReturnValue([]);
 });
@@ -134,6 +145,21 @@ describe('ForumPage', () => {
 		const container = await mount();
 		expect(container.querySelector('[data-testid="stub-toolbar"]')).not.toBeNull();
 		expect(container.querySelector('[data-testid="stub-list"]')!.textContent).toBe('list:2');
+	});
+
+	it('shows the guidelines banner alongside the toolbar, and not before the forum exists', async () => {
+		expect((await mount()).querySelector('[data-testid="stub-guidelines"]')).toBeNull();
+		getForumCategoriesMock.mockReturnValue([{id: 'cat'}]);
+		expect((await mount()).querySelector('[data-testid="stub-guidelines"]')).not.toBeNull();
+	});
+
+	it('hands the older-posts group to the list so it can render the collapsed section', async () => {
+		getForumCategoriesMock.mockReturnValue([{id: 'cat'}]);
+		forumState.postChannelIds = ['c1', 'c2'];
+		forumState.activePosts = [{}];
+		forumState.olderPosts = [{}, {}];
+		const container = await mount();
+		expect(container.querySelector('[data-testid="stub-list"]')!.textContent).toBe('list:1:2');
 	});
 
 	it('passes the persisted gallery view mode through to the list', async () => {

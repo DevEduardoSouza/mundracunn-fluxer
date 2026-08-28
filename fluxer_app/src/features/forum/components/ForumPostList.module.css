@@ -44,6 +44,45 @@
 	color: var(--text-primary-muted);
 }
 
+.olderToggle {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	/* Full-width row so the whole heading is the touch target, 44px tall on touch screens. */
+	width: 100%;
+	min-height: 2.75rem;
+	padding: 0.25rem 0.25rem;
+	border-radius: 0.25rem;
+	background: none;
+	border: none;
+	cursor: pointer;
+	font: inherit;
+	color: inherit;
+	text-align: left;
+	text-transform: inherit;
+	letter-spacing: inherit;
+}
+
+.olderToggle:hover {
+	color: var(--text-primary);
+}
+
+.olderToggle:focus-visible {
+	outline: 0.125rem solid var(--focus-primary);
+	outline-offset: 0.125rem;
+}
+
+.olderCaret {
+	flex-shrink: 0;
+	transition: transform 0.15s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.olderCaret {
+		transition: none;
+	}
+}
+
 .emptyText {
 	margin: 2rem 0;
 	text-align: center;

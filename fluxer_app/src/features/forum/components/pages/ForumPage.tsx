@@ -3,6 +3,7 @@
 import {ChannelHeader} from '@app/features/channel/components/ChannelHeader';
 import {ChannelViewScaffold} from '@app/features/channel/components/channel_view/ChannelViewScaffold';
 import * as ForumCoverCommands from '@app/features/forum/commands/ForumCoverCommands';
+import {ForumGuidelinesBanner} from '@app/features/forum/components/ForumGuidelinesBanner';
 import {ForumPostList} from '@app/features/forum/components/ForumPostList';
 import {ForumToolbar} from '@app/features/forum/components/ForumToolbar';
 import styles from '@app/features/forum/components/pages/ForumPage.module.css';
@@ -97,6 +98,11 @@ export const ForumPage: React.FC<ForumPageProps> = observer(({guildId}) => {
 			chatArea={
 				<div className={styles.chatArea} data-flx="forum.forum-page.chat-area">
 					{hasForumStructure && <ForumToolbar guildId={guildId} data-flx="forum.forum-page.toolbar" />}
+					{hasForumStructure && (
+						<div className={styles.guidelines} data-flx="forum.forum-page.guidelines">
+							<ForumGuidelinesBanner guildId={guildId} data-flx="forum.forum-page.guidelines-banner" />
+						</div>
+					)}
 					{hasForumStructure && hasAnyPosts ? (
 						<ForumPostList
 							guildId={guildId}
