@@ -74,8 +74,10 @@ const ChannelCommands = await import('@app/features/channel/commands/ChannelComm
 const MessageCommands = await import('@app/features/messaging/commands/MessageCommands');
 const NavigationCommands = await import('@app/features/navigation/commands/NavigationCommands');
 const ModalCommands = await import('@app/features/ui/commands/ModalCommands');
+const ForumChannelDiscovery = await import('@app/features/forum/utils/ForumChannelDiscovery');
 const ForumPostCommands = await import('@app/features/forum/commands/ForumPostCommands');
 const {ForumCreatePostModal} = await import('@app/features/forum/components/ForumCreatePostModal');
+const {Permissions} = await import('@fluxer/constants/src/ChannelConstants');
 
 import {act} from 'react';
 import {createRoot, type Root} from 'react-dom/client';
@@ -157,6 +159,38 @@ describe('ForumPostCommands.createForumPost — order of calls', () => {
 		expect(updateMock.mock.calls[0][1]).toEqual({topic: 'Meu Estudo\n#pintura'});
 		expect(sendMock.mock.calls[0][1]).toMatchObject({content: 'primeira mensagem'});
 		expect(NavigationCommands.selectChannel).toHaveBeenCalledWith('guild-a', 'chan-new');
+	});
+
+	it('denies MANAGE_CHANNELS|MANAGE_ROLES to the student role so only the author can edit the post', async () => {
+		(ForumChannelDiscovery.getStudentRole as unknown as Mock).mockReturnValueOnce({id: 'role-aluno', name: 'Aluno'});
+
+		await ForumPostCommands.createForumPost({
+			guildId: 'guild-a',
+			categoryId: 'cat-forum',
+			authorId: 'user-a',
+			title: 'Estudo',
+			description: 'oi',
+			tags: [],
+		});
+
+		const overwrites = createMock.mock.calls[0][1].permission_overwrites as Array<{
+			id: string;
+			type: number;
+			allow: string;
+			deny: string;
+		}>;
+		expect(overwrites).toContainEqual({
+			id: 'user-a',
+			type: 1,
+			allow: Permissions.MANAGE_CHANNELS.toString(),
+			deny: '0',
+		});
+		expect(overwrites).toContainEqual({
+			id: 'role-aluno',
+			type: 0,
+			allow: '0',
+			deny: (Permissions.MANAGE_CHANNELS | Permissions.MANAGE_ROLES).toString(),
+		});
 	});
 
 	it('falls back to the title as the first message when there is no description', async () => {

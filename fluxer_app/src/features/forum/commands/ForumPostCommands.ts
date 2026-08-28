@@ -20,12 +20,18 @@ interface ForumOverwrite {
 }
 
 const MANAGE_CHANNELS_BIT = Permissions.MANAGE_CHANNELS.toString();
+// The student role gets MANAGE_CHANNELS *and* MANAGE_ROLES on the forum category (so the
+// create-with-overwrites call is allowed — see backend PR #18). Denying only MANAGE_CHANNELS on the
+// post channel would still let another student edit the post's overwrites via MANAGE_ROLES, so deny
+// both. Confirmed against the backend in prod.
+const STUDENT_ROLE_DENY_BIT = (Permissions.MANAGE_CHANNELS | Permissions.MANAGE_ROLES).toString();
 
 /**
  * Overwrites that make a student the sole editor of their own post:
  *  - the author (MEMBER) gets `allow MANAGE_CHANNELS` — they can rename/delete it;
- *  - the "student" role (ROLE) gets `deny MANAGE_CHANNELS` — every other student can still read and
- *    comment, but can't touch the post. Staff keep their guild-level permission.
+ *  - the "student" role (ROLE) gets `deny MANAGE_CHANNELS|MANAGE_ROLES` — every other student can
+ *    still read and comment, but can't touch the post or its permissions. Staff keep their
+ *    guild-level permission.
  * If the class has no student role, the deny is simply omitted.
  */
 function buildForumPostOverwrites(guildId: string, authorId: string): Array<ForumOverwrite> {
@@ -34,7 +40,7 @@ function buildForumPostOverwrites(guildId: string, authorId: string): Array<Foru
 	];
 	const studentRole = getStudentRole(guildId);
 	if (studentRole && studentRole.id !== authorId) {
-		overwrites.push({id: studentRole.id, type: ChannelOverwriteTypes.ROLE, allow: '0', deny: MANAGE_CHANNELS_BIT});
+		overwrites.push({id: studentRole.id, type: ChannelOverwriteTypes.ROLE, allow: '0', deny: STUDENT_ROLE_DENY_BIT});
 	}
 	return overwrites;
 }
