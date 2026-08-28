@@ -355,7 +355,7 @@ msgstr "{count, plural, one {# סימנייה} other {# סימניות}}"
 msgid "{count, plural, one {# community found} other {# communities found}}"
 msgstr "{count, plural, one {# קהילה נמצאה} other {# קהילות נמצאו}}"
 
-#: src/features/app/components/layout/GuildsLayout.tsx:902
+#: src/features/app/components/layout/GuildsLayout.tsx:907
 msgid "{count, plural, one {# community is temporarily unavailable due to a flux capacitor malfunction.} other {# communities are temporarily unavailable due to a flux capacitor malfunction.}}"
 msgstr "{count, plural, one {# קהילה אינה זמינה באופן זמני עקב תקלה בקבלן השטף.} other {# קהילות אינן זמינות באופן זמני עקב תקלה בקבלן השטף.}}"
 
@@ -378,8 +378,6 @@ msgstr "{count, plural, one {# אימוג'י} other {# אימוג'יז}}"
 msgid "{count, plural, one {# gift} other {# gifts}}"
 msgstr "{count, plural, one {# מתנה} other {# מתנות}}"
 
-#. Slowmode duration expressed in hours, shown on the channel settings slowmode slider.
-#: src/features/channel/components/modals/channel_tabs/channel_overview_tab/SlowmodeControl.tsx:41
 #: src/features/channel/components/modals/GroupInvitesBottomSheet.tsx:139
 msgid "{count, plural, one {# hour} other {# hours}}"
 msgstr "{count, plural, one {# שעה} other {# שעות}}"
@@ -396,11 +394,6 @@ msgstr "{count, plural, one {# פריט} other {# פריטים}}"
 #: src/features/user/components/modals/user_profile_modal/MutualGroupItem.tsx:26
 msgid "{count, plural, one {# member} other {# members}}"
 msgstr "{count, plural, one {# חבר} other {# חברים}}"
-
-#. Slowmode duration expressed in minutes, shown on the channel settings slowmode slider.
-#: src/features/channel/components/modals/channel_tabs/channel_overview_tab/SlowmodeControl.tsx:37
-msgid "{count, plural, one {# minute} other {# minutes}}"
-msgstr "{count, plural, one {# דקה} other {# דקות}}"
 
 #: src/features/channel/components/direct_message/DMWelcomeSection.tsx:246
 msgid "{count, plural, one {# mutual community} other {# mutual communities}}"
@@ -433,9 +426,7 @@ msgstr "{count, plural, one {# מגיב} other {# מגיבים}}"
 msgid "{count, plural, one {# saved media item} other {# saved media items}}"
 msgstr "{count, plural, one {# פריט מדיה שמור} other {# פריטי מדיה שמורים}}"
 
-#. Slowmode duration expressed in seconds, shown on the channel settings slowmode slider.
 #: src/features/channel/components/channel_header_components/developer_tools/MockingMenu.tsx:183
-#: src/features/channel/components/modals/channel_tabs/channel_overview_tab/SlowmodeControl.tsx:33
 msgid "{count, plural, one {# second} other {# seconds}}"
 msgstr "{count, plural, one {# שנייה} other {# שניות}}"
 
@@ -781,7 +772,7 @@ msgid "{fps} FPS"
 msgstr "{fps} פריימים לשנייה"
 
 #. Short label in the app layout channel list content. Preserve {guildName}; it is inserted by code.
-#: src/features/app/components/layout/ChannelListContent.tsx:73
+#: src/features/app/components/layout/ChannelListContent.tsx:81
 msgid "{guildName} channels"
 msgstr "ערוצי {guildName}"
 
@@ -908,7 +899,7 @@ msgid "{memberCount} {rawMemberCount, plural, one {member} other {members}}"
 msgstr "{memberCount} {rawMemberCount, plural, one {חבר} other {חברים}}"
 
 #. Generic aria-label for an unread-mentions badge. Preserve {mentionCount}.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:799
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:807
 msgid "{mentionCount} mentions"
 msgstr "{mentionCount} אזכורים"
 
@@ -2014,6 +2005,13 @@ msgstr "מדבקה"
 msgid "A symphony of clacking keys is underway..."
 msgstr "מקלדת רועשת בפעולה..."
 
+#. Validation error when the forum post title is empty.
+#. Validation error when the forum post title is empty.
+#: src/features/forum/components/ForumCreatePostModal.tsx:34
+#: src/features/forum/components/ForumEditPostModal.tsx:27
+msgid "A title is required."
+msgstr ""
+
 #. Description for has:link. Sentence case, no trailing punctuation.
 #: src/features/search/utils/SearchUtils.ts:29
 msgid "a URL typed in the message text"
@@ -2271,6 +2269,11 @@ msgstr "לחיצת הפעלה"
 msgid "Active"
 msgstr "פעיל"
 
+#. Relative last-activity label on a forum post row. {time} is a short relative time like "5m" or "3d".
+#: src/features/forum/components/ForumPostRow.tsx:31
+msgid "active {time}"
+msgstr ""
+
 #: src/features/app/components/floating/UserAreaPopout.tsx:355
 #: src/features/auth/components/accounts/AccountRow.tsx:186
 msgid "Active account"
@@ -2311,7 +2314,7 @@ msgstr "מנוי חודשי פעיל (ביטול מתוזמן)"
 #. Short label in the appearance tab. Keep it concise.
 #. Short label in the inline. Keep it concise.
 #. Status label indicating a user is currently active.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:743
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:751
 #: src/features/user/components/modals/tabs/appearance_tab/AppearanceTabInline.tsx:43
 #: src/features/user/components/modals/tabs/AppearanceTab.tsx:51
 #: src/features/user/components/settings_utils/section_registry/AppearanceSections.ts:430
@@ -2433,7 +2436,11 @@ msgstr "הוספת קיצור דרך"
 msgid "Add a tag"
 msgstr "הוספת תגית"
 
+#. Placeholder for the tag input in the edit forum post modal.
+#. Placeholder for the tag input in the new forum post modal.
 #. Placeholder in the tag input on the Discovery application form. "Enter" refers to the Enter/Return key.
+#: src/features/forum/components/ForumCreatePostModal.tsx:58
+#: src/features/forum/components/ForumEditPostModal.tsx:43
 #: src/features/guild/components/modals/guild_tabs/GuildDiscoveryTab.tsx:137
 msgid "Add a tag and press Enter"
 msgstr "הוסף תגית ולחץ על Enter"
@@ -2509,7 +2516,7 @@ msgid "Add bot to a destination"
 msgstr "הוספת בוט ליעד"
 
 #. Generic action label that opens the create-channel flow from inside a category or sidebar.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:510
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:518
 msgid "Add channel"
 msgstr "הוספת ערוץ"
 
@@ -2600,7 +2607,7 @@ msgstr "הוספת מפתח גישה"
 
 #. Generic action label that opens the reaction picker for a message.
 #. Keyboard shortcut action label shown in the shortcuts list and keybind editor. Keep short, sentence case.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:522
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:530
 #: src/features/input/state/input_keybind/shared.ts:17
 msgid "Add reaction"
 msgstr "הוספת ריאקציה"
@@ -2755,7 +2762,7 @@ msgid "Added to favorite GIFs"
 msgstr "נוסף לגיפים המועדפים"
 
 #. Toast confirming an item was added to the favorites list.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:615
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:623
 msgid "Added to favorites"
 msgstr "נוסף למועדפים"
 
@@ -2847,7 +2854,7 @@ msgstr "מנהלים השהו הזמנות – אינך יכול/ה להצטרף
 #. Disclosure button label in the voice connection status popout. Reveals technical bandwidth and network stats.
 #. User settings tab for power-user and experimental application preferences.
 #. Voice participant context menu submenu label for IDs and diagnostics.
-#: src/features/channel/components/modals/channel_tabs/ChannelOverviewTab.tsx:337
+#: src/features/channel/components/modals/channel_tabs/ChannelOverviewTab.tsx:336
 #: src/features/guild/components/modals/guild_tabs/guild_overview_tab/index.tsx:28
 #: src/features/ui/action_menu/items/VoiceParticipantMenuData.tsx:178
 #: src/features/user/components/settings_utils/SettingsConstants.tsx:145
@@ -3747,7 +3754,7 @@ msgid "App zoom"
 msgstr "זום של האפליקציה"
 
 #. Setting label for the global UI zoom level.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:775
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:783
 msgid "App zoom level"
 msgstr "רמת זום של האפליקציה"
 
@@ -5258,7 +5265,7 @@ msgstr "הגעת למגבלת הסימניות"
 #. Generic action label that saves a message to the bookmarks list.
 #. Keyboard shortcut action label shown in the shortcuts list and keybind editor. Keep short, sentence case.
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:526
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:534
 #: src/features/input/state/input_keybind/shared.ts:265
 #: src/features/user/components/settings_utils/search_index/KeybindsIndex.ts:66
 msgid "Bookmark message"
@@ -5594,6 +5601,13 @@ msgstr "קנו מתנת {premiumProductName} מהלשונית {premiumProductNam
 msgid "Buy gift"
 msgstr "קניית מתנה"
 
+#. Byline under a forum post card title. {author} is the display name of the post owner.
+#. Byline under a forum post title. {author} is the display name of the post owner.
+#: src/features/forum/components/ForumPostCard.tsx:19
+#: src/features/forum/components/ForumPostRow.tsx:27
+msgid "by {author}"
+msgstr ""
+
 #: src/features/guild/components/modals/add_guild_modal/GuildCreateForm.tsx:338
 #: src/features/guild/components/modals/add_guild_modal/TemplateImportForm.tsx:653
 msgid "By creating a community, you agree to follow and uphold the <0>{PRODUCT_NAME} community guidelines</0>."
@@ -5683,7 +5697,7 @@ msgstr "שיחות"
 #. Generic voice/video setting label for the active camera device.
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
 #. Short label in the video tab. Keep it concise.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:719
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:727
 #: src/features/user/components/modals/tabs/UserVideoTab.tsx:70
 #: src/features/user/components/settings_utils/section_registry/VoiceVideoSections.ts:157
 #: src/features/voice/utils/SettingsDeviceOptions.ts:23
@@ -5733,7 +5747,7 @@ msgstr "מצלמה כבויה"
 
 #. Generic action label that enables the local camera.
 #. Notification sound setting label. Sound played when the user turns their camera on in a call.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:723
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:731
 #: src/features/notification/utils/SoundLabels.ts:52
 msgid "Camera on"
 msgstr "מצלמה פועלת"
@@ -6063,7 +6077,7 @@ msgid "Category deleted"
 msgstr "הקטגוריה נמחקה"
 
 #. Short label in the app layout channel list content.
-#: src/features/app/components/layout/ChannelListContent.tsx:64
+#: src/features/app/components/layout/ChannelListContent.tsx:72
 msgid "Category full"
 msgstr "הקטגוריה מלאה"
 
@@ -6144,7 +6158,7 @@ msgid "Change emoji"
 msgstr "שינוי אימוג'י"
 
 #. Generic action label that opens the friend-nickname edit flow.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:538
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:546
 msgid "Change friend nickname"
 msgstr "שינוי כינוי של חבר"
 
@@ -6376,7 +6390,7 @@ msgid "Channel actions"
 msgstr "פעולות ערוץ"
 
 #. Toast confirming a channel was added to the favorites list.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:791
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:799
 msgid "Channel added to favorites"
 msgstr "הערוץ נוסף למועדפים"
 
@@ -6397,14 +6411,14 @@ msgid "Channel created"
 msgstr "ערוץ נוצר"
 
 #. Title of the developer-mode channel debug modal (distinct from the action label that opens it).
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:546
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:554
 msgid "Channel debug"
 msgstr "ניפוי באגים בערוץ"
 
 #. Audit log entry label. Past-tense action describing that a channel was deleted.
 #. Toast confirming a channel was successfully deleted.
 #: src/features/app/config/AuditLogConstants.ts:20
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:759
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:767
 msgid "Channel deleted"
 msgstr "הערוץ נמחק"
 
@@ -6509,7 +6523,7 @@ msgid "Channel record"
 msgstr "תיעוד ערוץ"
 
 #. Toast confirming a channel was removed from the favorites list.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:787
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:795
 msgid "Channel removed from favorites"
 msgstr "הערוץ הוסר מהמועדפים"
 
@@ -6546,8 +6560,8 @@ msgstr "סוג ערוץ: {0}."
 
 #. Audit log entry label. Past-tense action describing that a channel was edited.
 #: src/features/app/config/AuditLogConstants.ts:16
-#: src/features/channel/components/modals/channel_tabs/ChannelOverviewTab.tsx:207
-#: src/features/channel/components/modals/channel_tabs/ChannelOverviewTab.tsx:226
+#: src/features/channel/components/modals/channel_tabs/ChannelOverviewTab.tsx:206
+#: src/features/channel/components/modals/channel_tabs/ChannelOverviewTab.tsx:225
 msgid "Channel updated"
 msgstr "הערוץ עודכן"
 
@@ -6560,6 +6574,13 @@ msgstr "ערוץ:"
 #: src/features/guild/components/modals/guild_tabs/GuildAuditLogTabUtils.tsx:313
 msgid "Channel: {0}."
 msgstr "ערוץ: {0}."
+
+#. Preview showing the channel name the post will get after renaming. {name} is the sanitized slug.
+#. Preview under the title field showing the channel name the post will get. {name} is the sanitized slug.
+#: src/features/forum/components/ForumCreatePostModal.tsx:42
+#: src/features/forum/components/ForumEditPostModal.tsx:35
+msgid "Channel: #{name}"
+msgstr ""
 
 #. Section header in the message search popout listing matching channels for the in: filter. Title Case.
 #. Section heading in the channel and chat autocomplete for channel suggestions.
@@ -7209,7 +7230,7 @@ msgid "Clear quick CSS?"
 msgstr "לנקות את ה-CSS המהיר?"
 
 #. Generic short button / icon label that clears the active search query.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:514
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:522
 #: src/features/theme_studio/sections/TokensSection.tsx:204
 msgid "Clear search"
 msgstr "נקה חיפוש"
@@ -7437,6 +7458,11 @@ msgstr "סגירה"
 #: src/features/user/components/settings_utils/section_registry/AccountSecuritySections.ts:117
 msgid "Close account"
 msgstr "סגירת חשבון"
+
+#. Accessible label for the button that closes the story comments panel.
+#: src/features/social_home/components/SocialHomeStoryCommentsPanel.tsx:28
+msgid "Close comments"
+msgstr ""
 
 #. Accessible label and tooltip for the close-DM button on a DM list row.
 #: src/features/channel/components/direct_message/DMListItem.tsx:83
@@ -7746,6 +7772,16 @@ msgstr "מופרד בפסיקים"
 msgid "Commands"
 msgstr "פקודות"
 
+#. Button on a class-feed card that deep-links to the original post in its channel to comment on it.
+#: src/features/social_home/components/SocialHomeFeedList.tsx:27
+msgid "Comment"
+msgstr ""
+
+#. Header title of the story comments panel opened alongside the fullscreen story viewer.
+#: src/features/social_home/components/SocialHomeStoryCommentsPanel.tsx:24
+msgid "Comments"
+msgstr ""
+
 #. Helper text in the forward modal explaining why the optional comment field is disabled when at least one selected target has slowmode active.
 #: src/features/messaging/components/modals/ForwardModal.tsx:63
 msgid "Comments are disabled because one or more selected channels have slowmode on. The comment would be blocked by slowmode right after the forward."
@@ -7842,7 +7878,7 @@ msgid "Community debug"
 msgstr "ניפוי באגים של קהילה"
 
 #. Notification level option indicating the channel inherits the community default.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:763
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:771
 msgid "Community default"
 msgstr "ברירת מחדל של קהילה"
 
@@ -8494,7 +8530,7 @@ msgstr "ניתן לפתוח תפריטי הקשר בלחיצה שמאלית (ע�
 #: src/features/auth/components/pages/oauth_authorize_page/OAuthAccountStep.tsx:34
 #: src/features/auth/flow/HandoffApprovalFlow.tsx:119
 #: src/features/connection/components/modals/AddConnectionModal.tsx:384
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:711
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:719
 #: src/features/user/components/modals/FluxerTagChangeModal.tsx:397
 #: src/features/user/components/modals/tabs/AuthorizedAppsTab.tsx:181
 msgid "Continue"
@@ -8705,7 +8741,7 @@ msgid "Copy code"
 msgstr "העתק קוד"
 
 #. Developer-mode action that copies a community snowflake/ID to the clipboard.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:727
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:735
 msgid "Copy community ID"
 msgstr "העתקת מזהה קהילה"
 
@@ -8803,7 +8839,7 @@ msgid "Copy invite URL"
 msgstr "העתקת קישור הזמנה"
 
 #. Generic action label that copies a URL to the clipboard.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:739
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:747
 #: src/features/user/components/modals/tabs/component_gallery_tab/ComponentGalleryTabButtonsTab.tsx:330
 #: src/features/user/components/modals/tabs/component_gallery_tab/index.tsx:145
 msgid "Copy link"
@@ -8836,7 +8872,7 @@ msgstr "העתק הודעה"
 
 #. Developer-mode action that copies a message snowflake/ID to the clipboard.
 #. Keyboard shortcut action label shown in the shortcuts list and keybind editor. Keep short, sentence case.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:731
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:739
 #: src/features/input/state/input_keybind/shared.ts:277
 msgid "Copy message ID"
 msgstr "העתקת מזהה הודעה"
@@ -8844,7 +8880,7 @@ msgstr "העתקת מזהה הודעה"
 #. Generic action label that copies a permalink to the selected message.
 #. IAR modal: quick-action card title.
 #. Keyboard shortcut action label shown in the shortcuts list and keybind editor. Keep short, sentence case.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:518
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:526
 #: src/features/input/state/input_keybind/shared.ts:273
 #: src/features/moderation/components/report_modal/IARModalCopy.ts:415
 msgid "Copy message link"
@@ -8912,7 +8948,7 @@ msgid "Copy user ID"
 msgstr "העתקת מזהה משתמש"
 
 #. Action that copies a user username (handle) to the clipboard.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:735
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:743
 msgid "Copy username"
 msgstr "העתקת שם משתמש"
 
@@ -9089,6 +9125,16 @@ msgstr "לא ניתן ליצור קישור הזמנה"
 msgid "Couldn't create role"
 msgstr "לא ניתן ליצור תפקיד"
 
+#. Error shown when the one-click class channel setup fails.
+#: src/features/social_home/components/pages/SocialHomePage.tsx:52
+msgid "Couldn't create the class channels. Try again."
+msgstr ""
+
+#. Error shown when creating a forum post fails.
+#: src/features/forum/components/ForumCreatePostModal.tsx:74
+msgid "Couldn't create the post. Try again."
+msgstr ""
+
 #. Title of the generic fallback error modal shown when creating a sticker fails.
 #: src/features/expressions/components/modals/AddGuildStickerModal.tsx:31
 msgid "Couldn't create this sticker"
@@ -9211,10 +9257,20 @@ msgstr "לא ניתן לטעון אפליקציות מורשות"
 msgid "Couldn't load bans"
 msgstr "לא ניתן היה לטעון את רשימת החסימות"
 
+#. Shown when fetching a story’s comments fails.
+#: src/features/social_home/components/SocialHomeStoryCommentTree.tsx:28
+msgid "Couldn't load comments."
+msgstr ""
+
 #. Error modal title shown when fetching invites fails.
 #: src/features/invite/components/alerts/InvitesLoadFailedModal.tsx:9
 msgid "Couldn't load invites"
 msgstr "לא ניתן לטעון הזמנות"
+
+#. Shown when fetching the class feed fails.
+#: src/features/social_home/components/pages/SocialHomePage.tsx:36
+msgid "Couldn't load the feed."
+msgstr ""
 
 #: src/features/user/components/modals/tabs/applications_tab/ApplicationDetail.tsx:574
 msgid "Couldn't load this application"
@@ -9343,6 +9399,11 @@ msgstr "לא ניתן היה להריץ את הפקודה: {detail}"
 msgid "Couldn't save entrance sound"
 msgstr "לא ניתן היה לשמור את צליל הכניסה"
 
+#. Error shown when saving forum post edits fails.
+#: src/features/forum/components/ForumEditPostModal.tsx:55
+msgid "Couldn't save the post. Try again."
+msgstr ""
+
 #. Title of the error modal shown when sending a friend request fails.
 #: src/features/relationship/components/alerts/RelationshipErrorModalUtils.tsx:11
 msgid "Couldn't send friend request"
@@ -9354,7 +9415,7 @@ msgid "Couldn't send invite"
 msgstr "לא ניתן היה לשלוח הזמנה"
 
 #. Toast shown when sending an invite (group DM or community) fails.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:703
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:711
 msgid "Couldn't send invite. Try again."
 msgstr "לא ניתן לשלוח הזמנה. יש לנסות שוב."
 
@@ -9615,6 +9676,11 @@ msgstr "יצירת קטגוריה"
 msgid "Create channel"
 msgstr "יצירת ערוץ"
 
+#. Button that creates the conventional Home channels (stories, professor feed, sketchbooks).
+#: src/features/social_home/components/pages/SocialHomePage.tsx:48
+msgid "Create class channels"
+msgstr ""
+
 #. Generic action or title label for creating a new community.
 #: src/features/i18n/utils/CommonMessageDescriptors.ts:156
 msgid "Create community"
@@ -9691,6 +9757,11 @@ msgstr "יצירת קישור חדש"
 #: src/features/input/state/input_keybind/shared.ts:121
 msgid "Create or join a community"
 msgstr "יצירה או הצטרפות לקהילה"
+
+#. Primary button in the new forum post modal.
+#: src/features/forum/components/ForumCreatePostModal.tsx:70
+msgid "Create post"
+msgstr ""
 
 #: src/features/guild/components/modals/guild_tabs/guild_roles_tab/MobileRoleList.tsx:48
 #: src/features/guild/components/modals/guild_tabs/guild_roles_tab/RoleSidebar.tsx:206
@@ -10175,7 +10246,7 @@ msgid "Custom warning text"
 msgstr "טקסט אזהרה מותאם אישית"
 
 #. Last "Custom…" option in dropdown menus that opens a custom-value picker.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:767
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:775
 msgid "Custom…"
 msgstr "מותאם אישית…"
 
@@ -10478,7 +10549,7 @@ msgstr "ניפוי באגים בהודעה"
 #. Channel details bottom sheet label or action (channel type, settings, toast, confirmation, or notification option).
 #. Developer-mode action that opens a user debug panel.
 #: src/features/channel/components/bottomsheets/channel_details_bottom_sheet/ChannelDetailsBottomSheetShared.ts:167
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:542
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:550
 msgid "Debug user"
 msgstr "ניפוי באגים של משתמש"
 
@@ -10701,7 +10772,7 @@ msgid "Delete application"
 msgstr "מחיקת יישום"
 
 #. Generic action label that removes an attachment from the upload tray / message.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:747
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:755
 msgid "Delete attachment"
 msgstr "מחיקת קובץ מצורף"
 
@@ -10803,6 +10874,11 @@ msgstr "מחיקת חבילה"
 #: src/features/user/components/modals/tabs/account_security_tab/SecurityTab.tsx:31
 msgid "Delete passkey"
 msgstr "מחיקת מפתח גישה"
+
+#. Destructive menu action that deletes a forum post (its channel).
+#: src/features/forum/components/ForumPostMenu.tsx:19
+msgid "Delete post"
+msgstr ""
 
 #. Button or menu action label in the application info section. Keep it concise. Keep the tone plain and specific.
 #: src/features/user/components/modals/tabs/applications_tab/application_detail/ApplicationInfoSection.tsx:56
@@ -10998,9 +11074,11 @@ msgid "Describe what your community is about"
 msgstr "תאר על מה הקהילה שלך"
 
 #. Generic form-field label for a free-form description.
+#. Label for the optional description field — becomes the first message of the post.
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
+#: src/features/forum/components/ForumCreatePostModal.tsx:46
 #: src/features/guild/components/modals/guild_tabs/GuildDiscoveryTab.tsx:415
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:498
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:506
 #: src/features/user/components/settings_utils/search_index/MyProfileIndex.ts:137
 msgid "Description"
 msgstr "תיאור"
@@ -11316,7 +11394,7 @@ msgstr "קלט ישיר"
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
 #: src/features/channel/components/bottomsheets/channel_details_bottom_sheet/ChannelDetailsBottomSheetShared.ts:14
 #: src/features/channel/components/channel_header_components/developer_tools/MockingMenu.tsx:398
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:562
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:570
 #: src/features/user/components/settings_utils/section_registry/SharedDescriptors.ts:85
 msgid "Direct message"
 msgstr "הודעה פרטית"
@@ -11801,7 +11879,7 @@ msgstr "הגדרות הודעות פרטיות ובקשות חברות"
 #. Channel details bottom sheet label or action (channel type, settings, toast, confirmation, or notification option).
 #. Generic success-toast label confirming that a DM channel was closed.
 #: src/features/channel/components/bottomsheets/channel_details_bottom_sheet/ChannelDetailsBottomSheetShared.ts:87
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:558
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:566
 msgid "DM closed"
 msgstr "ההתכתבות נסגרה"
 
@@ -11926,7 +12004,7 @@ msgstr "לא חוסם. אפשר לפתוח שוב מאוחר יותר."
 
 #. Generic form-field / table-column label for an internet domain.
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:771
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:779
 #: src/features/user/components/settings_utils/search_index/LinkedAccountsIndex.ts:28
 msgid "Domain"
 msgstr "דומיין"
@@ -12446,7 +12524,7 @@ msgstr "עריכת מדיה"
 
 #. Generic action label that opens the message edit composer.
 #. Keyboard shortcut action label shown in the shortcuts list and keybind editor. Keep short, sentence case.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:707
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:715
 #: src/features/input/state/input_keybind/shared.ts:9
 msgid "Edit message"
 msgstr "עריכת הודעה"
@@ -12467,6 +12545,13 @@ msgstr "עריכה או מחיקה של אימוג'י ומדבקות שנוצר�
 #: src/features/permissions/utils/PermissionLabelDescriptors.ts:118
 msgid "Edit overwrites for roles and members in this channel."
 msgstr "ערוך עקיפות עבור תפקידים וחברים בערוץ זה."
+
+#. Menu action that opens the edit modal for a forum post (title and tags).
+#. Title of the modal where the author edits their forum post title and tags.
+#: src/features/forum/components/ForumEditPostModal.tsx:19
+#: src/features/forum/components/ForumPostMenu.tsx:15
+msgid "Edit post"
+msgstr ""
 
 #: src/features/app/components/floating/UserAreaPopout.tsx:747
 #: src/features/app/components/pages/YouPage.tsx:151
@@ -13051,7 +13136,7 @@ msgstr "הפעלת התראות דחיפה בנייד"
 
 #. Generic action label / toggle that turns on push or desktop notifications.
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:779
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:787
 #: src/features/user/components/settings_utils/section_registry/NotificationsSections.ts:127
 msgid "Enable notifications"
 msgstr "הפעלת התראות"
@@ -13280,7 +13365,7 @@ msgstr "אנגלית (ארצות הברית)"
 #. Noise suppression option label (mobile voice settings). Enhanced engine (DeepFilterNet3).
 #. Noise suppression option label in the voice tab (neural filter). Keep it concise.
 #. Noise suppression option using the enhanced neural filter (DeepFilterNet3). Keep it concise.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:783
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:791
 #: src/features/user/components/modals/tabs/UserVoiceTab.tsx:86
 #: src/features/voice/components/bottomsheets/VoiceSettingsBottomSheets.tsx:51
 #: src/features/voice/components/voice_connection_status/AudioProcessingModal.tsx:47
@@ -14003,7 +14088,7 @@ msgid "Expression packs are not enabled on this instance. Contact your instance 
 msgstr "חבילות ביטויים אינן זמינות ביישום זה. לקבלת מידע נוסף, יש לפנות למנהל/ת היישום."
 
 #. Aria label for the expression picker category nav.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:751
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:759
 msgid "Expression picker categories"
 msgstr "קטגוריות בורר הביטויים"
 
@@ -14858,6 +14943,11 @@ msgstr "עקבו אחרינו ב- {blueskyProviderName}"
 msgid "Follow voice input"
 msgstr "מעקב אחר קלט קולי"
 
+#. Tooltip on the bell icon shown next to a forum post the current user follows.
+#: src/features/forum/components/ForumPostRow.tsx:23
+msgid "Following"
+msgstr ""
+
 #. Label in the sounds. Preserve {effectiveValue}; it is inserted by code.
 #: src/features/user/components/modals/tabs/notifications_tab/NotificationsTabSounds.tsx:83
 msgid "Following master • {effectiveValue}%"
@@ -15055,6 +15145,16 @@ msgstr "שכחתי סיסמה"
 #: src/features/auth/flow/AuthLoginLayout.tsx:64
 msgid "Forgot your password?"
 msgstr "שכחת את הסיסמה?"
+
+#. Generic header / tab / sidebar label for a guild forum page (aggregated forum-category discussion channels).
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:498
+msgid "Forum"
+msgstr ""
+
+#. Short label in the app layout channel list content for the selected Forum sidebar item.
+#: src/features/app/components/layout/ChannelListContent.tsx:93
+msgid "Forum, selected"
+msgstr ""
 
 #. has:forward chip label. Always lowercase; matches the typed query value 1:1.
 #: src/features/search/utils/SearchUtils.ts:89
@@ -15359,6 +15459,18 @@ msgstr "כבה והפעל מחדש את {productName} כדי ש-macOS יחיל �
 msgid "Gain control"
 msgstr "קבל שליטה"
 
+#. Forum view option: grid of cards with a large cover image.
+#. Generic header / tab label for a guild social home (class feed) page.
+#: src/features/forum/components/ForumToolbar.tsx:70
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:494
+msgid "Gallery"
+msgstr ""
+
+#. Short label in the app layout channel list content.
+#: src/features/app/components/layout/ChannelListContent.tsx:89
+msgid "Gallery, selected"
+msgstr ""
+
 #. Button label that starts native Linux game capture through the OBS-compatible hook path.
 #: src/features/voice/components/modals/ScreenSharePickerModal.tsx:165
 msgid "Game capture"
@@ -15449,7 +15561,7 @@ msgid "Germany"
 msgstr "גרמניה"
 
 #. Generic upsell CTA button to start the Plutonium purchase flow. Preserve {premiumProductName}.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:795
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:803
 msgid "Get {premiumProductName}"
 msgstr "קבלו את {premiumProductName}"
 
@@ -15708,6 +15820,11 @@ msgstr "תן לכולם במופע הזה את מגבלות הפרימיום ה�
 #: src/features/app/components/alerts/RoleNameBlankModal.tsx:12
 msgid "Give the role a name before saving."
 msgstr "יש לתת שם לתפקיד לפני השמירה."
+
+#. Placeholder for the title field in the new forum post modal.
+#: src/features/forum/components/ForumCreatePostModal.tsx:30
+msgid "Give your post a title"
+msgstr ""
 
 #. Randomly selected welcome message that appears as a system message when a user joins a community. Plural placeholder is the new member username. Tone is friendly and warm; keep variety across these strings.
 #: src/features/messaging/utils/SystemMessageUtils.tsx:46
@@ -16368,7 +16485,7 @@ msgid "Hide expiry footnotes"
 msgstr "הסתר הערות תפוגה"
 
 #. Toggle / action label that collapses or hides the favorites section.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:695
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:703
 msgid "Hide favorites"
 msgstr "הסתרת מועדפים"
 
@@ -16754,7 +16871,7 @@ msgstr "זהות"
 
 #. Generic presence-status label indicating the user is idle / AFK.
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:639
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:647
 #: src/features/user/components/settings_utils/search_index/NotificationsIndex.ts:46
 msgid "Idle"
 msgstr "לא פעיל"
@@ -17289,7 +17406,7 @@ msgstr "יש לכלול את מזהה הקהילה."
 #. Generic label for an incoming voice or video call.
 #. Notification sound setting label. Ringtone for an incoming DM or group DM call.
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:502
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:510
 #: src/features/notification/utils/SoundLabels.ts:48
 #: src/features/user/components/settings_utils/section_registry/NotificationsSections.ts:171
 msgid "Incoming call"
@@ -17899,7 +18016,7 @@ msgstr "מזמין:"
 #. Generic section / tab label for the invites list.
 #: src/features/channel/components/modals/channel_tabs/ChannelInvitesTab.tsx:191
 #: src/features/guild/components/modals/guild_tabs/GuildInvitesTab.tsx:53
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:683
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:691
 msgid "Invites"
 msgstr "הזמנות"
 
@@ -18089,7 +18206,7 @@ msgid "Join call"
 msgstr "הצטרף לשיחה"
 
 #. Generic action label that accepts a community invite / joins a community.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:679
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:687
 msgid "Join community"
 msgstr "הצטרפות לקהילה"
 
@@ -18176,7 +18293,7 @@ msgid "Joined {productName}"
 msgstr "הצטרף/ה ל-{productName}"
 
 #. Generic short action label that scrolls/navigates to a specific message.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:494
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:502
 #: src/features/messaging/components/popouts/RecentMentionsContent.tsx:204
 msgid "Jump"
 msgstr "קפיצה"
@@ -18414,7 +18531,7 @@ msgid "Kick a member from this community."
 msgstr "להוציא משתמש מהקהילה הזו."
 
 #. Moderation action label that removes a member from a community without banning.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:675
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:683
 msgid "Kick member"
 msgstr "להוציא משתמש"
 
@@ -18512,6 +18629,11 @@ msgstr "גרף השהיה"
 msgid "Later"
 msgstr "אחר כך"
 
+#. Alt text for the cover image of a forum post (the most recent image posted in its channel).
+#: src/features/forum/components/ForumCover.tsx:12
+msgid "Latest image posted in this forum thread"
+msgstr ""
+
 #. Country name. EU member state in the illegal-content report country dropdown.
 #: src/features/moderation/components/report/OptionDescriptors.ts:171
 msgid "Latvia"
@@ -18565,7 +18687,7 @@ msgid "Leave call"
 msgstr "יציאה מהשיחה"
 
 #. Destructive action label that removes the current user from a community.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:671
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:679
 msgid "Leave community"
 msgstr "יציאה מהקהילה"
 
@@ -18927,6 +19049,11 @@ msgstr "ברירת מחדל של לינוקס"
 msgid "Linux package"
 msgstr "חבילת לינוקס"
 
+#. Forum view option: compact one-per-row list.
+#: src/features/forum/components/ForumToolbar.tsx:66
+msgid "List"
+msgstr ""
+
 #: src/features/guild/components/modals/guild_tabs/GuildDiscoveryTab.tsx:331
 msgid "List your community in Discovery so others can find and join it."
 msgstr "הצג את הקהילה שלך ב'גילוי' כדי שאחרים יוכלו למצוא אותה ולהצטרף אליה."
@@ -18963,6 +19090,11 @@ msgstr "בשידור חי"
 msgid "Live region"
 msgstr "אזור פעיל"
 
+#. Button at the bottom of a story’s comment tree that loads the next page of comments.
+#: src/features/social_home/components/SocialHomeStoryCommentTree.tsx:32
+msgid "Load more comments"
+msgstr ""
+
 #: src/features/user/components/modals/tabs/component_gallery_tab/ComponentGalleryTabButtonsTab.tsx:448
 msgid "Loading"
 msgstr "טוען"
@@ -18976,6 +19108,11 @@ msgstr "{productName} נטען."
 msgid "Loading banned users"
 msgstr "טוען משתמשים חסומים"
 
+#. Loading state shown while a story’s first page of comments is being fetched.
+#: src/features/social_home/components/SocialHomeStoryCommentTree.tsx:24
+msgid "Loading comments…"
+msgstr ""
+
 #. Screen-reader status text shown while Discovery communities are loading.
 #: src/features/discovery/discovery/DiscoveryPage.tsx:65
 msgid "Loading communities"
@@ -18985,6 +19122,11 @@ msgstr "טוען קהילות"
 #: src/features/auth/components/pages/oauth_authorize_page/OAuthCommunityStep.tsx:40
 msgid "Loading destinations…"
 msgstr "טוען יעדים…"
+
+#. Loading state shown while the class feed posts are being fetched.
+#: src/features/social_home/components/pages/SocialHomePage.tsx:28
+msgid "Loading feed…"
+msgstr ""
 
 #. Short label in the channel and chat embed image. Keep it concise.
 #: src/features/channel/components/embeds/media/EmbedImage.tsx:48
@@ -18999,6 +19141,13 @@ msgstr "טוען את הגדרות המופע"
 #: src/features/channel/components/modals/GroupInvitesBottomSheet.tsx:186
 msgid "Loading invites..."
 msgstr "טוען הזמנות..."
+
+#. Footer shown at the bottom of the class feed while the next page loads.
+#. Label on the load-more-comments button while the next page is being fetched.
+#: src/features/social_home/components/SocialHomeFeedList.tsx:35
+#: src/features/social_home/components/SocialHomeStoryCommentTree.tsx:36
+msgid "Loading more…"
+msgstr ""
 
 #. Placeholder text in the channel and chat embed gifv. Keep it concise.
 #: src/features/channel/components/embeds/media/EmbedGifv.tsx:72
@@ -19479,7 +19628,7 @@ msgstr "סמן כספוילר"
 
 #. Generic action label that flips a channel back to unread.
 #. Keyboard shortcut action label shown in the shortcuts list and keybind editor. Keep short, sentence case.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:667
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:675
 #: src/features/input/state/input_keybind/shared.ts:33
 msgid "Mark as unread"
 msgstr "סמן כבלתי נקרא"
@@ -20009,7 +20158,7 @@ msgid "Members without the {readMessageHistoryPermissionLabel} permission can vi
 msgstr "חברים ללא הרשאת {readMessageHistoryPermissionLabel} יכולים לראות הודעות שנשלחו לאחר תאריך זה."
 
 #. Short label in the app layout channel list content.
-#: src/features/app/components/layout/ChannelListContent.tsx:77
+#: src/features/app/components/layout/ChannelListContent.tsx:85
 msgid "Members, selected"
 msgstr "חברים, נבחרו"
 
@@ -20071,7 +20220,7 @@ msgstr "תפקיד מוזכר"
 #. Generic section / tab label for the mentions inbox.
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
 #: src/features/guild/components/modals/GuildNotificationSettingsModal.tsx:136
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:643
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:651
 #: src/features/user/components/settings_utils/section_registry/SharedDescriptors.ts:166
 msgid "Mentions"
 msgstr "אזכורים"
@@ -20978,7 +21127,7 @@ msgid "Mute calls"
 msgstr "השתקת שיחות"
 
 #. Action label that mutes notifications for a channel category.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:575
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:583
 msgid "Mute category"
 msgstr "השתקת קטגוריה"
 
@@ -20993,7 +21142,7 @@ msgid "Mute communities"
 msgstr "השתקת קהילות"
 
 #. Generic action label that mutes notifications for an entire community.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:550
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:558
 msgid "Mute community"
 msgstr "השתקת קהילה"
 
@@ -21023,7 +21172,7 @@ msgid "Mute entrance sound"
 msgstr "השתקת צליל כניסה"
 
 #. Action label that mutes notifications for the favourites pseudo-guild.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:687
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:695
 msgid "Mute favourites"
 msgstr "השתקת מועדפים"
 
@@ -21417,7 +21566,7 @@ msgid "Neutral (inherit)"
 msgstr "ניטרלי (בירושה)"
 
 #. Generic short option label for "never" in time / frequency dropdowns.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:647
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:655
 msgid "Never"
 msgstr "אף פעם"
 
@@ -21513,7 +21662,7 @@ msgstr "הודעה חדשה"
 
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
 #. Short label in the app layout channel list content.
-#: src/features/app/components/layout/ChannelListContent.tsx:81
+#: src/features/app/components/layout/ChannelListContent.tsx:97
 #: src/features/user/components/settings_utils/section_registry/AccessibilitySections.ts:147
 msgid "New messages"
 msgstr "הודעות חדשות"
@@ -21531,6 +21680,13 @@ msgstr "מיקרופון חדש"
 #: src/features/user/components/modals/PasswordChangeModal.tsx:46
 msgid "New password"
 msgstr "סיסמה חדשה"
+
+#. Button in the forum toolbar that opens the create-forum-post flow.
+#. Title of the modal where a student creates a new forum post.
+#: src/features/forum/components/ForumCreatePostModal.tsx:22
+#: src/features/forum/components/ForumToolbar.tsx:30
+msgid "New post"
+msgstr ""
 
 #. Default name for a newly created role in the community roles settings tab. Short label.
 #: src/features/guild/components/modals/guild_tabs/GuildRolesTab.tsx:46
@@ -21575,7 +21731,7 @@ msgstr "החדשים ביותר ראשונים"
 #. Primary button in the required-action modal. Moves to the next carousel step.
 #: src/features/app/components/setup/SelfHostedSetupWizardGate.tsx:79
 #: src/features/auth/components/modals/required_action/RequiredActionDescriptors.ts:154
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:715
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:723
 msgid "Next"
 msgstr "הבא"
 
@@ -21757,6 +21913,11 @@ msgstr "אין ערוצים זמינים"
 msgid "No channels found"
 msgstr "לא נמצאו ערוצים"
 
+#. Empty state shown under a story when nobody has replied to it yet.
+#: src/features/social_home/components/SocialHomeStoryCommentTree.tsx:20
+msgid "No comments yet."
+msgstr ""
+
 #. Empty-state text in the discovery page.
 #: src/features/discovery/discovery/DiscoveryPage.tsx:73
 msgid "No communities match."
@@ -21789,7 +21950,7 @@ msgid "No custom shortcuts yet."
 msgstr "אין קיצורי דרך מותאמים אישית עדיין."
 
 #. Generic short empty-state body shown when an entity has no description set.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:651
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:659
 msgid "No description provided."
 msgstr "לא סופק תיאור."
 
@@ -21834,6 +21995,11 @@ msgstr "לא הוגדר צליל כניסה"
 #: src/features/channel/components/pickers/gif/GifPickerView.tsx:48
 msgid "No favorite GIFs yet"
 msgstr "אין עדיין קובצי GIF מועדפים"
+
+#. Forum page empty state shown when the forum category exists but has no post channels.
+#: src/features/forum/components/pages/ForumPage.tsx:36
+msgid "No forum posts yet."
+msgstr ""
 
 #. Short label in the shared app friend selector.
 #: src/features/app/components/shared/FriendSelector.tsx:28
@@ -21977,6 +22143,16 @@ msgstr "אין מספר טלפון"
 #: src/features/app/components/shared/ChannelPinsContent.tsx:54
 msgid "No pinned messages"
 msgstr "אין הודעות מוצמדות"
+
+#. Empty state shown in the forum list when the title search matches nothing.
+#: src/features/forum/components/ForumPostList.tsx:17
+msgid "No posts match your search."
+msgstr ""
+
+#. Empty state shown when the class feed has no posts to display.
+#: src/features/social_home/components/pages/SocialHomePage.tsx:40
+msgid "No posts yet."
+msgstr ""
 
 #. Empty-state text in the mention preference tab.
 #: src/features/user/components/modals/tabs/notifications_tab/MentionPreferenceTab.tsx:16
@@ -22397,7 +22573,7 @@ msgstr "עוצמת קול התראות"
 #. Generic section header / tab label for the notifications area.
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
 #: src/features/app/components/layout/MobileBottomNav.tsx:131
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:699
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:707
 #: src/features/notification/components/pages/NotificationsPage.tsx:43
 #: src/features/user/components/modals/tabs/advanced_settings_tab/AdvancedSettingsCategories.ts:18
 #: src/features/user/components/settings_utils/section_registry/NotificationsSections.ts:30
@@ -22465,7 +22641,7 @@ msgstr "אובייקטים"
 #. Option label for an H.264 backup stream select.
 #: src/features/channel/components/ChannelReplyBar.tsx:62
 #: src/features/channel/components/modals/channel_tabs/channel_overview_tab/MatureContentSection.tsx:26
-#: src/features/channel/components/modals/channel_tabs/channel_overview_tab/SlowmodeControl.tsx:23
+#: src/features/channel/components/modals/channel_tabs/channel_overview_tab/SlowmodeControl.tsx:24
 #: src/features/guild/components/modals/guild_tabs/GuildModerationTab.tsx:97
 #: src/features/guild/components/modals/guild_tabs/GuildModerationTab.tsx:139
 #: src/features/user/components/modals/tabs/advanced_settings_tab/AdvancedVideoControls.tsx:123
@@ -22486,7 +22662,7 @@ msgid "Off"
 msgstr "כבוי"
 
 #. Generic presence-status label indicating the user is offline.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:635
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:643
 msgid "Offline"
 msgstr "לא מחובר"
 
@@ -22498,6 +22674,11 @@ msgstr "OK"
 #: src/features/i18n/utils/CommonMessageDescriptors.ts:102
 msgid "Okay"
 msgstr "אישור"
+
+#. Heading for the collapsed section of forum posts hidden by the inactivity filter.
+#: src/features/forum/components/ForumPostList.tsx:13
+msgid "Older posts"
+msgstr ""
 
 #. Sort mode label in the mobile channel search bottom sheet. Sorts results oldest first.
 #: src/features/channel/components/bottomsheets/ChannelSearchBottomSheet.tsx:71
@@ -23025,6 +23206,11 @@ msgstr "פתח תפריט"
 #: src/features/guild/components/modals/guild_tabs/guild_overview_tab/sections/MessageHistoryCutoffSection.tsx:37
 msgid "Open message history threshold"
 msgstr "סף פתיחת היסטוריית ההודעות"
+
+#. Forum toolbar button label shown, instead of "New post", when the one-post-per-student rule is on and the student already has a post.
+#: src/features/forum/components/ForumToolbar.tsx:34
+msgid "Open my post"
+msgstr ""
 
 #: src/features/channel/components/channel_header_components/developer_tools/MockingMenu.tsx:216
 msgid "Open overlay"
@@ -24037,7 +24223,7 @@ msgstr "הצמד צ'אט קבוצתי"
 #. Keyboard shortcut action label shown in the shortcuts list and keybind editor. Keep short, sentence case.
 #. Title of the confirmation alert shown when pinning a message.
 #: src/features/channel/components/MessageActionUtils.tsx:56
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:534
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:542
 #: src/features/input/state/input_keybind/shared.ts:13
 msgid "Pin message"
 msgstr "הצמד הודעה"
@@ -24087,7 +24273,7 @@ msgid "pinned"
 msgstr "נעוץ"
 
 #. Generic short toast / status label confirming a DM was pinned.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:655
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:663
 msgid "Pinned DM"
 msgstr "הודעה אישית מוצמדת"
 
@@ -24310,6 +24496,26 @@ msgstr "פורטוגזית (ברזיל)"
 #: src/features/user/components/settings_utils/search_index/DesktopSettingsIndex.ts:162
 msgid "Position"
 msgstr "מיקום"
+
+#. Accessible label for the "add" circle shown only to whoever can post — professor/admin, and monitors if the class grants it. {featureName} is the feature's display name (see SocialHomeStoriesLabels.ts).
+#: src/features/social_home/components/SocialHomeStoriesBar.tsx:29
+msgid "Post a new {featureName}"
+msgstr ""
+
+#. Forum sort option: newest post (channel creation) first.
+#: src/features/forum/components/ForumToolbar.tsx:54
+msgid "Post date"
+msgstr ""
+
+#. Accessible label / tooltip for the button that opens the edit/delete menu of a forum post.
+#: src/features/forum/components/ForumPostMenuButton.tsx:16
+msgid "Post options"
+msgstr ""
+
+#. Collapsible section header in the new forum post modal that shows the guidelines channel message.
+#: src/features/forum/components/ForumCreatePostModal.tsx:66
+msgid "Posting guidelines"
+msgstr ""
 
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
 #: src/features/user/components/settings_utils/search_index/DesktopSettingsIndex.ts:62
@@ -24660,7 +24866,7 @@ msgid "Privacy policy"
 msgstr "מדיניות פרטיות"
 
 #. Generic section heading / button label for the privacy settings area.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:663
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:671
 msgid "Privacy settings"
 msgstr "הגדרות פרטיות"
 
@@ -24924,6 +25130,11 @@ msgstr "בוט ציבורי"
 #: src/features/app/components/setup/SetupWizardSteps.tsx:174
 msgid "Public registration is closed."
 msgstr "ההרשמה הציבורית סגורה."
+
+#. Button that opens the professor feed channel to post directly to the class feed.
+#: src/features/social_home/components/SocialHomePublishBar.tsx:18
+msgid "Publish"
+msgstr ""
 
 #. Field label in the voice connection status popout. Shows technical WebRTC publisher ICE transport details.
 #: src/features/voice/components/voice_connection_status/shared.ts:129
@@ -25239,7 +25450,9 @@ msgstr "הפעל מחדש את {0}."
 msgid "Re-record"
 msgstr "Re-record"
 
+#. Button on a class-feed card that opens the emoji picker to react to the post.
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
+#: src/features/social_home/components/SocialHomeFeedList.tsx:31
 #: src/features/user/components/settings_utils/section_registry/ChatSettingsSections.ts:14
 msgid "React"
 msgstr "ריאקט"
@@ -25251,7 +25464,7 @@ msgstr "הגב באמצעות {emojiShortcode}"
 
 #. Generic short section / tab / aria label for emoji reactions.
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:659
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:667
 #: src/features/messaging/components/modals/MessageReactionsModal.tsx:144
 #: src/features/user/components/settings_utils/section_registry/ChatSettingsSections.ts:10
 msgid "Reactions"
@@ -25366,6 +25579,11 @@ msgstr "קבלה:"
 #: src/features/platform/utils/DesktopLocaleBridge.ts:193
 msgid "Recent"
 msgstr "אחרונים"
+
+#. Forum sort option: newest message first. The default.
+#: src/features/forum/components/ForumToolbar.tsx:50
+msgid "Recent activity"
+msgstr ""
 
 #: src/features/auth/flow/InstanceSelector.tsx:278
 msgid "Recent instances"
@@ -26003,7 +26221,11 @@ msgstr "הסר ספוילר"
 msgid "Remove sticker"
 msgstr "הסר מדבקה"
 
+#. Accessible label for the button that removes a tag chip. {tag} is the tag text.
+#. Accessible label for the button that removes a tag chip. {tag} is the tag text.
 #. Accessible label for the per-tag X button in the Discovery tag list. {tag} is the tag text. Used by screen readers.
+#: src/features/forum/components/ForumCreatePostModal.tsx:62
+#: src/features/forum/components/ForumEditPostModal.tsx:47
 #: src/features/guild/components/modals/guild_tabs/GuildDiscoveryTab.tsx:132
 msgid "Remove tag {tag}"
 msgstr "הסר תגית {tag}"
@@ -26067,7 +26289,7 @@ msgid "Removed from favorite GIFs"
 msgstr "הוסר מה-GIFים המועדפים"
 
 #. Toast confirming an item was removed from the favorites list.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:611
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:619
 msgid "Removed from favorites"
 msgstr "הוסר מהמועדפים"
 
@@ -26247,7 +26469,7 @@ msgstr "תגובות"
 
 #. Generic action label that opens the reply composer for a message.
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:607
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:615
 #: src/features/user/components/settings_utils/section_registry/NotificationsSections.ts:71
 msgid "Reply"
 msgstr "השב/השיבי"
@@ -26342,7 +26564,7 @@ msgstr "דיווח על בעיה"
 
 #. Generic action label that opens the report flow targeting a specific message.
 #. Modal title for the IAR flow when reporting a specific message.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:530
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:538
 #: src/features/moderation/components/report_modal/IARModalContext.ts:22
 msgid "Report message"
 msgstr "דיווח על הודעה"
@@ -26668,7 +26890,7 @@ msgid "Reset premium state"
 msgstr "איפוס מצב פרימיום"
 
 #. Accessible label for a button that resets a slider to its default value.
-#: src/features/ui/components/Slider.tsx:18
+#: src/features/ui/components/Slider.tsx:24
 msgid "Reset slider to default value"
 msgstr "איפוס המחוון לערך ברירת המחדל"
 
@@ -26923,7 +27145,7 @@ msgstr "חיפוש תמונה הפוך"
 
 #. Generic action label that runs a reverse-image search on the selected media.
 #. Settings search entry label. Also used as a search synonym in the settings search bar.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:603
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:611
 #: src/features/user/components/settings_utils/search_index/ChatSettingsIndex.ts:267
 msgid "Reverse image search"
 msgstr "חיפוש תמונה הפוך"
@@ -27297,6 +27519,7 @@ msgstr "שמור"
 #. Button label that saves a custom emoji rename.
 #. Button or menu action label in the add custom search engine modal. Keep it concise.
 #. Button or menu action label in the rename channel modal. Keep it concise.
+#. Primary button in the edit forum post modal.
 #. Save button in the community-folder settings modal footer.
 #: src/features/app/components/dialogs/shared/MobileSettingsComponents.tsx:113
 #: src/features/auth/components/modals/PasskeyNameModal.tsx:87
@@ -27309,6 +27532,7 @@ msgstr "שמור"
 #: src/features/expressions/components/modals/EditFavoriteMemeModal.tsx:94
 #: src/features/expressions/components/modals/EditGuildStickerModal.tsx:122
 #: src/features/expressions/components/modals/EditPackModal.tsx:127
+#: src/features/forum/components/ForumEditPostModal.tsx:51
 #: src/features/guild/components/modals/guild_tabs/GuildDiscoveryTab.tsx:624
 #: src/features/guild/components/modals/guild_tabs/GuildVanityURLTab.tsx:279
 #: src/features/guild/components/modals/GuildFolderSettingsModal.tsx:90
@@ -27489,7 +27713,7 @@ msgstr "מסך"
 
 #. Section heading for screen-reader related accessibility settings.
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:599
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:607
 #: src/features/user/components/settings_utils/section_registry/AccessibilitySections.ts:51
 msgid "Screen reader"
 msgstr "קורא מסך"
@@ -27881,6 +28105,11 @@ msgstr "חיפוש הרשאות"
 #: src/features/channel/components/modals/channel_tabs/channel_permissions_tab/PermissionEditorPanel.tsx:20
 msgid "Search permissions…"
 msgstr "חיפוש הרשאות…"
+
+#. Placeholder for the forum toolbar search field, which filters posts by title.
+#: src/features/forum/components/ForumToolbar.tsx:38
+msgid "Search posts"
+msgstr ""
 
 #. Default header title in the channel search results panel before a query has been submitted.
 #. Settings content title shown above results for a settings search query.
@@ -28581,7 +28810,7 @@ msgid "Sensitive media"
 msgstr "מדיה רגישה"
 
 #. Generic short status label confirming an item (invite, gift, theme link) was sent.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:803
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:811
 msgid "Sent"
 msgstr "נשלח"
 
@@ -28901,6 +29130,11 @@ msgstr "הגדר את אזור הזמן שלך פעם אחת כך ש-{productNam
 #: src/features/user/components/modals/tabs/notifications_tab/NotificationsTabSounds.tsx:29
 msgid "Sets the level for every sound effect. Per-sound overrides ignore this."
 msgstr "קובע את העוצמה לכל אפקט קולי. הגדרות ספציפיות לצלילים בודדים יתעלמו מהגדרה זו."
+
+#. Shown when the feed search backend is still indexing the class channels.
+#: src/features/social_home/components/pages/SocialHomePage.tsx:32
+msgid "Setting up search for this class for the first time — try again in a moment."
+msgstr ""
 
 #. Generic action label / section header that opens settings.
 #: src/features/i18n/utils/CommonMessageDescriptors.ts:262
@@ -29658,7 +29892,7 @@ msgstr "התחבר באמצעות ספק ה-SSO של הארגון שלך."
 #: src/features/auth/utils/AccountSwitcherModalUtils.tsx:204
 #: src/features/auth/utils/AccountSwitcherModalUtils.tsx:265
 #: src/features/auth/utils/AccountSwitcherModalUtils.tsx:322
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:595
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:603
 #: src/features/user/components/settings_utils/search_index/DevicesIndex.ts:47
 msgid "Sign out"
 msgstr "התנתקות"
@@ -29896,7 +30130,7 @@ msgid "slash {commandName}"
 msgstr "קו נטוי {commandName}"
 
 #. Accessible label announcing the current slider value.
-#: src/features/ui/components/Slider.tsx:22
+#: src/features/ui/components/Slider.tsx:28
 msgid "Slider value"
 msgstr "ערך המחוון"
 
@@ -29968,7 +30202,7 @@ msgid "Slow profile load"
 msgstr "טעינת פרופיל איטית"
 
 #. Channel overview settings tab label, control, or validation message (name, topic, slowmode, voice region, mature content gate).
-#: src/features/channel/components/modals/channel_tabs/channel_overview_tab/SlowmodeControl.tsx:18
+#: src/features/channel/components/modals/channel_tabs/channel_overview_tab/SlowmodeControl.tsx:19
 msgid "Slowmode"
 msgstr "מצב איטי"
 
@@ -30298,6 +30532,16 @@ msgstr "משהו השתבש. אנחנו עובדים על זה."
 msgid "Sort"
 msgstr "מיין"
 
+#. Label of the forum toolbar button that opens the sort-order and list/gallery view menu.
+#: src/features/forum/components/ForumToolbar.tsx:42
+msgid "Sort & view"
+msgstr ""
+
+#. Section heading in the forum sort-and-view menu.
+#: src/features/forum/components/ForumToolbar.tsx:46
+msgid "Sort by"
+msgstr ""
+
 #. Status label in the channel search results header announcing the current sort mode. label is the selected sort.
 #: src/features/channel/components/channel_search_results/ChannelSearchResultsShared.tsx:99
 msgid "Sort mode: {label}"
@@ -30332,7 +30576,7 @@ msgstr "עוצמת קול"
 
 #. Section heading / tab label for the notification-sounds area.
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:807
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:815
 #: src/features/user/components/settings_utils/section_registry/NotificationsSections.ts:135
 msgid "Sounds"
 msgstr "צלילים"
@@ -30768,7 +31012,7 @@ msgid "Start uploading attachments as soon as they are added to the message inpu
 msgstr "התחל בהעלאת קבצים מצורפים ברגע שהם נוספו לשדה ההודעה"
 
 #. Action label that initiates a video call (DM or group DM).
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:591
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:599
 msgid "Start video call"
 msgstr "התחלת שיחת וידאו"
 
@@ -31107,6 +31351,11 @@ msgstr "עצור."
 msgid "Stops your speakers from looping back into your mic."
 msgstr "מונע מהרמקולים שלך לחזור למיקרופון."
 
+#. Provisional name for the class Stories feature (24h posts from the professor/staff at the top of Home) — CLAUDE.md section 7 notes the client has not confirmed the final name yet.
+#: src/features/social_home/utils/SocialHomeStoriesLabels.ts:14
+msgid "Stories"
+msgstr ""
+
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
 #: src/features/user/components/settings_utils/section_registry/NotificationsSections.ts:235
 msgid "Stream"
@@ -31321,7 +31570,7 @@ msgid "Suppress all role mentions"
 msgstr "השתקת כל האזכורים לתפקידים"
 
 #. Action label on a message that hides link previews / embeds.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:587
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:595
 msgid "Suppress embeds"
 msgstr "הסתר תצוגות מקדימות"
 
@@ -31716,7 +31965,11 @@ msgstr "כרטיסייה"
 msgid "Tag"
 msgstr "תגית"
 
+#. Label for the optional tags field in the new forum post modal.
+#. Label for the tags field in the edit forum post modal.
 #. Short label in the theme studio library section. Keep it concise.
+#: src/features/forum/components/ForumCreatePostModal.tsx:54
+#: src/features/forum/components/ForumEditPostModal.tsx:39
 #: src/features/theme_studio/sections/LibrarySection.tsx:117
 msgid "Tags"
 msgstr "תגיות"
@@ -32037,6 +32290,13 @@ msgstr "ההודעה הזו לא נמחקה"
 #: src/features/search/components/alerts/SearchResultOpenFailedModal.tsx:12
 msgid "That message is gone, or you lost access to the conversation."
 msgstr "ההודעה הזו נמחקה, או שאיבדת גישה לשיחה."
+
+#. Validation error when the forum post title exceeds the length limit.
+#. Validation error when the forum post title exceeds the length limit.
+#: src/features/forum/components/ForumCreatePostModal.tsx:38
+#: src/features/forum/components/ForumEditPostModal.tsx:31
+msgid "That title is too long."
+msgstr ""
 
 #. End-of-list line in the saved messages popout after every bookmark has been shown.
 #. End-of-list line on the saved messages page after every bookmark has been shown.
@@ -32434,7 +32694,7 @@ msgid "This card does not match your billing country, so it cannot be used for t
 msgstr "כרטיס זה אינו תואם את מדינת החיוב שלך, ולכן לא ניתן להשתמש בו עבור מטבע מקומי זה. השתמש/י בכרטיס מקומי, בחר/י אמצעי תשלום אחר, או חזור/חזרי ל-{productName} ועבור/עברי למחיר הסטנדרטי."
 
 #. Modal body shown when a category cannot accept another channel because the per-category limit is reached. Limit is interpolated.
-#: src/features/app/components/layout/ChannelListContent.tsx:68
+#: src/features/app/components/layout/ChannelListContent.tsx:76
 msgid "This category already contains the maximum of {maxChannelsPerCategory} channels."
 msgstr "קטגוריה זו כבר מכילה את המספר המרבי של {maxChannelsPerCategory} ערוצים."
 
@@ -32491,6 +32751,21 @@ msgstr "הערוץ הזה מסונכרן עם קטגוריית האב <0>{0}</0>
 #: src/features/app/components/alerts/ChannelDeleteFailedModal.tsx:34
 msgid "This channel no longer exists. It may have already been deleted."
 msgstr "הערוץ הזה כבר לא קיים. ייתכן שהוא נמחק."
+
+#. Forum page empty state shown to ordinary members when no forum category exists yet.
+#: src/features/forum/components/pages/ForumPage.tsx:32
+msgid "This class doesn't have a forum yet."
+msgstr ""
+
+#. Forum page empty state shown to staff (can manage channels) when no forum category exists yet.
+#: src/features/forum/components/pages/ForumPage.tsx:27
+msgid "This class doesn't have a forum yet. Create a channel category whose name starts with 'Forum' and the discussion channels inside it show up here."
+msgstr ""
+
+#. Empty state shown to admins of a class whose conventional Home channels are missing.
+#: src/features/social_home/components/pages/SocialHomePage.tsx:44
+msgid "This class doesn't have its Home channels yet. One click creates them: #stories, #feed-do-professor and a sketchbooks category."
+msgstr ""
 
 #. Description text in the theme studio settings section.
 #: src/features/theme_studio/sections/ThemeStudioSettingsSection.tsx:73
@@ -33311,6 +33586,15 @@ msgstr "אזור זמן"
 msgid "Tip"
 msgstr "טיפ"
 
+#. Forum sort option: alphabetical by post title.
+#. Label for the required title field in the new forum post modal.
+#. Label for the title field in the edit forum post modal.
+#: src/features/forum/components/ForumCreatePostModal.tsx:26
+#: src/features/forum/components/ForumEditPostModal.tsx:23
+#: src/features/forum/components/ForumToolbar.tsx:58
+msgid "Title"
+msgstr ""
+
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
 #: src/features/user/components/settings_utils/search_index/DesktopSettingsIndex.ts:178
 msgid "Title bar"
@@ -33584,7 +33868,7 @@ msgstr "הבעלות הועברה אל {0}."
 
 #. Generic action label that translates a message body.
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:583
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:591
 #: src/features/user/components/settings_utils/search_index/ChatSettingsIndex.ts:255
 msgid "Translate"
 msgstr "תרגום"
@@ -33867,7 +34151,7 @@ msgid "Turn off anything you're not comfortable with. Some features may stop wor
 msgstr "כבו כל מה שלא נוח לכם איתו. ייתכן שחלק מהתכונות יפסיקו לפעול."
 
 #. Voice / call action label that disables the local camera.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:506
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:514
 msgid "Turn off camera"
 msgstr "כיבוי מצלמה"
 
@@ -34207,7 +34491,7 @@ msgid "Unblock user"
 msgstr "בטל חסימת משתמש"
 
 #. Generic label for items that do not belong to a category.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:631
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:639
 msgid "Uncategorized"
 msgstr "ללא קטגוריה"
 
@@ -34364,7 +34648,7 @@ msgstr "גיבוי אוניברסלי. האיכות הנמוכה ביותר, א�
 #. Generic fallback label when a more specific value is unavailable.
 #. Short label in the invite list item. Keep it concise.
 #: src/features/emoji/components/emojis/EmojiListItem.tsx:586
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:755
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:763
 #: src/features/invite/components/InviteListItem.tsx:34
 #: src/features/moderation/components/modals/BanDetailsModal.tsx:114
 #: src/features/updater/commands/UpdaterModalCommands.tsx:144
@@ -34603,7 +34887,7 @@ msgid "Unmute all devices"
 msgstr "בטל השתקה בכל המכשירים"
 
 #. Action label that unmutes notifications for a channel category.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:579
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:587
 msgid "Unmute category"
 msgstr "בטל השתקה של קטגוריה"
 
@@ -34618,7 +34902,7 @@ msgid "Unmute communities"
 msgstr "בטל השתקה לקהילות"
 
 #. Generic action label that unmutes notifications for an entire community.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:554
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:562
 msgid "Unmute community"
 msgstr "בטל השתקה של הקהילה"
 
@@ -34638,7 +34922,7 @@ msgid "Unmute DMs"
 msgstr "בטל השתקת הודעות פרטיות"
 
 #. Action label that unmutes notifications for the favourites pseudo-guild.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:691
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:699
 msgid "Unmute favourites"
 msgstr "בטל השתקה של מועדפים"
 
@@ -34717,7 +35001,7 @@ msgid "Unpin this message?"
 msgstr "להסיר את ההצמדה מההודעה הזו?"
 
 #. Generic short toast / status label confirming a DM was unpinned.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:627
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:635
 msgid "Unpinned DM"
 msgstr "הודעה פרטית לא מוצמדת"
 
@@ -35680,7 +35964,7 @@ msgid "User controls"
 msgstr "בקרות משתמש"
 
 #. Title of the developer-mode user debug modal.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:571
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:579
 msgid "User debug"
 msgstr "ניפוי באגים של משתמש"
 
@@ -35763,7 +36047,7 @@ msgstr "משתמש, בוט או ווב-הוק"
 #. Label for SMTP username input.
 #. Settings search entry label. Also used as a search synonym in the settings search bar.
 #: src/features/app/components/setup/SetupWizardSteps.tsx:952
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:567
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:575
 #: src/features/user/components/modals/FluxerTagChangeModal.tsx:218
 #: src/features/user/components/modals/tabs/my_profile_tab/MyProfileTabUsernameSection.tsx:56
 #: src/features/user/components/settings_utils/search_index/MyProfileIndex.ts:53
@@ -36394,6 +36678,11 @@ msgstr "הצגה וניהול של קודי הגיבוי שלך לשחזור ה�
 msgid "View and regenerate client secrets and bot tokens"
 msgstr "הצגה ויצירה מחדש של סודות לקוח ואסימוני בוט"
 
+#. Section heading in the forum sort-and-view menu.
+#: src/features/forum/components/ForumToolbar.tsx:62
+msgid "View as"
+msgstr ""
+
 #. Short label in the authentication backup codes view modal. Keep the tone plain and specific.
 #: src/features/auth/components/modals/BackupCodesViewModal.tsx:16
 msgid "View backup codes"
@@ -36514,6 +36803,11 @@ msgstr "הצג פרופיל עבור {displayName}"
 #: src/features/channel/components/MessageActionMenu.tsx:75
 msgid "View reactions"
 msgstr "הצגת תגובות"
+
+#. Accessible label for a circle in the class Stories bar that opens that person’s story.
+#: src/features/social_home/components/SocialHomeStoriesBar.tsx:25
+msgid "View story from {name}"
+msgstr ""
 
 #. Short label in the app constants.
 #: src/features/app/constants/AppConstants.ts:21
@@ -36912,7 +37206,7 @@ msgid "Wait a moment. This window will close automatically once we receive your 
 msgstr "המתן רגע. חלון זה ייסגר אוטומטית ברגע שנקבל את ההודעה שלך."
 
 #. Description under the slowmode slider in channel settings. bypassSlowmodePermissionLabel is the localized Bypass Slowmode permission name.
-#: src/features/channel/components/modals/channel_tabs/channel_overview_tab/SlowmodeControl.tsx:28
+#: src/features/channel/components/modals/channel_tabs/channel_overview_tab/SlowmodeControl.tsx:29
 msgid "Wait between messages. \"{bypassSlowmodePermissionLabel}\" can bypass it."
 msgstr "המתנה בין הודעות. \"{bypassSlowmodePermissionLabel}\" יכול לעקוף זאת."
 
@@ -37687,6 +37981,11 @@ msgstr "גלישת טקסט"
 #: src/features/user/components/modals/tabs/component_gallery_tab/ComponentGalleryTabInputsTab.tsx:82
 msgid "Write a short bio (max 280 characters)"
 msgstr "כתבו ביוגרפיה קצרה (עד 280 תווים)"
+
+#. Placeholder for the description field in the new forum post modal.
+#: src/features/forum/components/ForumCreatePostModal.tsx:50
+msgid "Write the first message of your post"
+msgstr ""
 
 #. Description text in the inputs tab.
 #: src/features/user/components/modals/tabs/component_gallery_tab/ComponentGalleryTabInputsTab.tsx:98
@@ -39028,7 +39327,7 @@ msgstr "זום"
 #. Keyboard shortcut action label shown in the shortcuts list and keybind editor. Keep short, sentence case.
 #. Native View menu item that increases UI zoom level.
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:623
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:631
 #: src/features/input/state/input_keybind/shared.ts:253
 #: src/features/platform/utils/DesktopLocaleBridge.ts:62
 #: src/features/user/components/settings_utils/search_index/KeybindsIndex.ts:82
@@ -39039,7 +39338,7 @@ msgstr "התקרבות"
 #. Keyboard shortcut action label shown in the shortcuts list and keybind editor. Keep short, sentence case.
 #. Native View menu item that decreases UI zoom level.
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:619
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:627
 #: src/features/input/state/input_keybind/shared.ts:257
 #: src/features/platform/utils/DesktopLocaleBridge.ts:66
 #: src/features/user/components/settings_utils/search_index/KeybindsIndex.ts:86

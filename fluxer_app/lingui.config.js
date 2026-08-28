@@ -38,6 +38,9 @@ module.exports = {
 		'zh-TW',
 	],
 	sourceLocale: 'en-US',
+	// MUNDRACUNN: strings novas do fork nao passam pelo Weblate do upstream; idiomas sem traducao
+	// caem no ingles em vez de quebrar o build (o compile do fork roda sem --strict).
+	fallbackLocales: {default: 'en-US'},
 	catalogs: [
 		{
 			path: 'src/features/i18n/locales/{locale}/messages',
