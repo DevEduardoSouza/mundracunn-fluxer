@@ -2291,7 +2291,7 @@ msgstr "Ativa"
 #. Relative last-activity label on a forum post row. {time} is an already localized relative phrase such as "3 days ago" / "há 3 dias", so the translation should read naturally around it.
 #: src/features/forum/components/ForumPostRow.tsx:31
 msgid "active {time}"
-msgstr "ativo há {time}"
+msgstr "ativo {time}"
 
 #: src/features/app/components/floating/UserAreaPopout.tsx:355
 #: src/features/auth/components/accounts/AccountRow.tsx:186
