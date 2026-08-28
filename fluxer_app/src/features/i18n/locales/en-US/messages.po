@@ -39046,3 +39046,137 @@ msgstr "Zoom in"
 #: src/features/user/components/settings_utils/search_index/KeybindsIndex.ts:86
 msgid "Zoom out"
 msgstr "Zoom out"
+
+# --- MUNDRACUNN feature: forum (hand-added; run `pnpm i18n:refresh` to regenerate properly) ---
+
+#. Validation error when the forum post title is empty.
+msgid "A title is required."
+msgstr "A title is required."
+
+#. Relative last-activity label on a forum post row. {time} is a short relative time like "5m" or "3d".
+msgid "active {time}"
+msgstr "active {time}"
+
+#. Byline under a forum post card title. {author} is the display name of the post owner.
+msgid "by {author}"
+msgstr "by {author}"
+
+#. Preview under the title field showing the channel name the post will get. {name} is the sanitized slug.
+msgid "Channel: #{name}"
+msgstr "Channel: #{name}"
+
+#. Error shown when creating a forum post fails.
+msgid "Couldn't create the post. Try again."
+msgstr "Couldn't create the post. Try again."
+
+#. Error shown when saving forum post edits fails.
+msgid "Couldn't save the post. Try again."
+msgstr "Couldn't save the post. Try again."
+
+#. Primary button in the new forum post modal.
+msgid "Create post"
+msgstr "Create post"
+
+#. Destructive menu action that deletes a forum post (its channel).
+msgid "Delete post"
+msgstr "Delete post"
+
+#. Title of the modal where the author edits their forum post title and tags.
+msgid "Edit post"
+msgstr "Edit post"
+
+#. Tooltip on the bell icon shown next to a forum post the current user follows.
+msgid "Following"
+msgstr "Following"
+
+#. Generic header / tab / sidebar label for a guild forum page (aggregated forum-category discussion channels).
+msgid "Forum"
+msgstr "Forum"
+
+#. Forum view option: grid of cards with a large cover image.
+msgid "Gallery"
+msgstr "Gallery"
+
+#. Placeholder for the title field in the new forum post modal.
+msgid "Give your post a title"
+msgstr "Give your post a title"
+
+#. Alt text for the cover image of a forum post (the most recent image posted in its channel).
+msgid "Latest image posted in this forum thread"
+msgstr "Latest image posted in this forum thread"
+
+#. Forum view option: compact one-per-row list.
+msgid "List"
+msgstr "List"
+
+#. Title of the modal where a student creates a new forum post.
+msgid "New post"
+msgstr "New post"
+
+#. Forum page empty state shown when the forum category exists but has no post channels.
+msgid "No forum posts yet."
+msgstr "No forum posts yet."
+
+#. Empty state shown in the forum list when the title search matches nothing.
+msgid "No posts match your search."
+msgstr "No posts match your search."
+
+#. Heading for the collapsed section of forum posts hidden by the inactivity filter.
+msgid "Older posts"
+msgstr "Older posts"
+
+#. Forum toolbar button label shown, instead of "New post", when the one-post-per-student rule is on and the student already has a post.
+msgid "Open my post"
+msgstr "Open my post"
+
+#. Forum sort option: newest post (channel creation) first.
+msgid "Post date"
+msgstr "Post date"
+
+#. Accessible label / tooltip for the button that opens the edit/delete menu of a forum post.
+msgid "Post options"
+msgstr "Post options"
+
+#. Collapsible section header in the new forum post modal that shows the guidelines channel message.
+msgid "Posting guidelines"
+msgstr "Posting guidelines"
+
+#. Forum sort option: newest message first. The default.
+msgid "Recent activity"
+msgstr "Recent activity"
+
+#. Placeholder for the forum toolbar search field, which filters posts by title.
+msgid "Search posts"
+msgstr "Search posts"
+
+#. Label of the forum toolbar button that opens the sort-order and list/gallery view menu.
+msgid "Sort & view"
+msgstr "Sort & view"
+
+#. Section heading in the forum sort-and-view menu.
+msgid "Sort by"
+msgstr "Sort by"
+
+#. Validation error when the forum post title exceeds the length limit.
+msgid "That title is too long."
+msgstr "That title is too long."
+
+#. Forum page empty state shown to ordinary members when no forum category exists yet.
+msgid "This class doesn't have a forum yet."
+msgstr "This class doesn't have a forum yet."
+
+#. Forum page empty state shown to staff (can manage channels) when no forum category exists yet.
+msgid "This class doesn't have a forum yet. Create a channel category whose name starts with 'Forum' and the discussion channels inside it show up here."
+msgstr "This class doesn't have a forum yet. Create a channel category whose name starts with 'Forum' and the discussion channels inside it show up here."
+
+#. Label for the required title field in the new forum post modal.
+msgid "Title"
+msgstr "Title"
+
+#. Section heading in the forum sort-and-view menu.
+msgid "View as"
+msgstr "View as"
+
+#. Placeholder for the description field in the new forum post modal.
+msgid "Write the first message of your post"
+msgstr "Write the first message of your post"
