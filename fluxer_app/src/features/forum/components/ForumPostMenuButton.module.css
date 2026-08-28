@@ -15,6 +15,31 @@
 	flex-shrink: 0;
 }
 
+.button:focus-visible {
+	outline: 0.125rem solid var(--focus-primary);
+	outline-offset: 0.125rem;
+}
+
+/*
+ * The glyph stays 24px so it doesn't dominate a list row, but on a touch screen the hit area is
+ * grown to 44px with a centered overlay — the visual size and the tap size are different things.
+ */
+@media (pointer: coarse) {
+	.button {
+		position: relative;
+	}
+
+	.button::after {
+		content: '';
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		width: 2.75rem;
+		height: 2.75rem;
+		transform: translate(-50%, -50%);
+	}
+}
+
 .button:hover {
 	background: var(--background-modifier-hover);
 	color: var(--text-primary);
