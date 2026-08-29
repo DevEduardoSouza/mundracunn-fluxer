@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import {ForumPostCard} from '@app/features/forum/components/ForumPostCard';
-import {ForumPostRow} from '@app/features/forum/components/ForumPostRow';
 import styles from '@app/features/forum/components/ForumPostList.module.css';
+import {ForumPostRow} from '@app/features/forum/components/ForumPostRow';
 import type {ForumPost, ForumViewMode} from '@app/features/forum/state/Forum';
+import {remFromPx} from '@app/features/theme/layout/RemFromPx';
 import {Scroller} from '@app/features/ui/components/Scroller';
 import {msg} from '@lingui/core/macro';
 import {useLingui} from '@lingui/react/macro';
@@ -75,6 +76,7 @@ export const ForumPostList: React.FC<ForumPostListProps> = observer(
 						<section className={styles.followedSection} data-flx="forum.forum-post-list.followed-section">
 							<h2 className={styles.followedHeading} data-flx="forum.forum-post-list.followed-heading">
 								<StarIcon
+									size={remFromPx(16)}
 									weight="fill"
 									className={styles.followedStar}
 									data-flx="forum.forum-post-list.followed-star"
@@ -106,6 +108,7 @@ export const ForumPostList: React.FC<ForumPostListProps> = observer(
 									data-flx="forum.forum-post-list.older-toggle"
 								>
 									<CaretDownIcon
+										size={remFromPx(16)}
 										weight="bold"
 										className={styles.olderCaret}
 										style={{transform: olderOpen ? undefined : 'rotate(-90deg)'}}

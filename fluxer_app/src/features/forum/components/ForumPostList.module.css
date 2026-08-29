@@ -54,6 +54,9 @@
 }
 
 .followedStar {
+	/* the SVG has no intrinsic size: without this it grows to fill the row (seen in prod 29/08) */
+	width: 1rem;
+	height: 1rem;
 	flex-shrink: 0;
 	color: var(--text-warning, #f0b232);
 }
@@ -104,6 +107,8 @@
 }
 
 .olderCaret {
+	width: 1rem;
+	height: 1rem;
 	flex-shrink: 0;
 	transition: transform 0.15s ease;
 }
