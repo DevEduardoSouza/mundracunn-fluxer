@@ -1450,7 +1450,7 @@ msgid "@mention"
 msgstr "@mention"
 
 #. Starter message written into the guidelines channel when staff creates the forum structure. The professor is expected to edit it; markdown is intentional.
-#: src/features/forum/commands/ForumSetupCommands.ts:26
+#: src/features/forum/commands/ForumSetupCommands.ts:30
 msgid ""
 "**Posting guidelines**\n"
 "\n"
@@ -2290,7 +2290,7 @@ msgid "Active"
 msgstr "Active"
 
 #. Relative last-activity label on a forum post row. {time} is an already localized relative phrase such as "3 days ago" / "há 3 dias", so the translation should read naturally around it.
-#: src/features/forum/components/ForumPostRow.tsx:31
+#: src/features/forum/components/ForumPostRow.tsx:25
 msgid "active {time}"
 msgstr "active {time}"
 
@@ -2907,7 +2907,7 @@ msgid "AFK timeout"
 msgstr "AFK timeout"
 
 #. Forum "hide inactive" option: move a post to "Older posts" after {days} days without a message.
-#: src/features/forum/components/ForumToolbar.tsx:93
+#: src/features/forum/components/ForumToolbar.tsx:98
 msgid "After {days} days"
 msgstr "After {days} days"
 
@@ -4788,6 +4788,11 @@ msgstr "Back"
 msgid "Back to call"
 msgstr "Back to call"
 
+#. Accessible label of the breadcrumb link that leaves a forum post and returns to the forum page.
+#: src/features/forum/components/ForumPostHeader.tsx:23
+msgid "Back to forum"
+msgstr "Back to forum"
+
 #. Button or menu action label in the channel and chat gif picker header. Keep it concise.
 #: src/features/channel/components/pickers/gif/GifPickerHeader.tsx:26
 msgid "Back to GIF categories"
@@ -5626,10 +5631,12 @@ msgstr "Buy a {premiumProductName} gift from the {premiumProductName} tab to sha
 msgid "Buy gift"
 msgstr "Buy gift"
 
+#. Byline in the header of a forum post. {author} is the display name of the post owner.
 #. Byline under a forum post card title. {author} is the display name of the post owner.
 #. Byline under a forum post title. {author} is the display name of the post owner.
-#: src/features/forum/components/ForumPostCard.tsx:19
-#: src/features/forum/components/ForumPostRow.tsx:27
+#: src/features/forum/components/ForumPostCard.tsx:20
+#: src/features/forum/components/ForumPostHeader.tsx:27
+#: src/features/forum/components/ForumPostRow.tsx:21
 msgid "by {author}"
 msgstr "by {author}"
 
@@ -7158,7 +7165,7 @@ msgid "Claiming to be another person, brand, or organization."
 msgstr "Claiming to be another person, brand, or organization."
 
 #. Forum "hide inactive" option that follows whatever the class configured. {days} is that number of days.
-#: src/features/forum/components/ForumToolbar.tsx:84
+#: src/features/forum/components/ForumToolbar.tsx:89
 msgid "Class default ({days} days)"
 msgstr "Class default ({days} days)"
 
@@ -10916,7 +10923,7 @@ msgid "Delete passkey"
 msgstr "Delete passkey"
 
 #. Destructive menu action that deletes a forum post (its channel).
-#: src/features/forum/components/ForumPostMenu.tsx:19
+#: src/features/forum/components/ForumPostMenu.tsx:30
 msgid "Delete post"
 msgstr "Delete post"
 
@@ -12589,7 +12596,7 @@ msgstr "Edit overwrites for roles and members in this channel."
 #. Menu action that opens the edit modal for a forum post (title and tags).
 #. Title of the modal where the author edits their forum post title and tags.
 #: src/features/forum/components/ForumEditPostModal.tsx:19
-#: src/features/forum/components/ForumPostMenu.tsx:15
+#: src/features/forum/components/ForumPostMenu.tsx:18
 msgid "Edit post"
 msgstr "Edit post"
 
@@ -14974,6 +14981,16 @@ msgstr "Folder name"
 msgid "Folder settings"
 msgstr "Folder settings"
 
+#. Button on a forum post that starts following it (adds it to favorites, activity notifications on).
+#: src/features/forum/components/ForumFollowButton.tsx:15
+msgid "Follow"
+msgstr "Follow"
+
+#. Menu action on a forum post that starts following it (favorites + activity notifications).
+#: src/features/forum/components/ForumPostMenu.tsx:22
+msgid "Follow post"
+msgstr "Follow post"
+
 #. Short label in the whats new modal. Preserve {blueskyProviderName}; it is inserted by code.
 #: src/features/app/components/whats_new/WhatsNewModal.tsx:33
 msgid "Follow us on {blueskyProviderName}"
@@ -14983,10 +15000,17 @@ msgstr "Follow us on {blueskyProviderName}"
 msgid "Follow voice input"
 msgstr "Follow voice input"
 
-#. Tooltip on the bell icon shown next to a forum post the current user follows.
-#: src/features/forum/components/ForumPostRow.tsx:23
+#. Heading of the highlighted strip at the top of the forum list with the posts the user follows.
+#. State of the forum follow button once the post is followed; clicking it unfollows.
+#: src/features/forum/components/ForumFollowButton.tsx:19
+#: src/features/forum/components/ForumPostList.tsx:24
 msgid "Following"
 msgstr "Following"
+
+#. Toggle chip in the forum toolbar that shows only the posts the user follows. {count} is how many posts they follow.
+#: src/features/forum/components/ForumToolbar.tsx:48
+msgid "Following ({count})"
+msgstr "Following ({count})"
 
 #. Label in the sounds. Preserve {effectiveValue}; it is inserted by code.
 #: src/features/user/components/modals/tabs/notifications_tab/NotificationsTabSounds.tsx:83
@@ -15186,7 +15210,9 @@ msgstr "Forgot password"
 msgid "Forgot your password?"
 msgstr "Forgot your password?"
 
+#. Breadcrumb root in the header of a forum post channel; clicking it goes back to the forum page.
 #. Generic header / tab / sidebar label for a guild forum page (aggregated forum-category discussion channels).
+#: src/features/forum/components/ForumPostHeader.tsx:19
 #: src/features/i18n/utils/CommonMessageDescriptors.ts:498
 msgid "Forum"
 msgstr "Forum"
@@ -15501,7 +15527,7 @@ msgstr "Gain control"
 
 #. Forum view option: grid of cards with a large cover image.
 #. Generic header / tab label for a guild social home (class feed) page.
-#: src/features/forum/components/ForumToolbar.tsx:76
+#: src/features/forum/components/ForumToolbar.tsx:81
 #: src/features/i18n/utils/CommonMessageDescriptors.ts:494
 msgid "Gallery"
 msgstr "Gallery"
@@ -16536,7 +16562,7 @@ msgid "Hide help center button"
 msgstr "Hide help center button"
 
 #. Section heading in the forum sort-and-view menu for the "hide posts nobody wrote in" rule.
-#: src/features/forum/components/ForumToolbar.tsx:80
+#: src/features/forum/components/ForumToolbar.tsx:85
 msgid "Hide inactive"
 msgstr "Hide inactive"
 
@@ -19102,7 +19128,7 @@ msgid "Linux package"
 msgstr "Linux package"
 
 #. Forum view option: compact one-per-row list.
-#: src/features/forum/components/ForumToolbar.tsx:72
+#: src/features/forum/components/ForumToolbar.tsx:77
 msgid "List"
 msgstr "List"
 
@@ -24555,11 +24581,11 @@ msgid "Post a new {featureName}"
 msgstr "Post a new {featureName}"
 
 #. Forum sort option: newest post (channel creation) first.
-#: src/features/forum/components/ForumToolbar.tsx:60
+#: src/features/forum/components/ForumToolbar.tsx:65
 msgid "Post date"
 msgstr "Post date"
 
-#. Accessible label / tooltip for the button that opens the edit/delete menu of a forum post.
+#. Accessible label / tooltip for the button that opens the follow/edit/delete menu of a forum post.
 #: src/features/forum/components/ForumPostMenuButton.tsx:16
 msgid "Post options"
 msgstr "Post options"
@@ -25633,7 +25659,7 @@ msgid "Recent"
 msgstr "Recent"
 
 #. Forum sort option: newest message first. The default.
-#: src/features/forum/components/ForumToolbar.tsx:56
+#: src/features/forum/components/ForumToolbar.tsx:61
 msgid "Recent activity"
 msgstr "Recent activity"
 
@@ -29576,7 +29602,7 @@ msgid "Show emoji reactions on messages"
 msgstr "Show emoji reactions on messages"
 
 #. Forum "hide inactive" option that turns the rule off, keeping every post in the main list.
-#: src/features/forum/components/ForumToolbar.tsx:89
+#: src/features/forum/components/ForumToolbar.tsx:94
 msgid "Show every post"
 msgstr "Show every post"
 
@@ -30595,12 +30621,12 @@ msgid "Sort"
 msgstr "Sort"
 
 #. Label of the forum toolbar button that opens the sort-order and list/gallery view menu.
-#: src/features/forum/components/ForumToolbar.tsx:48
+#: src/features/forum/components/ForumToolbar.tsx:53
 msgid "Sort & view"
 msgstr "Sort & view"
 
 #. Section heading in the forum sort-and-view menu.
-#: src/features/forum/components/ForumToolbar.tsx:52
+#: src/features/forum/components/ForumToolbar.tsx:57
 msgid "Sort by"
 msgstr "Sort by"
 
@@ -33653,7 +33679,7 @@ msgstr "Tip"
 #. Label for the title field in the edit forum post modal.
 #: src/features/forum/components/ForumCreatePostModal.tsx:24
 #: src/features/forum/components/ForumEditPostModal.tsx:23
-#: src/features/forum/components/ForumToolbar.tsx:64
+#: src/features/forum/components/ForumToolbar.tsx:69
 msgid "Title"
 msgstr "Title"
 
@@ -34677,6 +34703,16 @@ msgstr "Unfocus"
 #: src/features/user/components/settings_utils/search_index/DesktopSettingsIndex.ts:22
 msgid "Unfocused"
 msgstr "Unfocused"
+
+#. Tooltip / accessible action on the forum follow button when the post is already followed.
+#: src/features/forum/components/ForumFollowButton.tsx:23
+msgid "Unfollow"
+msgstr "Unfollow"
+
+#. Menu action on a forum post the user already follows; stops following it.
+#: src/features/forum/components/ForumPostMenu.tsx:26
+msgid "Unfollow post"
+msgstr "Unfollow post"
 
 #. Button label in the embed debugger.
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
@@ -36741,7 +36777,7 @@ msgid "View and regenerate client secrets and bot tokens"
 msgstr "View and regenerate client secrets and bot tokens"
 
 #. Section heading in the forum sort-and-view menu.
-#: src/features/forum/components/ForumToolbar.tsx:68
+#: src/features/forum/components/ForumToolbar.tsx:73
 msgid "View as"
 msgstr "View as"
 
@@ -38171,6 +38207,11 @@ msgstr "You are signed in as the instance administrator. The next steps configur
 #: src/features/app/components/dialogs/components/plutonium/PricingContextPanel.tsx:119
 msgid "You are using the full standard {baseCurrencyLabel} price instead of localized pricing."
 msgstr "You are using the full standard {baseCurrencyLabel} price instead of localized pricing."
+
+#. Empty state of the forum list when the "Following" filter is on but the user follows nothing.
+#: src/features/forum/components/ForumPostList.tsx:28
+msgid "You aren't following any posts yet. Tap the star on a post to follow it."
+msgstr "You aren't following any posts yet. Tap the star on a post to follow it."
 
 #. Placeholder shown when the user has no communities to filter.
 #: src/features/user/components/modals/tabs/privacy_safety_tab/data_request_modal/DataRequestModal.tsx:159

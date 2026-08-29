@@ -1,0 +1,74 @@
+/* SPDX-License-Identifier: AGPL-3.0-or-later */
+
+.button {
+	appearance: none;
+	border: none;
+	background: none;
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.375rem;
+	border-radius: 0.25rem;
+	color: var(--text-primary-muted);
+	font: inherit;
+	flex-shrink: 0;
+}
+
+.button:hover {
+	background: var(--background-modifier-hover);
+	color: var(--text-primary);
+}
+
+.button:focus-visible {
+	outline: 0.125rem solid var(--focus-primary);
+	outline-offset: 0.125rem;
+}
+
+/* A followed post reads as "on" even when the pointer is elsewhere. */
+.following,
+.following:hover {
+	color: var(--text-warning, #f0b232);
+}
+
+.sm {
+	width: 1.5rem;
+	height: 1.5rem;
+}
+
+.md {
+	height: 2rem;
+	padding: 0 0.625rem;
+	border-radius: 0.375rem;
+	font-size: 0.875rem;
+	font-weight: 500;
+	background: var(--background-secondary);
+}
+
+.md.following {
+	background: var(--background-modifier-selected);
+}
+
+.label {
+	white-space: nowrap;
+}
+
+/*
+ * Same trick as ForumPostMenuButton: the glyph stays small so it doesn't dominate a row, but on a
+ * touch screen the hit area is grown to 44px with a centered overlay.
+ */
+@media (pointer: coarse) {
+	.sm {
+		position: relative;
+	}
+
+	.sm::after {
+		content: '';
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		width: 2.75rem;
+		height: 2.75rem;
+		transform: translate(-50%, -50%);
+	}
+}

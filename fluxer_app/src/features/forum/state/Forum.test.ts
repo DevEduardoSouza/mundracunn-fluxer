@@ -105,6 +105,7 @@ beforeEach(() => {
 	Forum.setInactiveDaysOverride(0);
 	Forum.setSortBy('activity');
 	Forum.setViewMode('list');
+	Forum.setShowOnlyFollowed(false);
 	Forum.setGuildId(GUILD_ID);
 });
 
@@ -257,20 +258,34 @@ describe('persisted preferences', () => {
 		Forum.setViewMode('grid');
 		Forum.setSortBy('title');
 		Forum.setInactiveDaysOverride(3);
+		Forum.setShowOnlyFollowed(true);
 		expect(JSON.parse(storage.get('Forum:prefs:user-1')!)).toEqual({
 			viewMode: 'grid',
 			sortBy: 'title',
 			inactiveDays: 3,
+			showOnlyFollowed: true,
 		});
 	});
 
 	it('restores them on the next visit', () => {
 		seed([{id: 'a', title: 'Alfa'}]);
-		storage.set('Forum:prefs:user-1', JSON.stringify({viewMode: 'grid', sortBy: 'title', inactiveDays: 3}));
+		storage.set(
+			'Forum:prefs:user-1',
+			JSON.stringify({viewMode: 'grid', sortBy: 'title', inactiveDays: 3, showOnlyFollowed: true}),
+		);
 		Forum.loadPrefs('user-1');
 		expect(Forum.getViewMode()).toBe('grid');
 		expect(Forum.getSortBy()).toBe('title');
 		expect(Forum.getInactiveDaysOverride()).toBe(3);
+		expect(Forum.getShowOnlyFollowed()).toBe(true);
+	});
+
+	it('treats a missing or bogus "following" flag as off', () => {
+		seed([{id: 'a', title: 'Alfa'}]);
+		Forum.setShowOnlyFollowed(true);
+		storage.set('Forum:prefs:user-1', JSON.stringify({viewMode: 'grid', showOnlyFollowed: 'yes'}));
+		Forum.loadPrefs('user-1');
+		expect(Forum.getShowOnlyFollowed()).toBe(false);
 	});
 
 	it('writes nothing before a user is known', () => {
@@ -308,6 +323,63 @@ describe('persisted preferences', () => {
 		expect(Forum.getViewMode()).toBe('grid');
 		expect(Forum.getQuery()).toBe('');
 		expect(Forum.getGuildId()).toBeNull();
+	});
+});
+
+describe('followed posts', () => {
+	/** Marks the posts with the given channel names as favorites. */
+	function follow(...ids: ReadonlyArray<string>): void {
+		const channels = getGuildChannelsMock(GUILD_ID) as ReadonlyArray<{id: string; name: string}>;
+		const followedIds = new Set(channels.filter((channel) => ids.includes(channel.name)).map((channel) => channel.id));
+		getFavoriteChannelMock.mockImplementation((id: string) => (followedIds.has(id) ? {id} : null));
+	}
+
+	beforeEach(() => {
+		seed([
+			// Distinct creation dates: the channel id is a snowflake of that instant.
+			{id: 'a', title: 'Alfa', createdDaysAgo: 1, lastMessageDaysAgo: 0},
+			{id: 'b', title: 'Beta', createdDaysAgo: 2, lastMessageDaysAgo: 2},
+			{id: 'c', title: 'Gama', createdDaysAgo: 40, lastMessageDaysAgo: 30},
+		]);
+		Forum.setInactiveDaysOverride(7);
+		// `clearAllMocks` keeps implementations — start each case from "follows nothing".
+		getFavoriteChannelMock.mockImplementation(() => null);
+	});
+
+	it('lists the followed posts in the usual order, ignoring the inactivity window', () => {
+		follow('c', 'a');
+		expect(titles(Forum.getFollowedPosts())).toEqual(['Alfa', 'Gama']);
+	});
+
+	it('pulls followed posts out of both groups so the strip on top does not duplicate them', () => {
+		follow('c', 'a');
+		expect(titles(Forum.getVisiblePosts())).toEqual(['Beta']);
+		expect(Forum.getVisibleOlderPosts()).toHaveLength(0);
+		// The raw activity split is untouched — the sidebar and the tests above still read it.
+		expect(titles(Forum.getActivePosts())).toEqual(['Alfa', 'Beta']);
+		expect(titles(Forum.getOlderPosts())).toEqual(['Gama']);
+	});
+
+	it('shows only the followed posts while the filter is on', () => {
+		follow('b');
+		Forum.setShowOnlyFollowed(true);
+		expect(titles(Forum.getVisiblePosts())).toEqual(['Beta']);
+		expect(Forum.getVisibleOlderPosts()).toHaveLength(0);
+		Forum.toggleShowOnlyFollowed();
+		expect(Forum.getShowOnlyFollowed()).toBe(false);
+		expect(titles(Forum.getVisiblePosts())).toEqual(['Alfa']);
+	});
+
+	it('applies the search to the followed strip too', () => {
+		follow('a', 'b');
+		Forum.setQuery('beta');
+		expect(titles(Forum.getFollowedPosts())).toEqual(['Beta']);
+	});
+
+	it('shows everything in the main list when nothing is followed', () => {
+		expect(Forum.getFollowedPosts()).toHaveLength(0);
+		expect(titles(Forum.getVisiblePosts())).toEqual(['Alfa', 'Beta']);
+		expect(titles(Forum.getVisibleOlderPosts())).toEqual(['Gama']);
 	});
 });
 

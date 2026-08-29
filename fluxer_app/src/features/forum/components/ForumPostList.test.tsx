@@ -49,8 +49,10 @@ function post(title: string) {
 
 async function mount(props: {
 	viewMode?: 'list' | 'grid';
+	followedPosts?: ReadonlyArray<unknown>;
 	activePosts?: ReadonlyArray<unknown>;
 	olderPosts?: ReadonlyArray<unknown>;
+	showOnlyFollowed?: boolean;
 }): Promise<HTMLDivElement> {
 	const container = document.createElement('div');
 	document.body.append(container);
@@ -60,8 +62,10 @@ async function mount(props: {
 			<ForumPostList
 				guildId="guild-a"
 				viewMode={props.viewMode ?? 'list'}
+				followedPosts={props.followedPosts as never}
 				activePosts={(props.activePosts ?? []) as never}
 				olderPosts={(props.olderPosts ?? []) as never}
+				showOnlyFollowed={props.showOnlyFollowed}
 			/>,
 		);
 	});
@@ -136,7 +140,39 @@ describe('the "older posts" section', () => {
 	});
 });
 
+describe('the "following" strip', () => {
+	it('is not rendered when the user follows nothing', async () => {
+		const container = await mount({activePosts: [post('Alfa')]});
+		expect(container.querySelector('[data-flx="forum.forum-post-list.followed-section"]')).toBeNull();
+	});
+
+	it('puts the followed posts first, in their own section, before the rest', async () => {
+		const container = await mount({followedPosts: [post('Seguida')], activePosts: [post('Alfa')]});
+		const section = container.querySelector<HTMLElement>('[data-flx="forum.forum-post-list.followed-section"]')!;
+		expect(section.textContent).toContain('Following');
+		expect(texts(section, 'row')).toEqual(['Seguida']);
+		expect(texts(container, 'row')).toEqual(['Seguida', 'Alfa']);
+	});
+
+	it('uses cards in gallery mode', async () => {
+		const container = await mount({viewMode: 'grid', followedPosts: [post('Seguida')], activePosts: [post('Alfa')]});
+		expect(texts(container, 'card')).toEqual(['Seguida', 'Alfa']);
+	});
+
+	it('carries the list alone when every active post is followed', async () => {
+		const container = await mount({followedPosts: [post('Seguida')]});
+		expect(texts(container, 'row')).toEqual(['Seguida']);
+		expect(container.textContent).not.toContain('No posts match your search.');
+	});
+});
+
 describe('the empty state', () => {
+	it('explains the "following" filter when it is on and nothing is followed', async () => {
+		const container = await mount({showOnlyFollowed: true});
+		expect(container.textContent).toContain("You aren't following any posts yet.");
+		expect(container.textContent).not.toContain('No posts match your search.');
+	});
+
 	it('says nothing matched when both groups are empty', async () => {
 		const container = await mount({});
 		expect(container.textContent).toContain('No posts match your search.');

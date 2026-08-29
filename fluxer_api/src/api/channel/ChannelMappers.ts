@@ -118,6 +118,9 @@ function serializeGuildCategoryChannel(channel: Channel, ctx: ContentWarningCtx)
 	return {
 		...serializeBaseChannelFields(channel),
 		...serializeGuildChannelFields(channel),
+		// MUNDRACUNN (feature forum): a category topic is accepted by PATCH /channels but was never
+		// serialized back; the forum reads its config markers from it.
+		topic: channel.topic,
 		...serializeContentWarningFields(channel, ctx),
 	};
 }

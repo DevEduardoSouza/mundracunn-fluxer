@@ -28,7 +28,7 @@ import {useContextMenuTrigger} from '@app/features/ui/hooks/useContextMenuTrigge
 import Users from '@app/features/user/state/Users';
 import {msg} from '@lingui/core/macro';
 import {useLingui} from '@lingui/react/macro';
-import {CaretDownIcon, MagnifyingGlassIcon, PlusIcon, SlidersHorizontalIcon} from '@phosphor-icons/react';
+import {CaretDownIcon, MagnifyingGlassIcon, PlusIcon, SlidersHorizontalIcon, StarIcon} from '@phosphor-icons/react';
 import {observer} from 'mobx-react-lite';
 import type React from 'react';
 import {useCallback} from 'react';
@@ -44,6 +44,11 @@ const OPEN_MY_POST_DESCRIPTOR = msg({
 const SEARCH_PLACEHOLDER_DESCRIPTOR = msg({
 	message: 'Search posts',
 	comment: 'Placeholder for the forum toolbar search field, which filters posts by title.',
+});
+const FOLLOWING_FILTER_DESCRIPTOR = msg({
+	message: 'Following ({count})',
+	comment:
+		'Toggle chip in the forum toolbar that shows only the posts the user follows. {count} is how many posts they follow.',
 });
 const SORT_AND_VIEW_DESCRIPTOR = msg({
 	message: 'Sort & view',
@@ -190,6 +195,9 @@ export const ForumToolbar: React.FC<ForumToolbarProps> = observer(({guildId}) =>
 	const {i18n} = useLingui();
 	const {isOpen, withTracking} = useContextMenuTrigger();
 	const query = Forum.getQuery();
+	const showOnlyFollowed = Forum.getShowOnlyFollowed();
+	const followedCount = Forum.getFollowedPosts().length;
+	const toggleFollowedFilter = useCallback(() => Forum.toggleShowOnlyFollowed(), []);
 	const handleQueryChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
 		Forum.setQuery(event.target.value);
 	}, []);
@@ -255,6 +263,24 @@ export const ForumToolbar: React.FC<ForumToolbarProps> = observer(({guildId}) =>
 				}
 				data-flx="forum.forum-toolbar.search"
 			/>
+			{/* Kept visible while the filter is on even at zero, so the user can switch it back off. */}
+			{(followedCount > 0 || showOnlyFollowed) && (
+				<Button
+					variant={showOnlyFollowed ? 'primary' : 'secondary'}
+					onClick={toggleFollowedFilter}
+					aria-pressed={showOnlyFollowed}
+					leftIcon={
+						<StarIcon
+							size={remFromPx(16)}
+							weight={showOnlyFollowed ? 'fill' : 'regular'}
+							data-flx="forum.forum-toolbar.following-icon"
+						/>
+					}
+					data-flx="forum.forum-toolbar.following-filter"
+				>
+					{i18n._(FOLLOWING_FILTER_DESCRIPTOR, {count: followedCount})}
+				</Button>
+			)}
 			<Button
 				variant="secondary"
 				onClick={openSortMenu}

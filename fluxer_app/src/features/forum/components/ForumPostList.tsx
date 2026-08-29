@@ -7,7 +7,7 @@ import type {ForumPost, ForumViewMode} from '@app/features/forum/state/Forum';
 import {Scroller} from '@app/features/ui/components/Scroller';
 import {msg} from '@lingui/core/macro';
 import {useLingui} from '@lingui/react/macro';
-import {CaretDownIcon} from '@phosphor-icons/react';
+import {CaretDownIcon, StarIcon} from '@phosphor-icons/react';
 import {observer} from 'mobx-react-lite';
 import type React from 'react';
 import {useState} from 'react';
@@ -21,12 +21,24 @@ const NO_RESULTS_DESCRIPTOR = msg({
 	message: 'No posts match your search.',
 	comment: 'Empty state shown in the forum list when the title search matches nothing.',
 });
+const FOLLOWING_SECTION_DESCRIPTOR = msg({
+	message: 'Following',
+	comment: 'Heading of the highlighted strip at the top of the forum list with the posts the user follows.',
+});
+const NO_FOLLOWED_DESCRIPTOR = msg({
+	message: "You aren't following any posts yet. Tap the star on a post to follow it.",
+	comment: 'Empty state of the forum list when the "Following" filter is on but the user follows nothing.',
+});
 
 interface ForumPostListProps {
 	guildId: string;
 	viewMode: ForumViewMode;
+	/** Posts the user follows, shown in a highlighted strip above `activePosts` (never duplicated there). */
+	followedPosts?: ReadonlyArray<ForumPost>;
 	activePosts: ReadonlyArray<ForumPost>;
 	olderPosts: ReadonlyArray<ForumPost>;
+	/** The toolbar's "Following" filter is on: `activePosts` are the followed ones, empty state says so. */
+	showOnlyFollowed?: boolean;
 }
 
 const ForumPostGroup: React.FC<{guildId: string; viewMode: ForumViewMode; posts: ReadonlyArray<ForumPost>}> = observer(
@@ -51,19 +63,33 @@ const ForumPostGroup: React.FC<{guildId: string; viewMode: ForumViewMode; posts:
 );
 
 export const ForumPostList: React.FC<ForumPostListProps> = observer(
-	({guildId, viewMode, activePosts, olderPosts}) => {
+	({guildId, viewMode, followedPosts = [], activePosts, olderPosts, showOnlyFollowed = false}) => {
 		const {i18n} = useLingui();
 		// Collapsed by default: the whole point of the rule is to get stale posts out of the way.
 		const [olderOpen, setOlderOpen] = useState(false);
+		const nothingToShow = followedPosts.length === 0 && activePosts.length === 0 && olderPosts.length === 0;
 		return (
 			<Scroller className={styles.scroller} data-flx="forum.forum-post-list.scroller">
 				<div className={styles.inner} data-flx="forum.forum-post-list.inner">
-					{/* An empty active group is only "nothing found" when there is no older group either:
+					{followedPosts.length > 0 && (
+						<section className={styles.followedSection} data-flx="forum.forum-post-list.followed-section">
+							<h2 className={styles.followedHeading} data-flx="forum.forum-post-list.followed-heading">
+								<StarIcon
+									weight="fill"
+									className={styles.followedStar}
+									data-flx="forum.forum-post-list.followed-star"
+								/>
+								{i18n._(FOLLOWING_SECTION_DESCRIPTOR)}
+							</h2>
+							<ForumPostGroup guildId={guildId} viewMode={viewMode} posts={followedPosts} />
+						</section>
+					)}
+					{/* An empty active group is only "nothing found" when there is no other group either:
 					    with every post past the inactivity window the section below carries the list. */}
 					{activePosts.length === 0 ? (
-						olderPosts.length === 0 && (
+						nothingToShow && (
 							<p className={styles.emptyText} data-flx="forum.forum-post-list.empty-text">
-								{i18n._(NO_RESULTS_DESCRIPTOR)}
+								{i18n._(showOnlyFollowed ? NO_FOLLOWED_DESCRIPTOR : NO_RESULTS_DESCRIPTOR)}
 							</p>
 						)
 					) : (
