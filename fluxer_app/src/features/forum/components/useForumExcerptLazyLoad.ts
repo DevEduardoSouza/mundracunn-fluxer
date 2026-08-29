@@ -1,16 +1,15 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import * as ForumCoverCommands from '@app/features/forum/commands/ForumCoverCommands';
+import * as ForumExcerptCommands from '@app/features/forum/commands/ForumExcerptCommands';
 import type React from 'react';
 import {useEffect, useRef} from 'react';
 
 /**
- * Fires a lazy cover fetch for one forum post channel the first time its card scrolls near the
- * viewport. Only does anything when the batched prefetch on the page can't cover it — search
- * backend unavailable, or still indexing a new post's channel — `ensureCoverLazy` is a no-op
- * otherwise. Returns a ref to attach to the card's root element.
+ * Fires a lazy excerpt fetch (the post's first message, see ForumExcerptCommands) the first time a
+ * gallery card scrolls near the viewport. Same shape as useForumCoverLazyLoad — kept separate so the
+ * two loaders evolve independently. Returns a ref to attach to the card's root element.
  */
-export function useForumCoverLazyLoad<T extends HTMLElement>(
+export function useForumExcerptLazyLoad<T extends HTMLElement>(
 	guildId: string,
 	channelId: string,
 ): React.RefObject<T | null> {
@@ -18,14 +17,14 @@ export function useForumCoverLazyLoad<T extends HTMLElement>(
 	useEffect(() => {
 		const element = ref.current;
 		if (!element || typeof IntersectionObserver === 'undefined') {
-			void ForumCoverCommands.ensureCoverLazy(guildId, channelId);
+			void ForumExcerptCommands.ensureExcerptLazy(guildId, channelId);
 			return;
 		}
 		const observer = new IntersectionObserver(
 			(entries) => {
 				for (const entry of entries) {
 					if (entry.isIntersecting) {
-						void ForumCoverCommands.ensureCoverLazy(guildId, channelId);
+						void ForumExcerptCommands.ensureExcerptLazy(guildId, channelId);
 						observer.disconnect();
 						break;
 					}

@@ -63,9 +63,16 @@ class ForumCovers {
 		}
 	}
 
-	setIndexing(): void {
-		this.isIndexing = true;
-		this.isLoading = false;
+	/**
+	 * The search API answers `indexing` while a never-indexed channel (any new post) is being indexed.
+	 * While true, covers come from the per-channel fallback (see ForumCoverCommands) until a retry of
+	 * the search succeeds.
+	 */
+	setIndexing(isIndexing = true): void {
+		this.isIndexing = isIndexing;
+		if (isIndexing) {
+			this.isLoading = false;
+		}
 	}
 
 	markRequested(channelIds: Iterable<string>): void {

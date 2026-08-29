@@ -62,6 +62,7 @@ export const ForumPage: React.FC<ForumPageProps> = observer(({guildId}) => {
 		Forum.loadPrefs(Users.currentUserId ?? '');
 		void ForumCoverCommands.fetchCovers(i18n, guildId);
 		return () => {
+			ForumCoverCommands.cancelCoverWork();
 			Forum.reset();
 			ForumCovers.reset();
 		};

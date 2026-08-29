@@ -12,6 +12,7 @@
 	overflow: hidden;
 	display: flex;
 	flex-direction: column;
+	min-width: 0;
 }
 
 .card:hover {
@@ -23,47 +24,35 @@
 	outline-offset: 0.125rem;
 }
 
-.coverWrap {
-	position: relative;
-}
-
-.menuOverlay {
-	position: absolute;
-	top: 0.375rem;
-	right: 0.375rem;
-	opacity: 0;
-	transition: opacity 0.1s ease;
-}
-
-.card:hover .menuOverlay,
-.card:focus-within .menuOverlay {
-	opacity: 1;
-}
-
-/* A touch screen never hovers, so the reveal-on-hover overlay would put the post menu out of
-   reach on mobile entirely. There it is simply always visible. */
-@media (hover: none) {
-	.menuOverlay {
-		opacity: 1;
-	}
-}
-
-@media (prefers-reduced-motion: reduce) {
-	.menuOverlay {
-		transition: none;
-	}
-}
-
-.menuOverlay button {
-	background: var(--background-primary);
-}
-
 .body {
 	display: flex;
 	flex-direction: column;
-	gap: 0.25rem;
-	padding: 0.625rem 0.75rem 0.75rem;
+	gap: 0.375rem;
+	padding: 0.75rem 0.75rem 0.5rem;
 	min-width: 0;
+}
+
+/* Author line: avatar, name in the accent weight, "posted 3 days ago" muted after it. */
+.header {
+	display: flex;
+	align-items: center;
+	gap: 0.375rem;
+	min-width: 0;
+	font-size: 0.75rem;
+	color: var(--text-primary-muted);
+}
+
+.author {
+	font-weight: 600;
+	color: var(--text-primary);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.posted {
+	flex-shrink: 0;
+	white-space: nowrap;
 }
 
 .titleRow {
@@ -75,7 +64,9 @@
 
 .title {
 	flex: 1;
-	font-weight: 600;
+	min-width: 0;
+	font-weight: 700;
+	line-height: 1.3;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
@@ -89,10 +80,97 @@
 	flex-shrink: 0;
 }
 
-.author {
+.tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.25rem;
+}
+
+.tag {
+	font-size: 0.75rem;
+	color: var(--text-link);
+	background: var(--background-primary);
+	border-radius: 0.25rem;
+	padding: 0.0625rem 0.3125rem;
+}
+
+/* Featured image: fixed 16:10 slot (ForumCover's `.large`), rounded on every corner now that it
+   sits inside the padded body instead of flush with the card edge. */
+.coverWrap {
+	margin-top: 0.25rem;
+	border-radius: 0.375rem;
+	overflow: hidden;
+}
+
+.coverWrap img {
+	border-radius: 0.375rem;
+}
+
+/* Text preview, in place of the image when the post has none. */
+.excerpt {
+	margin: 0.25rem 0 0;
+	font-size: 0.8125rem;
+	line-height: 1.4;
+	color: var(--text-primary-muted);
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 4;
+	overflow: hidden;
+	overflow-wrap: anywhere;
+}
+
+.footer {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.25rem 0.5rem 0.375rem 0.75rem;
+	border-top: 1px solid var(--background-modifier-accent);
+	min-height: 2.25rem;
+}
+
+.activity {
+	flex: 1;
+	min-width: 0;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.25rem;
 	font-size: 0.75rem;
 	color: var(--text-primary-muted);
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+}
+
+.activityIcon {
+	width: 1rem;
+	height: 1rem;
+	flex-shrink: 0;
+}
+
+/* Follow star + "⋯" menu. Muted until the card is hovered or focused, but never hidden: a touch
+   screen never hovers, so the buttons stay reachable there (see the hover: none rule below). */
+.actions {
+	display: flex;
+	align-items: center;
+	gap: 0.125rem;
+	flex-shrink: 0;
+	opacity: 0.6;
+	transition: opacity 0.1s ease;
+}
+
+.card:hover .actions,
+.card:focus-within .actions {
+	opacity: 1;
+}
+
+@media (hover: none) {
+	.actions {
+		opacity: 1;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.actions {
+		transition: none;
+	}
 }
