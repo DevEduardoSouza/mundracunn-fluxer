@@ -144,3 +144,11 @@
 		padding: 0.5rem;
 	}
 }
+
+/* Phones (measured at 390px, 29/08/2026): two columns left ~175px per card — author, title and
+   footer all truncated. One column reads like the Discord mobile forum. */
+@media (max-width: 480px) {
+	.grid {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
