@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import type {Channel} from '@app/features/channel/models/Channel';
+import {isFollowingForumPost, toggleFollowForumPost} from '@app/features/forum/commands/ForumFollowCommands';
+import {canManageForumPost} from '@app/features/forum/utils/ForumChannelDiscovery';
 import {ContextMenuCloseProvider} from '@app/features/ui/action_menu/ContextMenu';
 import {MenuGroup} from '@app/features/ui/action_menu/MenuGroup';
 import {MenuItem} from '@app/features/ui/action_menu/MenuItem';
@@ -9,12 +11,21 @@ import {modal, push as pushModal} from '@app/features/ui/commands/ModalCommands'
 import type {ContextMenuConfig} from '@app/features/ui/state/ContextMenu';
 import type {I18n} from '@lingui/core';
 import {msg} from '@lingui/core/macro';
-import {PencilSimpleIcon, TrashIcon} from '@phosphor-icons/react';
+import {PencilSimpleIcon, StarIcon, TrashIcon} from '@phosphor-icons/react';
+import {observer} from 'mobx-react-lite';
 import type React from 'react';
 
 const EDIT_POST_DESCRIPTOR = msg({
 	message: 'Edit post',
 	comment: 'Menu action that opens the edit modal for a forum post (title and tags).',
+});
+const FOLLOW_POST_DESCRIPTOR = msg({
+	message: 'Follow post',
+	comment: 'Menu action on a forum post that starts following it (favorites + activity notifications).',
+});
+const UNFOLLOW_POST_DESCRIPTOR = msg({
+	message: 'Unfollow post',
+	comment: 'Menu action on a forum post the user already follows; stops following it.',
 });
 const DELETE_POST_DESCRIPTOR = msg({
 	message: 'Delete post',
@@ -35,26 +46,44 @@ function openDeleteModal(channelId: string): void {
 	});
 }
 
-const ForumPostMenuContent: React.FC<{channel: Channel; onClose: () => void; i18n: I18n}> = ({channel, onClose, i18n}) => (
-	<ContextMenuCloseProvider value={onClose} data-flx="forum.forum-post-menu.close-provider">
-		<MenuGroup data-flx="forum.forum-post-menu.group">
-			<MenuItem
-				icon={<PencilSimpleIcon data-flx="forum.forum-post-menu.edit-icon" />}
-				onClick={() => openEditModal(channel)}
-				data-flx="forum.forum-post-menu.edit"
-			>
-				{i18n._(EDIT_POST_DESCRIPTOR)}
-			</MenuItem>
-			<MenuItem
-				danger={true}
-				icon={<TrashIcon data-flx="forum.forum-post-menu.delete-icon" />}
-				onClick={() => openDeleteModal(channel.id)}
-				data-flx="forum.forum-post-menu.delete"
-			>
-				{i18n._(DELETE_POST_DESCRIPTOR)}
-			</MenuItem>
-		</MenuGroup>
-	</ContextMenuCloseProvider>
+// Following is for everyone; editing and deleting only for whoever can manage the post.
+const ForumPostMenuContent: React.FC<{channel: Channel; onClose: () => void; i18n: I18n}> = observer(
+	({channel, onClose, i18n}) => {
+		const following = isFollowingForumPost(channel.id);
+		const canManage = canManageForumPost(channel.id);
+		return (
+			<ContextMenuCloseProvider value={onClose} data-flx="forum.forum-post-menu.close-provider">
+				<MenuGroup data-flx="forum.forum-post-menu.follow-group">
+					<MenuItem
+						icon={<StarIcon weight={following ? 'fill' : 'regular'} data-flx="forum.forum-post-menu.follow-icon" />}
+						onClick={() => toggleFollowForumPost(channel.id)}
+						data-flx="forum.forum-post-menu.follow"
+					>
+						{i18n._(following ? UNFOLLOW_POST_DESCRIPTOR : FOLLOW_POST_DESCRIPTOR)}
+					</MenuItem>
+				</MenuGroup>
+				{canManage && (
+					<MenuGroup data-flx="forum.forum-post-menu.group">
+						<MenuItem
+							icon={<PencilSimpleIcon data-flx="forum.forum-post-menu.edit-icon" />}
+							onClick={() => openEditModal(channel)}
+							data-flx="forum.forum-post-menu.edit"
+						>
+							{i18n._(EDIT_POST_DESCRIPTOR)}
+						</MenuItem>
+						<MenuItem
+							danger={true}
+							icon={<TrashIcon data-flx="forum.forum-post-menu.delete-icon" />}
+							onClick={() => openDeleteModal(channel.id)}
+							data-flx="forum.forum-post-menu.delete"
+						>
+							{i18n._(DELETE_POST_DESCRIPTOR)}
+						</MenuItem>
+					</MenuGroup>
+				)}
+			</ContextMenuCloseProvider>
+		);
+	},
 );
 
 export function openForumPostMenu(

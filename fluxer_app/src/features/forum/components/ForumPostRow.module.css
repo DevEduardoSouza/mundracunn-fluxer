@@ -55,10 +55,10 @@
 	flex-shrink: 0;
 }
 
-.followingIcon {
-	display: inline-flex;
+.actions {
+	display: flex;
 	align-items: center;
-	color: var(--text-tertiary);
+	gap: 0.125rem;
 	flex-shrink: 0;
 }
 

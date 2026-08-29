@@ -2,6 +2,7 @@
 
 import {Routes} from '@app/app/Routes';
 import {ForumCover} from '@app/features/forum/components/ForumCover';
+import {ForumFollowButton} from '@app/features/forum/components/ForumFollowButton';
 import {ForumPostMenuButton} from '@app/features/forum/components/ForumPostMenuButton';
 import styles from '@app/features/forum/components/ForumPostRow.module.css';
 import {useForumCoverLazyLoad} from '@app/features/forum/components/useForumCoverLazyLoad';
@@ -10,20 +11,13 @@ import ForumCovers from '@app/features/forum/state/ForumCovers';
 import {formatForumRelativeTime} from '@app/features/forum/utils/ForumRelativeTime';
 import {isKeyboardActivationKey} from '@app/features/input/utils/KeyboardUtils';
 import * as RouterUtils from '@app/features/navigation/utils/RouterUtils';
-import {remFromPx} from '@app/features/theme/layout/RemFromPx';
-import {Tooltip} from '@app/features/ui/tooltip/Tooltip';
 import Users from '@app/features/user/state/Users';
 import {msg} from '@lingui/core/macro';
 import {useLingui} from '@lingui/react/macro';
-import {BellRingingIcon} from '@phosphor-icons/react';
 import {observer} from 'mobx-react-lite';
 import type React from 'react';
 import {useCallback} from 'react';
 
-const FOLLOWING_DESCRIPTOR = msg({
-	message: 'Following',
-	comment: 'Tooltip on the bell icon shown next to a forum post the current user follows.',
-});
 const BY_AUTHOR_DESCRIPTOR = msg({
 	message: 'by {author}',
 	comment: 'Byline under a forum post title. {author} is the display name of the post owner.',
@@ -73,13 +67,6 @@ export const ForumPostRow: React.FC<ForumPostRowProps> = observer(({guildId, pos
 					<span className={styles.title} data-flx="forum.forum-post-row.title">
 						{post.title}
 					</span>
-					{post.isFollowed && (
-						<Tooltip text={i18n._(FOLLOWING_DESCRIPTOR)} data-flx="forum.forum-post-row.following-tooltip">
-							<span className={styles.followingIcon} data-flx="forum.forum-post-row.following-icon">
-								<BellRingingIcon size={remFromPx(14)} data-flx="forum.forum-post-row.following-icon-glyph" />
-							</span>
-						</Tooltip>
-					)}
 				</div>
 				<div className={styles.meta} data-flx="forum.forum-post-row.meta">
 					{authorName && (
@@ -99,7 +86,10 @@ export const ForumPostRow: React.FC<ForumPostRowProps> = observer(({guildId, pos
 					</div>
 				)}
 			</div>
-			<ForumPostMenuButton channel={post.channel} data-flx="forum.forum-post-row.menu-button" />
+			<div className={styles.actions} data-flx="forum.forum-post-row.actions">
+				<ForumFollowButton channelId={post.channel.id} size="sm" data-flx="forum.forum-post-row.follow-button" />
+				<ForumPostMenuButton channel={post.channel} data-flx="forum.forum-post-row.menu-button" />
+			</div>
 			<ForumCover message={cover} variant="thumb" data-flx="forum.forum-post-row.cover" />
 		</div>
 	);

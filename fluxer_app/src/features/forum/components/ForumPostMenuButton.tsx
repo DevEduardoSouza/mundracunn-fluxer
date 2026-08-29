@@ -15,10 +15,10 @@ import {useCallback} from 'react';
 
 const POST_OPTIONS_DESCRIPTOR = msg({
 	message: 'Post options',
-	comment: 'Accessible label / tooltip for the button that opens the edit/delete menu of a forum post.',
+	comment: 'Accessible label / tooltip for the button that opens the follow/edit/delete menu of a forum post.',
 });
 
-/** Compact "⋯" button for a forum post card/row. Renders nothing unless the user can manage the post. */
+/** Compact "⋯" button for a forum post card/row. Shown to everyone: the menu always has "Follow". */
 export const ForumPostMenuButton: React.FC<{channel: Channel}> = observer(({channel}) => {
 	const {i18n} = useLingui();
 	const handleClick = useCallback(
@@ -28,7 +28,6 @@ export const ForumPostMenuButton: React.FC<{channel: Channel}> = observer(({chan
 		},
 		[channel, i18n],
 	);
-	if (!canManageForumPost(channel.id)) return null;
 	return (
 		<button
 			type="button"

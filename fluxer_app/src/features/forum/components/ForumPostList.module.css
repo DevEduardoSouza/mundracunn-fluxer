@@ -31,6 +31,33 @@
 	gap: 0.75rem;
 }
 
+.followedSection {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	padding: 0.75rem;
+	border-radius: 0.5rem;
+	background: var(--background-secondary);
+	border: 1px solid var(--background-modifier-accent);
+}
+
+.followedHeading {
+	display: flex;
+	align-items: center;
+	gap: 0.375rem;
+	margin: 0;
+	font-size: 0.8125rem;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.02em;
+	color: var(--text-primary-muted);
+}
+
+.followedStar {
+	flex-shrink: 0;
+	color: var(--text-warning, #f0b232);
+}
+
 .olderSection {
 	display: flex;
 	flex-direction: column;
@@ -106,5 +133,9 @@
 
 	.inner {
 		padding: 0.75rem;
+	}
+
+	.followedSection {
+		padding: 0.5rem;
 	}
 }

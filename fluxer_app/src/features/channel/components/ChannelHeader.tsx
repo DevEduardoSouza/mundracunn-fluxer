@@ -46,6 +46,7 @@ import {isGroupDmFull} from '@app/features/channel/utils/GroupDmUtils';
 // nao puxar o codigo do forum pro bundle de todo canal; o componente ja se auto-oculta quando o
 // canal nao e uma postagem de forum ou o usuario nao pode gerencia-la.
 import {createNamedLoadableComponent} from '@app/features/platform/components/loadable/LoadableComponent';
+import {isForumPostChannel} from '@app/features/forum/utils/ForumChannelDiscovery';
 import {
 	ADD_TO_FAVORITES_DESCRIPTOR,
 	CHANNEL_ADDED_TO_FAVORITES_DESCRIPTOR,
@@ -122,6 +123,11 @@ const ForumPostHeaderMenuButton = createNamedLoadableComponent<{guildId: string;
 	load: async () =>
 		(await import('@app/features/forum/components/ForumPostMenuButton')).ForumPostHeaderMenuButton,
 });
+// MUNDRACUNN (feature forum): breadcrumb "Forum > titulo", tags, autor e seguir no lugar do nome do canal.
+const ForumPostHeader = createNamedLoadableComponent<{guildId: string; channel: Channel}>({
+	displayName: 'ForumPostHeader',
+	load: async () => (await import('@app/features/forum/components/ForumPostHeader')).ForumPostHeader,
+});
 
 interface ChannelHeaderProps {
 	channel?: Channel;
@@ -158,6 +164,8 @@ export const ChannelHeader = observer(
 		const headerRef = useRef<HTMLElement>(null);
 		const {isMembersOpen} = MemberList;
 		const isMobile = MobileLayout.isMobileLayout();
+		// MUNDRACUNN (feature forum)
+		const isForumPost = !!channel?.guildId && isForumPostChannel(channel.guildId, channel);
 		const isCallChannelConnected = Boolean(MediaEngine.connected && MediaEngine.channelId === channel?.id);
 		const channelIsE2EEEncrypted =
 			isCallChannelConnected && channel
@@ -366,12 +374,25 @@ export const ChannelHeader = observer(
 				RouterUtils.transitionTo(Routes.ME);
 			} else if (Routes.isFavoritesRoute(location.pathname)) {
 				RouterUtils.transitionTo(Routes.FAVORITES);
+			} else if (isMobile && isForumPost && channel?.guildId) {
+				// MUNDRACUNN (feature forum): mobile back leaves the post towards the forum page.
+				RouterUtils.transitionTo(Routes.guildForum(channel.guildId));
 			} else if (isGuildChannel && channel?.guildId) {
 				NavigationCommands.selectChannel(channel.guildId);
 			} else {
 				goBackOr(Routes.ME);
 			}
-		}, [onBackClick, isDM, isGroupDM, isPersonalNotes, isGuildChannel, channel?.guildId, location.pathname]);
+		}, [
+			onBackClick,
+			isDM,
+			isGroupDM,
+			isPersonalNotes,
+			isGuildChannel,
+			isMobile,
+			isForumPost,
+			channel?.guildId,
+			location.pathname,
+		]);
 		const handleChannelDetailsClick = () => {
 			setInitialTab('members');
 			setChannelDetailsOpen(true);
@@ -552,6 +573,13 @@ export const ChannelHeader = observer(
 							<div className={styles.leftContentContainer} data-flx="channel.channel-header.left-content-container">
 								{leftContent ? (
 									leftContent
+								) : channel?.guildId && isForumPost ? (
+									// MUNDRACUNN (feature forum)
+									<ForumPostHeader
+										guildId={channel.guildId}
+										channel={channel}
+										data-flx="channel.channel-header.forum-post-header"
+									/>
 								) : channel ? (
 									isMobile ? (
 										<FocusRing offset={-2} data-flx="channel.channel-header.focus-ring--3">

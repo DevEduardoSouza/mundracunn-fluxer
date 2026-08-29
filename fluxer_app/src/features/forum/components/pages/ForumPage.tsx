@@ -95,8 +95,11 @@ export const ForumPage: React.FC<ForumPageProps> = observer(({guildId}) => {
 			setIsSettingUp(false);
 		}
 	}, [guildId, i18n]);
-	const activePosts = Forum.getActivePosts();
-	const olderPosts = Forum.getOlderPosts();
+	const showOnlyFollowed = Forum.getShowOnlyFollowed();
+	// With the filter on the followed posts ARE the main list; off, they get their own strip on top.
+	const followedPosts = showOnlyFollowed ? undefined : Forum.getFollowedPosts();
+	const activePosts = Forum.getVisiblePosts();
+	const olderPosts = Forum.getVisibleOlderPosts();
 	const viewMode = Forum.getViewMode();
 	const hasForumStructure = getForumCategories(guildId).length > 0;
 	const hasAnyPosts = Forum.getGuildPostChannelIds(guildId).length > 0;
@@ -130,8 +133,10 @@ export const ForumPage: React.FC<ForumPageProps> = observer(({guildId}) => {
 						<ForumPostList
 							guildId={guildId}
 							viewMode={viewMode}
+							followedPosts={followedPosts}
 							activePosts={activePosts}
 							olderPosts={olderPosts}
+							showOnlyFollowed={showOnlyFollowed}
 							data-flx="forum.forum-page.post-list"
 						/>
 					) : (

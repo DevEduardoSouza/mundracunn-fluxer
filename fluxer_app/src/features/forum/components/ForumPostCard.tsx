@@ -2,6 +2,7 @@
 
 import {Routes} from '@app/app/Routes';
 import {ForumCover} from '@app/features/forum/components/ForumCover';
+import {ForumFollowButton} from '@app/features/forum/components/ForumFollowButton';
 import {ForumPostMenuButton} from '@app/features/forum/components/ForumPostMenuButton';
 import styles from '@app/features/forum/components/ForumPostCard.module.css';
 import {useForumCoverLazyLoad} from '@app/features/forum/components/useForumCoverLazyLoad';
@@ -66,6 +67,7 @@ export const ForumPostCard: React.FC<ForumPostCardProps> = observer(({guildId, p
 					<span className={styles.title} data-flx="forum.forum-post-card.title">
 						{post.title}
 					</span>
+					<ForumFollowButton channelId={post.channel.id} size="sm" data-flx="forum.forum-post-card.follow-button" />
 				</div>
 				{authorName && (
 					<span className={styles.author} data-flx="forum.forum-post-card.author">

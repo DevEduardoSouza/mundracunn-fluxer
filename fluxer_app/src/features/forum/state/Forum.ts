@@ -34,6 +34,8 @@ interface ForumPrefs {
 	viewMode: ForumViewMode;
 	sortBy: ForumSortBy;
 	inactiveDays: ForumInactiveDaysOverride;
+	/** "Seguindo" chip in the toolbar: show only the posts the user follows. */
+	showOnlyFollowed: boolean;
 }
 
 function prefsStorageKey(userId: string): string {
@@ -59,14 +61,20 @@ export interface ForumPost {
  * the forum (which updates that channel's `lastMessageId` via MESSAGE_CREATE) re-sorts the list on
  * its own with nothing to fetch or invalidate.
  *
- * `viewMode`/`sortBy` are per-user preferences persisted to AppStorage (localStorage) under
- * `Forum:prefs:<userId>` — {@link loadPrefs} reads them on mount, the setters write them back.
+ * `viewMode`/`sortBy`/`showOnlyFollowed` are per-user preferences persisted to AppStorage
+ * (localStorage) under `Forum:prefs:<userId>` — {@link loadPrefs} reads them on mount, the setters
+ * write them back.
+ *
+ * Followed posts (native Favorites, see ForumFollowCommands) are pulled out of the activity split:
+ * with the filter off they go in a highlighted strip above the list ({@link followedPosts}) and are
+ * left out of {@link visiblePosts}/{@link visibleOlderPosts}; with it on, only they are shown.
  */
 class Forum {
 	guildId: string | null = null;
 	viewMode: ForumViewMode = 'list';
 	sortBy: ForumSortBy = 'activity';
 	inactiveDaysOverride: ForumInactiveDaysOverride = null;
+	showOnlyFollowed = false;
 	query = '';
 	private prefsUserId: string | null = null;
 
@@ -96,6 +104,10 @@ class Forum {
 
 	getInactiveDaysOverride(): ForumInactiveDaysOverride {
 		return this.inactiveDaysOverride;
+	}
+
+	getShowOnlyFollowed(): boolean {
+		return this.showOnlyFollowed;
 	}
 
 	private get allPosts(): ReadonlyArray<ForumPost> {
@@ -184,6 +196,41 @@ class Forum {
 		return this.olderPosts;
 	}
 
+	/**
+	 * Every post the user follows (search applied, sorted like the rest), regardless of the
+	 * inactivity window — a post you chose to follow is never buried under "Older posts".
+	 */
+	get followedPosts(): ReadonlyArray<ForumPost> {
+		return this.allPosts.filter((post) => post.isFollowed);
+	}
+
+	/**
+	 * The main list. With the "Seguindo" filter on, just the followed posts; otherwise the active
+	 * posts minus the followed ones, which the list shows in its own strip on top (no duplicates).
+	 */
+	get visiblePosts(): ReadonlyArray<ForumPost> {
+		if (this.showOnlyFollowed) return this.followedPosts;
+		return this.activePosts.filter((post) => !post.isFollowed);
+	}
+
+	/** The collapsed "Older posts" group, minus followed posts; empty while the filter is on. */
+	get visibleOlderPosts(): ReadonlyArray<ForumPost> {
+		if (this.showOnlyFollowed) return [];
+		return this.olderPosts.filter((post) => !post.isFollowed);
+	}
+
+	getFollowedPosts(): ReadonlyArray<ForumPost> {
+		return this.followedPosts;
+	}
+
+	getVisiblePosts(): ReadonlyArray<ForumPost> {
+		return this.visiblePosts;
+	}
+
+	getVisibleOlderPosts(): ReadonlyArray<ForumPost> {
+		return this.visibleOlderPosts;
+	}
+
 	/** Every forum post channel of a guild, unfiltered — for prefetching covers and the sidebar badge. */
 	getGuildPostChannelIds(guildId: string): Array<string> {
 		return getForumPostChannels(guildId).map((channel) => channel.id);
@@ -214,6 +261,15 @@ class Forum {
 		this.persistPrefs();
 	}
 
+	setShowOnlyFollowed(showOnlyFollowed: boolean): void {
+		this.showOnlyFollowed = showOnlyFollowed;
+		this.persistPrefs();
+	}
+
+	toggleShowOnlyFollowed(): void {
+		this.setShowOnlyFollowed(!this.showOnlyFollowed);
+	}
+
 	setQuery(query: string): void {
 		this.query = query;
 	}
@@ -232,6 +288,7 @@ class Forum {
 			typeof stored?.inactiveDays === 'number' && Number.isFinite(stored.inactiveDays) && stored.inactiveDays >= 0
 				? stored.inactiveDays
 				: null;
+		this.showOnlyFollowed = stored?.showOnlyFollowed === true;
 	}
 
 	private persistPrefs(): void {
@@ -240,6 +297,7 @@ class Forum {
 			viewMode: this.viewMode,
 			sortBy: this.sortBy,
 			inactiveDays: this.inactiveDaysOverride,
+			showOnlyFollowed: this.showOnlyFollowed,
 		});
 	}
 

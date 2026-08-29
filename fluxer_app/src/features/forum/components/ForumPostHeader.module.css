@@ -1,0 +1,93 @@
+/* SPDX-License-Identifier: AGPL-3.0-or-later */
+
+/* Fills the header's left slot; everything inside must shrink so the title ellipsizes at 390px. */
+.root {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	flex: 1 1 auto;
+	min-width: 0;
+	overflow: hidden;
+}
+
+.main {
+	display: flex;
+	flex-direction: column;
+	gap: 0.0625rem;
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.breadcrumb {
+	display: flex;
+	align-items: center;
+	gap: 0.125rem;
+	min-width: 0;
+	line-height: 1.25rem;
+}
+
+.forumLink {
+	appearance: none;
+	border: none;
+	background: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	flex-shrink: 0;
+	color: var(--channel-header-text-muted, var(--text-primary-muted));
+	border-radius: 0.25rem;
+}
+
+.forumLink:hover {
+	color: var(--text-primary);
+	text-decoration: underline;
+}
+
+.forumLink:focus-visible {
+	outline: 0.125rem solid var(--focus-primary);
+	outline-offset: 0.125rem;
+}
+
+.caret {
+	width: 0.875rem;
+	height: 0.875rem;
+	flex-shrink: 0;
+	color: var(--channel-header-text-muted, var(--text-primary-muted));
+}
+
+.title {
+	font-weight: 600;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: var(--text-primary);
+}
+
+/* Single line, no wrapping: the header has no vertical room; overflowing tags just clip. */
+.meta {
+	display: flex;
+	align-items: center;
+	gap: 0.375rem;
+	min-width: 0;
+	overflow: hidden;
+	white-space: nowrap;
+	font-size: 0.75rem;
+	line-height: 1rem;
+	color: var(--text-primary-muted);
+}
+
+.author {
+	flex-shrink: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: 10rem;
+}
+
+.tag {
+	flex-shrink: 0;
+	color: var(--text-link);
+	background: var(--background-secondary);
+	border-radius: 0.25rem;
+	padding: 0 0.3125rem;
+}

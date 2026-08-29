@@ -129,15 +129,12 @@ export function getStudentRole(guildId: string): GuildRole | undefined {
 /**
  * Where a class writes the forum's configuration markers.
  *
- * The intended place is the forum category's topic, but the API's category serializer
- * (`serializeGuildCategoryChannel` in fluxer_api/src/api/channel/ChannelMappers.ts) omits `topic`
- * entirely — the value is stored server-side and never sent to the client, so `category.topic` is
- * always undefined here. The guidelines channel is a GUILD_TEXT, whose topic *is* serialized, so it
- * is read as well and is the one that actually works today.
- *
- * Both are scanned: the category first, so the markers start working from the category topic the
- * day that serializer gains the field (a one-line upstream fix worth sending) with nothing to change
- * in any class.
+ * The natural place is the forum category's topic. Upstream Fluxer's category serializer
+ * (`serializeGuildCategoryChannel` in fluxer_api/src/api/channel/ChannelMappers.ts) omits `topic`,
+ * so `category.topic` was always undefined on the client; the fork's API now sends it (one-line
+ * change there, candidate for an upstream PR). The guidelines channel is a GUILD_TEXT whose topic
+ * has always been serialized, so it is scanned as well: a class can keep the markers in either
+ * place, and one written in `#diretrizes` keeps working against an unpatched API.
  */
 function getForumConfigTopics(guildId: string): Array<string> {
 	const topics = getForumCategories(guildId).map((category) => category.topic ?? '');
