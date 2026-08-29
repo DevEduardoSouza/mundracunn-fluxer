@@ -26,7 +26,10 @@ vi.mock('@app/features/guild/state/Guilds', () => ({
 vi.mock('@app/features/navigation/commands/NavigationCommands', () => ({selectChannel: vi.fn()}));
 vi.mock('@app/features/permissions/state/Permission', () => ({default: {getGuildPermissions: vi.fn(() => 0n)}}));
 vi.mock('@app/features/user/state/Users', () => ({default: {currentUserId: 'user-1'}}));
-vi.mock('@app/features/forum/commands/ForumCoverCommands', () => ({fetchCovers: vi.fn(() => Promise.resolve())}));
+vi.mock('@app/features/forum/commands/ForumCoverCommands', () => ({
+	fetchCovers: vi.fn(() => Promise.resolve()),
+	cancelCoverWork: vi.fn(),
+}));
 vi.mock('@app/features/forum/commands/ForumSetupCommands', () => ({
 	setupForumChannels: vi.fn(() => Promise.resolve()),
 }));

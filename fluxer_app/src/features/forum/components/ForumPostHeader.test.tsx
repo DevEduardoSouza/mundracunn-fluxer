@@ -125,10 +125,10 @@ describe('ForumPostHeader', () => {
 		expect(container.querySelector('[data-flx="forum.forum-post-header.title"]')!.textContent).toBe('meu-sketchbook');
 	});
 
-	it('navigates to the forum page when "Forum" is clicked', async () => {
+	it('navigates to the forum page when the breadcrumb root is clicked', async () => {
 		const container = await mount();
 		const link = container.querySelector('[data-flx="forum.forum-post-header.forum-link"]')!;
-		expect(link.textContent).toBe('Forum');
+		expect(link.textContent).toBe('Community Sketchbooks');
 		await act(async () => {
 			link.dispatchEvent(new MouseEvent('click', {bubbles: true}));
 		});

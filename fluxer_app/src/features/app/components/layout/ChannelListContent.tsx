@@ -91,7 +91,7 @@ const HOME_SELECTED_DESCRIPTOR = msg({
 	comment: 'Short label in the app layout channel list content.',
 });
 const FORUM_SELECTED_DESCRIPTOR = msg({
-	message: 'Forum, selected',
+	message: 'Community Sketchbooks, selected',
 	comment: 'Short label in the app layout channel list content for the selected Forum sidebar item.',
 });
 const NEW_MESSAGES_DESCRIPTOR = msg({

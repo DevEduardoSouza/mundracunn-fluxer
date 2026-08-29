@@ -17,11 +17,11 @@ import type React from 'react';
 import {useCallback} from 'react';
 
 const FORUM_DESCRIPTOR = msg({
-	message: 'Forum',
+	message: 'Community Sketchbooks',
 	comment: 'Breadcrumb root in the header of a forum post channel; clicking it goes back to the forum page.',
 });
 const BACK_TO_FORUM_DESCRIPTOR = msg({
-	message: 'Back to forum',
+	message: 'Back to Community Sketchbooks',
 	comment: 'Accessible label of the breadcrumb link that leaves a forum post and returns to the forum page.',
 });
 const BY_AUTHOR_DESCRIPTOR = msg({

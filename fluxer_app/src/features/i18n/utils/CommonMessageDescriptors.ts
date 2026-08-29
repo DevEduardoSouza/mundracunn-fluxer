@@ -496,7 +496,8 @@ export const SOCIAL_HOME_DESCRIPTOR = msg({
 	comment: 'Generic header / tab label for a guild social home (class feed) page.',
 });
 export const FORUM_DESCRIPTOR = msg({
-	message: 'Forum',
+	// MUNDRACUNN: the client named the forum "Sketchbooks da Comunidade" (29/08/2026)
+	message: 'Community Sketchbooks',
 	comment: 'Generic header / tab / sidebar label for a guild forum page (aggregated forum-category discussion channels).',
 });
 export const JUMP_DESCRIPTOR = msg({

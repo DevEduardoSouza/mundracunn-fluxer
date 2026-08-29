@@ -899,7 +899,7 @@ msgid "{memberCount} {rawMemberCount, plural, one {member} other {members}}"
 msgstr "{memberCount} {rawMemberCount, plural, one {membro} other {membros}}"
 
 #. Generic aria-label for an unread-mentions badge. Preserve {mentionCount}.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:807
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:808
 msgid "{mentionCount} mentions"
 msgstr "{mentionCount} menções"
 
@@ -2288,7 +2288,9 @@ msgstr "Clique de ativação"
 msgid "Active"
 msgstr "Ativa"
 
+#. Relative last-activity label in the footer of a forum post card. {time} is an already localized relative phrase such as "3 days ago" / "há 3 dias", so the translation should read naturally around it.
 #. Relative last-activity label on a forum post row. {time} is an already localized relative phrase such as "3 days ago" / "há 3 dias", so the translation should read naturally around it.
+#: src/features/forum/components/ForumPostCard.tsx:30
 #: src/features/forum/components/ForumPostRow.tsx:25
 msgid "active {time}"
 msgstr "ativo {time}"
@@ -2333,7 +2335,7 @@ msgstr "Assinante mensal ativo (cancelamento agendado)"
 #. Short label in the appearance tab. Keep it concise.
 #. Short label in the inline. Keep it concise.
 #. Status label indicating a user is currently active.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:751
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:752
 #: src/features/user/components/modals/tabs/appearance_tab/AppearanceTabInline.tsx:43
 #: src/features/user/components/modals/tabs/AppearanceTab.tsx:51
 #: src/features/user/components/settings_utils/section_registry/AppearanceSections.ts:430
@@ -2535,7 +2537,7 @@ msgid "Add bot to a destination"
 msgstr "Adicionar bot a um destino"
 
 #. Generic action label that opens the create-channel flow from inside a category or sidebar.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:518
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:519
 msgid "Add channel"
 msgstr "Adicionar canal"
 
@@ -2626,7 +2628,7 @@ msgstr "Adicionar chave de acesso"
 
 #. Generic action label that opens the reaction picker for a message.
 #. Keyboard shortcut action label shown in the shortcuts list and keybind editor. Keep short, sentence case.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:530
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:531
 #: src/features/input/state/input_keybind/shared.ts:17
 msgid "Add reaction"
 msgstr "Adicionar reação"
@@ -2781,7 +2783,7 @@ msgid "Added to favorite GIFs"
 msgstr "Adicionado aos GIFs favoritos"
 
 #. Toast confirming an item was added to the favorites list.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:623
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:624
 msgid "Added to favorites"
 msgstr "Adicionado aos favoritos"
 
@@ -3778,7 +3780,7 @@ msgid "App zoom"
 msgstr "Zoom do app"
 
 #. Setting label for the global UI zoom level.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:783
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:784
 msgid "App zoom level"
 msgstr "Nível de zoom do app"
 
@@ -4789,8 +4791,8 @@ msgstr "Voltar para a chamada"
 
 #. Accessible label of the breadcrumb link that leaves a forum post and returns to the forum page.
 #: src/features/forum/components/ForumPostHeader.tsx:23
-msgid "Back to forum"
-msgstr "Voltar ao fórum"
+msgid "Back to Community Sketchbooks"
+msgstr "Voltar aos Sketchbooks da Comunidade"
 
 #. Button or menu action label in the channel and chat gif picker header. Keep it concise.
 #: src/features/channel/components/pickers/gif/GifPickerHeader.tsx:26
@@ -5294,7 +5296,7 @@ msgstr "Limite de favoritos atingido"
 #. Generic action label that saves a message to the bookmarks list.
 #. Keyboard shortcut action label shown in the shortcuts list and keybind editor. Keep short, sentence case.
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:534
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:535
 #: src/features/input/state/input_keybind/shared.ts:265
 #: src/features/user/components/settings_utils/search_index/KeybindsIndex.ts:66
 msgid "Bookmark message"
@@ -5631,9 +5633,7 @@ msgid "Buy gift"
 msgstr "Comprar presente"
 
 #. Byline in the header of a forum post. {author} is the display name of the post owner.
-#. Byline under a forum post card title. {author} is the display name of the post owner.
 #. Byline under a forum post title. {author} is the display name of the post owner.
-#: src/features/forum/components/ForumPostCard.tsx:20
 #: src/features/forum/components/ForumPostHeader.tsx:27
 #: src/features/forum/components/ForumPostRow.tsx:21
 msgid "by {author}"
@@ -5728,7 +5728,7 @@ msgstr "Chamadas"
 #. Generic voice/video setting label for the active camera device.
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
 #. Short label in the video tab. Keep it concise.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:727
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:728
 #: src/features/user/components/modals/tabs/UserVideoTab.tsx:70
 #: src/features/user/components/settings_utils/section_registry/VoiceVideoSections.ts:157
 #: src/features/voice/utils/SettingsDeviceOptions.ts:23
@@ -5778,7 +5778,7 @@ msgstr "Câmera desativada"
 
 #. Generic action label that enables the local camera.
 #. Notification sound setting label. Sound played when the user turns their camera on in a call.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:731
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:732
 #: src/features/notification/utils/SoundLabels.ts:52
 msgid "Camera on"
 msgstr "Câmera ligada"
@@ -6189,7 +6189,7 @@ msgid "Change emoji"
 msgstr "Mudar emoji"
 
 #. Generic action label that opens the friend-nickname edit flow.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:546
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:547
 msgid "Change friend nickname"
 msgstr "Mudar apelido do amigo"
 
@@ -6421,7 +6421,7 @@ msgid "Channel actions"
 msgstr "Ações do canal"
 
 #. Toast confirming a channel was added to the favorites list.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:799
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:800
 msgid "Channel added to favorites"
 msgstr "Canal adicionado aos favoritos"
 
@@ -6442,14 +6442,14 @@ msgid "Channel created"
 msgstr "Canal criado"
 
 #. Title of the developer-mode channel debug modal (distinct from the action label that opens it).
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:554
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:555
 msgid "Channel debug"
 msgstr "Depuração do canal"
 
 #. Audit log entry label. Past-tense action describing that a channel was deleted.
 #. Toast confirming a channel was successfully deleted.
 #: src/features/app/config/AuditLogConstants.ts:20
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:767
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:768
 msgid "Channel deleted"
 msgstr "Canal apagado"
 
@@ -6554,7 +6554,7 @@ msgid "Channel record"
 msgstr "Registro do canal"
 
 #. Toast confirming a channel was removed from the favorites list.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:795
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:796
 msgid "Channel removed from favorites"
 msgstr "Canal removido dos favoritos"
 
@@ -7266,7 +7266,7 @@ msgid "Clear quick CSS?"
 msgstr "Limpar CSS rápido?"
 
 #. Generic short button / icon label that clears the active search query.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:522
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:523
 #: src/features/theme_studio/sections/TokensSection.tsx:204
 msgid "Clear search"
 msgstr "Limpar pesquisa"
@@ -7914,7 +7914,7 @@ msgid "Community debug"
 msgstr "Depuração da comunidade"
 
 #. Notification level option indicating the channel inherits the community default.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:771
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:772
 msgid "Community default"
 msgstr "Padrão da comunidade"
 
@@ -8064,6 +8064,18 @@ msgstr "Registro da comunidade"
 #: src/features/user/components/settings_utils/GuildSettingsConstants.ts:244
 msgid "Community settings"
 msgstr "Configurações da comunidade"
+
+#. Breadcrumb root in the header of a forum post channel; clicking it goes back to the forum page.
+#. Generic header / tab / sidebar label for a guild forum page (aggregated forum-category discussion channels).
+#: src/features/forum/components/ForumPostHeader.tsx:19
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:498
+msgid "Community Sketchbooks"
+msgstr "Sketchbooks da Comunidade"
+
+#. Short label in the app layout channel list content for the selected Forum sidebar item.
+#: src/features/app/components/layout/ChannelListContent.tsx:93
+msgid "Community Sketchbooks, selected"
+msgstr "Sketchbooks da Comunidade, selecionado"
 
 #. Short label in the app layout guild layout.
 #: src/features/app/components/layout/GuildLayout.tsx:92
@@ -8566,7 +8578,7 @@ msgstr "Os menus de contexto podem ser abertos com um clique esquerdo (em botõe
 #: src/features/auth/components/pages/oauth_authorize_page/OAuthAccountStep.tsx:34
 #: src/features/auth/flow/HandoffApprovalFlow.tsx:119
 #: src/features/connection/components/modals/AddConnectionModal.tsx:384
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:719
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:720
 #: src/features/user/components/modals/FluxerTagChangeModal.tsx:397
 #: src/features/user/components/modals/tabs/AuthorizedAppsTab.tsx:181
 msgid "Continue"
@@ -8777,7 +8789,7 @@ msgid "Copy code"
 msgstr "Copiar código"
 
 #. Developer-mode action that copies a community snowflake/ID to the clipboard.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:735
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:736
 msgid "Copy community ID"
 msgstr "Copiar ID da comunidade"
 
@@ -8875,7 +8887,7 @@ msgid "Copy invite URL"
 msgstr "Copiar link de convite"
 
 #. Generic action label that copies a URL to the clipboard.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:747
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:748
 #: src/features/user/components/modals/tabs/component_gallery_tab/ComponentGalleryTabButtonsTab.tsx:330
 #: src/features/user/components/modals/tabs/component_gallery_tab/index.tsx:145
 msgid "Copy link"
@@ -8908,7 +8920,7 @@ msgstr "Copiar mensagem"
 
 #. Developer-mode action that copies a message snowflake/ID to the clipboard.
 #. Keyboard shortcut action label shown in the shortcuts list and keybind editor. Keep short, sentence case.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:739
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:740
 #: src/features/input/state/input_keybind/shared.ts:277
 msgid "Copy message ID"
 msgstr "Copiar ID da mensagem"
@@ -8916,7 +8928,7 @@ msgstr "Copiar ID da mensagem"
 #. Generic action label that copies a permalink to the selected message.
 #. IAR modal: quick-action card title.
 #. Keyboard shortcut action label shown in the shortcuts list and keybind editor. Keep short, sentence case.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:526
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:527
 #: src/features/input/state/input_keybind/shared.ts:273
 #: src/features/moderation/components/report_modal/IARModalCopy.ts:415
 msgid "Copy message link"
@@ -8984,7 +8996,7 @@ msgid "Copy user ID"
 msgstr "Copiar ID de usuário"
 
 #. Action that copies a user username (handle) to the clipboard.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:743
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:744
 msgid "Copy username"
 msgstr "Copiar nome de usuário"
 
@@ -9456,7 +9468,7 @@ msgid "Couldn't send invite"
 msgstr "Não foi possível enviar o convite"
 
 #. Toast shown when sending an invite (group DM or community) fails.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:711
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:712
 msgid "Couldn't send invite. Try again."
 msgstr "Não foi possível enviar o convite. Tente novamente."
 
@@ -10292,7 +10304,7 @@ msgid "Custom warning text"
 msgstr "Texto de aviso personalizado"
 
 #. Last "Custom…" option in dropdown menus that opens a custom-value picker.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:775
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:776
 msgid "Custom…"
 msgstr "Personalizado…"
 
@@ -10595,7 +10607,7 @@ msgstr "Mensagem de depuração"
 #. Channel details bottom sheet label or action (channel type, settings, toast, confirmation, or notification option).
 #. Developer-mode action that opens a user debug panel.
 #: src/features/channel/components/bottomsheets/channel_details_bottom_sheet/ChannelDetailsBottomSheetShared.ts:167
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:550
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:551
 msgid "Debug user"
 msgstr "Depurar usuário"
 
@@ -10818,7 +10830,7 @@ msgid "Delete application"
 msgstr "Excluir aplicativo"
 
 #. Generic action label that removes an attachment from the upload tray / message.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:755
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:756
 msgid "Delete attachment"
 msgstr "Excluir anexo"
 
@@ -11124,7 +11136,7 @@ msgstr "Descreva sobre o que é sua comunidade"
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
 #: src/features/forum/components/ForumCreatePostModal.tsx:44
 #: src/features/guild/components/modals/guild_tabs/GuildDiscoveryTab.tsx:415
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:506
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:507
 #: src/features/user/components/settings_utils/search_index/MyProfileIndex.ts:137
 msgid "Description"
 msgstr "Descrição"
@@ -11440,7 +11452,7 @@ msgstr "Entrada direta"
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
 #: src/features/channel/components/bottomsheets/channel_details_bottom_sheet/ChannelDetailsBottomSheetShared.ts:14
 #: src/features/channel/components/channel_header_components/developer_tools/MockingMenu.tsx:398
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:570
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:571
 #: src/features/user/components/settings_utils/section_registry/SharedDescriptors.ts:85
 msgid "Direct message"
 msgstr "Mensagem direta"
@@ -11925,7 +11937,7 @@ msgstr "Configurações de DM e pedidos de amizade"
 #. Channel details bottom sheet label or action (channel type, settings, toast, confirmation, or notification option).
 #. Generic success-toast label confirming that a DM channel was closed.
 #: src/features/channel/components/bottomsheets/channel_details_bottom_sheet/ChannelDetailsBottomSheetShared.ts:87
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:566
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:567
 msgid "DM closed"
 msgstr "DM fechada"
 
@@ -12050,7 +12062,7 @@ msgstr "Não bloqueia. Você pode reabrir depois."
 
 #. Generic form-field / table-column label for an internet domain.
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:779
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:780
 #: src/features/user/components/settings_utils/search_index/LinkedAccountsIndex.ts:28
 msgid "Domain"
 msgstr "Domínio"
@@ -12570,7 +12582,7 @@ msgstr "Editar mídia"
 
 #. Generic action label that opens the message edit composer.
 #. Keyboard shortcut action label shown in the shortcuts list and keybind editor. Keep short, sentence case.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:715
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:716
 #: src/features/input/state/input_keybind/shared.ts:9
 msgid "Edit message"
 msgstr "Editar mensagem"
@@ -13182,7 +13194,7 @@ msgstr "Ativar notificações push no celular"
 
 #. Generic action label / toggle that turns on push or desktop notifications.
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:787
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:788
 #: src/features/user/components/settings_utils/section_registry/NotificationsSections.ts:127
 msgid "Enable notifications"
 msgstr "Ativar notificações"
@@ -13411,7 +13423,7 @@ msgstr "inglês (EUA)"
 #. Noise suppression option label (mobile voice settings). Enhanced engine (DeepFilterNet3).
 #. Noise suppression option label in the voice tab (neural filter). Keep it concise.
 #. Noise suppression option using the enhanced neural filter (DeepFilterNet3). Keep it concise.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:791
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:792
 #: src/features/user/components/modals/tabs/UserVoiceTab.tsx:86
 #: src/features/voice/components/bottomsheets/VoiceSettingsBottomSheets.tsx:51
 #: src/features/voice/components/voice_connection_status/AudioProcessingModal.tsx:47
@@ -14134,7 +14146,7 @@ msgid "Expression packs are not enabled on this instance. Contact your instance 
 msgstr "Os pacotes de figurinhas não estão ativados nesta instância. Entre em contato com o administrador da sua instância para saber mais."
 
 #. Aria label for the expression picker category nav.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:759
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:760
 msgid "Expression picker categories"
 msgstr "Categorias do seletor de expressões"
 
@@ -15209,18 +15221,6 @@ msgstr "Esqueceu a senha"
 msgid "Forgot your password?"
 msgstr "Esqueceu a senha?"
 
-#. Breadcrumb root in the header of a forum post channel; clicking it goes back to the forum page.
-#. Generic header / tab / sidebar label for a guild forum page (aggregated forum-category discussion channels).
-#: src/features/forum/components/ForumPostHeader.tsx:19
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:498
-msgid "Forum"
-msgstr "Fórum"
-
-#. Short label in the app layout channel list content for the selected Forum sidebar item.
-#: src/features/app/components/layout/ChannelListContent.tsx:93
-msgid "Forum, selected"
-msgstr "Fórum, selecionado"
-
 #. has:forward chip label. Always lowercase; matches the typed query value 1:1.
 #: src/features/search/utils/SearchUtils.ts:89
 msgid "forward"
@@ -15626,7 +15626,7 @@ msgid "Germany"
 msgstr "Alemanha"
 
 #. Generic upsell CTA button to start the Plutonium purchase flow. Preserve {premiumProductName}.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:803
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:804
 msgid "Get {premiumProductName}"
 msgstr "Obter {premiumProductName}"
 
@@ -16552,7 +16552,7 @@ msgid "Hide expiry footnotes"
 msgstr "Ocultar notas de rodapé de validade"
 
 #. Toggle / action label that collapses or hides the favorites section.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:703
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:704
 msgid "Hide favorites"
 msgstr "Ocultar favoritos"
 
@@ -16948,7 +16948,7 @@ msgstr "Identidade"
 
 #. Generic presence-status label indicating the user is idle / AFK.
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:647
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:648
 #: src/features/user/components/settings_utils/search_index/NotificationsIndex.ts:46
 msgid "Idle"
 msgstr "Inativo"
@@ -17483,7 +17483,7 @@ msgstr "Inclua o ID da comunidade."
 #. Generic label for an incoming voice or video call.
 #. Notification sound setting label. Ringtone for an incoming DM or group DM call.
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:510
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:511
 #: src/features/notification/utils/SoundLabels.ts:48
 #: src/features/user/components/settings_utils/section_registry/NotificationsSections.ts:171
 msgid "Incoming call"
@@ -18093,7 +18093,7 @@ msgstr "Quem convidou:"
 #. Generic section / tab label for the invites list.
 #: src/features/channel/components/modals/channel_tabs/ChannelInvitesTab.tsx:191
 #: src/features/guild/components/modals/guild_tabs/GuildInvitesTab.tsx:53
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:691
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:692
 msgid "Invites"
 msgstr "Convites"
 
@@ -18283,7 +18283,7 @@ msgid "Join call"
 msgstr "Entrar na chamada"
 
 #. Generic action label that accepts a community invite / joins a community.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:687
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:688
 msgid "Join community"
 msgstr "Entrar na comunidade"
 
@@ -18370,7 +18370,7 @@ msgid "Joined {productName}"
 msgstr "Entrou no {productName}"
 
 #. Generic short action label that scrolls/navigates to a specific message.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:502
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:503
 #: src/features/messaging/components/popouts/RecentMentionsContent.tsx:204
 msgid "Jump"
 msgstr "Ir para"
@@ -18608,7 +18608,7 @@ msgid "Kick a member from this community."
 msgstr "Remover um membro desta comunidade."
 
 #. Moderation action label that removes a member from a community without banning.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:683
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:684
 msgid "Kick member"
 msgstr "Remover membro"
 
@@ -18764,7 +18764,7 @@ msgid "Leave call"
 msgstr "Sair da chamada"
 
 #. Destructive action label that removes the current user from a community.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:679
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:680
 msgid "Leave community"
 msgstr "Sair da comunidade"
 
@@ -19705,7 +19705,7 @@ msgstr "Marcar como spoiler"
 
 #. Generic action label that flips a channel back to unread.
 #. Keyboard shortcut action label shown in the shortcuts list and keybind editor. Keep short, sentence case.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:675
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:676
 #: src/features/input/state/input_keybind/shared.ts:33
 msgid "Mark as unread"
 msgstr "Marcar como não lida"
@@ -20297,7 +20297,7 @@ msgstr "função mencionada"
 #. Generic section / tab label for the mentions inbox.
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
 #: src/features/guild/components/modals/GuildNotificationSettingsModal.tsx:136
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:651
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:652
 #: src/features/user/components/settings_utils/section_registry/SharedDescriptors.ts:166
 msgid "Mentions"
 msgstr "Menções"
@@ -21204,7 +21204,7 @@ msgid "Mute calls"
 msgstr "Silenciar chamadas"
 
 #. Action label that mutes notifications for a channel category.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:583
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:584
 msgid "Mute category"
 msgstr "Silenciar categoria"
 
@@ -21219,7 +21219,7 @@ msgid "Mute communities"
 msgstr "Silenciar comunidades"
 
 #. Generic action label that mutes notifications for an entire community.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:558
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:559
 msgid "Mute community"
 msgstr "Silenciar comunidade"
 
@@ -21249,7 +21249,7 @@ msgid "Mute entrance sound"
 msgstr "Silenciar som de entrada"
 
 #. Action label that mutes notifications for the favourites pseudo-guild.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:695
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:696
 msgid "Mute favourites"
 msgstr "Silenciar favoritos"
 
@@ -21643,7 +21643,7 @@ msgid "Neutral (inherit)"
 msgstr "Neutro (herdado)"
 
 #. Generic short option label for "never" in time / frequency dropdowns.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:655
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:656
 msgid "Never"
 msgstr "Nunca"
 
@@ -21737,9 +21737,11 @@ msgstr "Novo grupo"
 msgid "New message"
 msgstr "Nova mensagem"
 
+#. Accessible label of the unread dot on a forum post card.
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
 #. Short label in the app layout channel list content.
 #: src/features/app/components/layout/ChannelListContent.tsx:97
+#: src/features/forum/components/ForumPostCard.tsx:35
 #: src/features/user/components/settings_utils/section_registry/AccessibilitySections.ts:147
 msgid "New messages"
 msgstr "Novas mensagens"
@@ -21808,7 +21810,7 @@ msgstr "Mais recentes primeiro"
 #. Primary button in the required-action modal. Moves to the next carousel step.
 #: src/features/app/components/setup/SelfHostedSetupWizardGate.tsx:79
 #: src/features/auth/components/modals/required_action/RequiredActionDescriptors.ts:154
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:723
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:724
 msgid "Next"
 msgstr "Próximo"
 
@@ -22027,7 +22029,7 @@ msgid "No custom shortcuts yet."
 msgstr "Nenhum atalho personalizado ainda."
 
 #. Generic short empty-state body shown when an entity has no description set.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:659
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:660
 msgid "No description provided."
 msgstr "Nenhuma descrição fornecida."
 
@@ -22650,7 +22652,7 @@ msgstr "Volume de notificações"
 #. Generic section header / tab label for the notifications area.
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
 #: src/features/app/components/layout/MobileBottomNav.tsx:131
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:707
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:708
 #: src/features/notification/components/pages/NotificationsPage.tsx:43
 #: src/features/user/components/modals/tabs/advanced_settings_tab/AdvancedSettingsCategories.ts:18
 #: src/features/user/components/settings_utils/section_registry/NotificationsSections.ts:30
@@ -22739,7 +22741,7 @@ msgid "Off"
 msgstr "Desativado"
 
 #. Generic presence-status label indicating the user is offline.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:643
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:644
 msgid "Offline"
 msgstr "offline"
 
@@ -24300,7 +24302,7 @@ msgstr "Fixar DM em grupo"
 #. Keyboard shortcut action label shown in the shortcuts list and keybind editor. Keep short, sentence case.
 #. Title of the confirmation alert shown when pinning a message.
 #: src/features/channel/components/MessageActionUtils.tsx:56
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:542
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:543
 #: src/features/input/state/input_keybind/shared.ts:13
 msgid "Pin message"
 msgstr "Fixar mensagem"
@@ -24350,7 +24352,7 @@ msgid "pinned"
 msgstr "fixada"
 
 #. Generic short toast / status label confirming a DM was pinned.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:663
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:664
 msgid "Pinned DM"
 msgstr "DM fixada"
 
@@ -24588,6 +24590,11 @@ msgstr "Data da postagem"
 #: src/features/forum/components/ForumPostMenuButton.tsx:16
 msgid "Post options"
 msgstr "Opções da postagem"
+
+#. When a forum post was created, next to the author name on a gallery card. {time} is an already localized relative phrase such as "3 days ago" / "há 3 dias".
+#: src/features/forum/components/ForumPostCard.tsx:25
+msgid "posted {time}"
+msgstr "postado {time}"
 
 #. Header of the forum panel that shows the rules message from the guidelines channel.
 #: src/features/forum/components/ForumGuidelinesBanner.tsx:28
@@ -24943,7 +24950,7 @@ msgid "Privacy policy"
 msgstr "Política de privacidade"
 
 #. Generic section heading / button label for the privacy settings area.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:671
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:672
 msgid "Privacy settings"
 msgstr "Configurações de privacidade"
 
@@ -25541,7 +25548,7 @@ msgstr "Reagir com {emojiShortcode}"
 
 #. Generic short section / tab / aria label for emoji reactions.
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:667
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:668
 #: src/features/messaging/components/modals/MessageReactionsModal.tsx:144
 #: src/features/user/components/settings_utils/section_registry/ChatSettingsSections.ts:10
 msgid "Reactions"
@@ -26366,7 +26373,7 @@ msgid "Removed from favorite GIFs"
 msgstr "Removido dos GIFs favoritos"
 
 #. Toast confirming an item was removed from the favorites list.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:619
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:620
 msgid "Removed from favorites"
 msgstr "Removido dos favoritos"
 
@@ -26546,7 +26553,7 @@ msgstr "Respostas"
 
 #. Generic action label that opens the reply composer for a message.
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:615
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:616
 #: src/features/user/components/settings_utils/section_registry/NotificationsSections.ts:71
 msgid "Reply"
 msgstr "Responder"
@@ -26641,7 +26648,7 @@ msgstr "Reportar problema"
 
 #. Generic action label that opens the report flow targeting a specific message.
 #. Modal title for the IAR flow when reporting a specific message.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:538
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:539
 #: src/features/moderation/components/report_modal/IARModalContext.ts:22
 msgid "Report message"
 msgstr "Denunciar mensagem"
@@ -27222,7 +27229,7 @@ msgstr "Pesquisa de imagem"
 
 #. Generic action label that runs a reverse-image search on the selected media.
 #. Settings search entry label. Also used as a search synonym in the settings search bar.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:611
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:612
 #: src/features/user/components/settings_utils/search_index/ChatSettingsIndex.ts:267
 msgid "Reverse image search"
 msgstr "Pesquisar imagem"
@@ -27790,7 +27797,7 @@ msgstr "Tela"
 
 #. Section heading for screen-reader related accessibility settings.
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:607
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:608
 #: src/features/user/components/settings_utils/section_registry/AccessibilitySections.ts:51
 msgid "Screen reader"
 msgstr "Leitor de tela"
@@ -28887,7 +28894,7 @@ msgid "Sensitive media"
 msgstr "Mídia sensível"
 
 #. Generic short status label confirming an item (invite, gift, theme link) was sent.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:811
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:812
 msgid "Sent"
 msgstr "Enviado"
 
@@ -29979,7 +29986,7 @@ msgstr "Entrar com o provedor de logon único da sua organização."
 #: src/features/auth/utils/AccountSwitcherModalUtils.tsx:204
 #: src/features/auth/utils/AccountSwitcherModalUtils.tsx:265
 #: src/features/auth/utils/AccountSwitcherModalUtils.tsx:322
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:603
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:604
 #: src/features/user/components/settings_utils/search_index/DevicesIndex.ts:47
 msgid "Sign out"
 msgstr "Sair"
@@ -30663,7 +30670,7 @@ msgstr "Volume do som"
 
 #. Section heading / tab label for the notification-sounds area.
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:815
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:816
 #: src/features/user/components/settings_utils/section_registry/NotificationsSections.ts:135
 msgid "Sounds"
 msgstr "Sons"
@@ -31099,7 +31106,7 @@ msgid "Start uploading attachments as soon as they are added to the message inpu
 msgstr "Comece a enviar os anexos assim que eles forem adicionados à caixa de mensagem"
 
 #. Action label that initiates a video call (DM or group DM).
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:599
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:600
 msgid "Start video call"
 msgstr "Iniciar chamada de vídeo"
 
@@ -31657,7 +31664,7 @@ msgid "Suppress all role mentions"
 msgstr "Silenciar todas as menções de cargo"
 
 #. Action label on a message that hides link previews / embeds.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:595
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:596
 msgid "Suppress embeds"
 msgstr "Ocultar prévias"
 
@@ -33955,7 +33962,7 @@ msgstr "Transferiu a propriedade para {0}."
 
 #. Generic action label that translates a message body.
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:591
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:592
 #: src/features/user/components/settings_utils/search_index/ChatSettingsIndex.ts:255
 msgid "Translate"
 msgstr "Traduzir"
@@ -34238,7 +34245,7 @@ msgid "Turn off anything you're not comfortable with. Some features may stop wor
 msgstr "Desative o que você não se sentir à vontade. Alguns recursos podem parar de funcionar."
 
 #. Voice / call action label that disables the local camera.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:514
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:515
 msgid "Turn off camera"
 msgstr "Desligar câmera"
 
@@ -34578,7 +34585,7 @@ msgid "Unblock user"
 msgstr "Desbloquear usuário"
 
 #. Generic label for items that do not belong to a category.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:639
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:640
 msgid "Uncategorized"
 msgstr "Não categorizado"
 
@@ -34745,7 +34752,7 @@ msgstr "Alternativa universal. Qualidade mais baixa, mas funciona em qualquer lu
 #. Generic fallback label when a more specific value is unavailable.
 #. Short label in the invite list item. Keep it concise.
 #: src/features/emoji/components/emojis/EmojiListItem.tsx:586
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:763
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:764
 #: src/features/invite/components/InviteListItem.tsx:34
 #: src/features/moderation/components/modals/BanDetailsModal.tsx:114
 #: src/features/updater/commands/UpdaterModalCommands.tsx:144
@@ -34984,7 +34991,7 @@ msgid "Unmute all devices"
 msgstr "Reativar som em todos os dispositivos"
 
 #. Action label that unmutes notifications for a channel category.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:587
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:588
 msgid "Unmute category"
 msgstr "Reativar categoria"
 
@@ -34999,7 +35006,7 @@ msgid "Unmute communities"
 msgstr "Reativar comunidades"
 
 #. Generic action label that unmutes notifications for an entire community.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:562
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:563
 msgid "Unmute community"
 msgstr "Reativar comunidade"
 
@@ -35019,7 +35026,7 @@ msgid "Unmute DMs"
 msgstr "Reativar DMs"
 
 #. Action label that unmutes notifications for the favourites pseudo-guild.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:699
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:700
 msgid "Unmute favourites"
 msgstr "Reativar notificações dos favoritos"
 
@@ -35098,7 +35105,7 @@ msgid "Unpin this message?"
 msgstr "Desafixar esta mensagem?"
 
 #. Generic short toast / status label confirming a DM was unpinned.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:635
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:636
 msgid "Unpinned DM"
 msgstr "DM desafixada"
 
@@ -36061,7 +36068,7 @@ msgid "User controls"
 msgstr "Controles do usuário"
 
 #. Title of the developer-mode user debug modal.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:579
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:580
 msgid "User debug"
 msgstr "Depurar usuário"
 
@@ -36144,7 +36151,7 @@ msgstr "usuário, bot ou webhook"
 #. Label for SMTP username input.
 #. Settings search entry label. Also used as a search synonym in the settings search bar.
 #: src/features/app/components/setup/SetupWizardSteps.tsx:952
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:575
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:576
 #: src/features/user/components/modals/FluxerTagChangeModal.tsx:218
 #: src/features/user/components/modals/tabs/my_profile_tab/MyProfileTabUsernameSection.tsx:56
 #: src/features/user/components/settings_utils/search_index/MyProfileIndex.ts:53
@@ -39429,7 +39436,7 @@ msgstr "Zoom"
 #. Keyboard shortcut action label shown in the shortcuts list and keybind editor. Keep short, sentence case.
 #. Native View menu item that increases UI zoom level.
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:631
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:632
 #: src/features/input/state/input_keybind/shared.ts:253
 #: src/features/platform/utils/DesktopLocaleBridge.ts:62
 #: src/features/user/components/settings_utils/search_index/KeybindsIndex.ts:82
@@ -39440,7 +39447,7 @@ msgstr "Mais zoom"
 #. Keyboard shortcut action label shown in the shortcuts list and keybind editor. Keep short, sentence case.
 #. Native View menu item that decreases UI zoom level.
 #. Settings search synonym. Used to match this term when the user types it in the settings search bar.
-#: src/features/i18n/utils/CommonMessageDescriptors.ts:627
+#: src/features/i18n/utils/CommonMessageDescriptors.ts:628
 #: src/features/input/state/input_keybind/shared.ts:257
 #: src/features/platform/utils/DesktopLocaleBridge.ts:66
 #: src/features/user/components/settings_utils/search_index/KeybindsIndex.ts:86
