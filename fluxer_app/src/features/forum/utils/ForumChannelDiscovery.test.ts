@@ -24,6 +24,7 @@ const {
 	getForumPostChannels,
 	isForumHiddenChannel,
 	shouldRedirectAwayFromRawGuidelinesChannel,
+	canEditGuidelines,
 	isSinglePostRuleEnabled,
 	findOwnForumPostChannel,
 	getForumPostAuthorId,
@@ -212,6 +213,33 @@ describe('shouldRedirectAwayFromRawGuidelinesChannel — the rules channel is a 
 		getChannelPermissionsMock.mockReturnValue(VIEW);
 
 		expect(shouldRedirectAwayFromRawGuidelinesChannel(GUILD_ID, 'ch-rules')).toBe(false);
+	});
+});
+
+describe('canEditGuidelines — who gets the banner\'s "Editar" button', () => {
+	function seedGuidelines(): void {
+		seed([category({id: 'cat', name: 'Fórum'}), textChannel({id: 'ch-rules', name: 'diretrizes', parentId: 'cat'})]);
+	}
+
+	it('is true for whoever can write in the guidelines channel', () => {
+		seedGuidelines();
+		getChannelPermissionsMock.mockReturnValue(VIEW | Permissions.SEND_MESSAGES);
+
+		expect(canEditGuidelines(GUILD_ID)).toBe(true);
+	});
+
+	it('is false for a student who can only read the rules', () => {
+		seedGuidelines();
+		getChannelPermissionsMock.mockReturnValue(VIEW);
+
+		expect(canEditGuidelines(GUILD_ID)).toBe(false);
+	});
+
+	it('is false in a guild whose forum has no guidelines channel', () => {
+		seed([category({id: 'cat', name: 'Fórum'}), textChannel({id: 'ch-post', name: 'Apresentações', parentId: 'cat'})]);
+		getChannelPermissionsMock.mockReturnValue(VIEW | Permissions.SEND_MESSAGES);
+
+		expect(canEditGuidelines(GUILD_ID)).toBe(false);
 	});
 });
 

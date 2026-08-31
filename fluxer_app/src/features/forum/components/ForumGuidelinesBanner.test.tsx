@@ -17,7 +17,11 @@ vi.mock('@app/features/messaging/components/markdown', () => ({
 	SafeMarkdown: ({content}: {content: string}) => <div data-testid="markdown">{content}</div>,
 }));
 vi.mock('@app/features/messaging/models/MessagingMessage', () => ({Message: class {}}));
-vi.mock('@app/features/forum/utils/ForumChannelDiscovery', () => ({getGuidelinesChannel: vi.fn()}));
+vi.mock('@app/features/forum/utils/ForumChannelDiscovery', () => ({
+	getGuidelinesChannel: vi.fn(),
+	canEditGuidelines: vi.fn(),
+}));
+vi.mock('@app/features/navigation/commands/NavigationCommands', () => ({selectChannel: vi.fn()}));
 vi.mock('@app/features/forum/commands/ForumPostCommands', () => ({fetchGuidelinesMessage: vi.fn()}));
 vi.mock('@app/features/user/state/Users', () => ({default: {currentUserId: 'user-1'}}));
 vi.mock('@app/features/platform/state/PersistentStorage', () => ({
@@ -37,7 +41,8 @@ vi.mock('@lingui/react/macro', () => {
 	return {useLingui: () => ({i18n: fakeI18n})};
 });
 
-const {getGuidelinesChannel} = await import('@app/features/forum/utils/ForumChannelDiscovery');
+const {getGuidelinesChannel, canEditGuidelines} = await import('@app/features/forum/utils/ForumChannelDiscovery');
+const NavigationCommands = await import('@app/features/navigation/commands/NavigationCommands');
 const ForumPostCommands = await import('@app/features/forum/commands/ForumPostCommands');
 const {ForumGuidelinesBanner} = await import('@app/features/forum/components/ForumGuidelinesBanner');
 
@@ -48,7 +53,10 @@ import {afterEach, beforeEach, describe, expect, it, type Mock, vi} from 'vitest
 (globalThis as {IS_REACT_ACT_ENVIRONMENT?: boolean}).IS_REACT_ACT_ENVIRONMENT = true;
 
 const getGuidelinesChannelMock = getGuidelinesChannel as unknown as Mock;
+const canEditGuidelinesMock = canEditGuidelines as unknown as Mock;
+const selectChannelMock = NavigationCommands.selectChannel as unknown as Mock;
 const fetchGuidelinesMessageMock = ForumPostCommands.fetchGuidelinesMessage as unknown as Mock;
+const EDIT_SELECTOR = '[data-flx="forum.forum-guidelines-banner.edit"]';
 
 const DISMISSED_KEY = 'Forum:guidelinesRead:user-1:channel-diretrizes';
 
@@ -74,6 +82,7 @@ async function click(element: Element): Promise<void> {
 beforeEach(() => {
 	storage.clear();
 	getGuidelinesChannelMock.mockReturnValue({id: 'channel-diretrizes'});
+	canEditGuidelinesMock.mockReturnValue(false);
 	fetchGuidelinesMessageMock.mockResolvedValue({content: 'Uma postagem de sketchbook por pessoa.'});
 });
 
@@ -144,6 +153,36 @@ describe('on the forum page', () => {
 		expect(container.querySelector('[data-flx="forum.forum-guidelines-banner.dismiss"]')).not.toBeNull();
 		await click(container.querySelector('[data-flx="forum.forum-guidelines-banner.toggle"]')!);
 		expect(container.querySelector('[data-flx="forum.forum-guidelines-banner.dismiss"]')).toBeNull();
+	});
+});
+
+/**
+ * The forum category — guidelines channel included — is hidden from the sidebar, so this button is
+ * the only way anyone reaches the message that stores the rules.
+ */
+describe('editing the rules', () => {
+	it('hides the button from a reader who cannot write in the guidelines channel', async () => {
+		expect((await mount()).querySelector(EDIT_SELECTOR)).toBeNull();
+	});
+
+	it('opens the guidelines channel for staff', async () => {
+		canEditGuidelinesMock.mockReturnValue(true);
+		const container = await mount();
+		await click(container.querySelector(EDIT_SELECTOR)!);
+		expect(selectChannelMock).toHaveBeenCalledWith('guild-a', 'channel-diretrizes');
+	});
+
+	it('stays reachable after the panel is collapsed', async () => {
+		canEditGuidelinesMock.mockReturnValue(true);
+		const container = await mount();
+		await click(container.querySelector('[data-flx="forum.forum-guidelines-banner.toggle"]')!);
+		expect(container.querySelector('[data-testid="markdown"]')).toBeNull();
+		expect(container.querySelector(EDIT_SELECTOR)).not.toBeNull();
+	});
+
+	it('is not offered inside the new-post modal', async () => {
+		canEditGuidelinesMock.mockReturnValue(true);
+		expect((await mount('modal')).querySelector(EDIT_SELECTOR)).toBeNull();
 	});
 });
 

@@ -12450,10 +12450,12 @@ msgid "Echo cancellation"
 msgstr "Redukcja echa"
 
 #. Action label for opening the edit flow for the selected item.
+#. Button in the forum posting-guidelines panel, shown only to whoever can write in the guidelines channel; it opens that channel so the rules message can be edited.
 #. Button or menu action label in the linked accounts tab. Keep it concise.
 #. Button or menu action label in the search engines tab. Keep it concise.
 #. Top-level native menu bar title (Edit menu, holds cut/copy/paste).
 #: src/features/emoji/components/stickers/StickerGridItem.tsx:42
+#: src/features/forum/components/ForumGuidelinesBanner.tsx:45
 #: src/features/platform/utils/DesktopLocaleBridge.ts:42
 #: src/features/user/components/modals/tabs/chat_settings_tab/SearchEnginesTab.tsx:35
 #: src/features/user/components/modals/tabs/ExpressionPacksTab.tsx:123
@@ -16023,7 +16025,7 @@ msgstr "Google Lens"
 #. Button that collapses the forum posting-guidelines panel for good ("já li").
 #. Short label in the whats new modal.
 #: src/features/app/components/whats_new/WhatsNewModal.tsx:37
-#: src/features/forum/components/ForumGuidelinesBanner.tsx:32
+#: src/features/forum/components/ForumGuidelinesBanner.tsx:33
 msgid "Got it"
 msgstr "Rozumiem"
 
@@ -16627,7 +16629,7 @@ msgid "Hide preview thumbnail"
 msgstr "Ukryj podgląd miniatury"
 
 #. Accessible label for the expanded forum posting-guidelines panel header.
-#: src/features/forum/components/ForumGuidelinesBanner.tsx:40
+#: src/features/forum/components/ForumGuidelinesBanner.tsx:41
 msgid "Hide the posting guidelines"
 msgstr ""
 
@@ -24595,7 +24597,7 @@ msgid "posted {time}"
 msgstr ""
 
 #. Header of the forum panel that shows the rules message from the guidelines channel.
-#: src/features/forum/components/ForumGuidelinesBanner.tsx:28
+#: src/features/forum/components/ForumGuidelinesBanner.tsx:29
 msgid "Posting guidelines"
 msgstr ""
 
@@ -29881,7 +29883,7 @@ msgid "Show system tray icon"
 msgstr "Pokaż ikonę na pasku zadań"
 
 #. Accessible label for the collapsed forum posting-guidelines panel header.
-#: src/features/forum/components/ForumGuidelinesBanner.tsx:36
+#: src/features/forum/components/ForumGuidelinesBanner.tsx:37
 msgid "Show the posting guidelines"
 msgstr ""
 
