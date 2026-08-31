@@ -16,7 +16,9 @@ vi.mock('@app/features/permissions/state/Permission', () => ({default: {getChann
 
 const Channels = (await import('@app/features/channel/state/Channels')).default;
 const Permission = (await import('@app/features/permissions/state/Permission')).default;
-const {discoverFeedChannelIds} = await import('@app/features/social_home/utils/SocialHomeChannelDiscovery');
+const {discoverFeedChannelIds, canPostStories, shouldRedirectAwayFromRawStoriesChannel} = await import(
+	'@app/features/social_home/utils/SocialHomeChannelDiscovery'
+);
 
 const getGuildChannelsMock = Channels.getGuildChannels as unknown as Mock;
 const getChannelPermissionsMock = Permission.getChannelPermissions as unknown as Mock;
@@ -135,5 +137,48 @@ describe('discoverFeedChannelIds — the channels the Gallery aggregates', () =>
 		]);
 
 		expect(discoverFeedChannelIds(GUILD_ID)).toEqual(['ch-post']);
+	});
+});
+
+/**
+ * Commenting on a story is a reply in the Stories channel, so it needs SEND_MESSAGES there — which
+ * used to be the whole publish gate as well, handing every commenter the publish button. The class
+ * owner asked for comments without uploads (30/08/2026), so the gate is ATTACH_FILES.
+ */
+describe('canPostStories — publishing is gated apart from commenting', () => {
+	function seedStories(permissions: bigint): void {
+		getGuildChannelsMock.mockReturnValue([textChannel({id: 'ch-stories', name: 'stories'})]);
+		getChannelPermissionsMock.mockReturnValue(permissions);
+	}
+
+	it('is true for staff, who can attach files', () => {
+		seedStories(VIEW | Permissions.SEND_MESSAGES | Permissions.ATTACH_FILES);
+
+		expect(canPostStories(GUILD_ID)).toBe(true);
+	});
+
+	it('is false for a member who may comment but not upload', () => {
+		seedStories(VIEW | Permissions.SEND_MESSAGES);
+
+		expect(canPostStories(GUILD_ID)).toBe(false);
+	});
+
+	it('is false for a read-only visitor', () => {
+		seedStories(VIEW);
+
+		expect(canPostStories(GUILD_ID)).toBe(false);
+	});
+
+	it('is false in a class with no Stories channel', () => {
+		getGuildChannelsMock.mockReturnValue([textChannel({id: 'ch-geral', name: 'conversa-geral'})]);
+		getChannelPermissionsMock.mockReturnValue(VIEW | Permissions.SEND_MESSAGES | Permissions.ATTACH_FILES);
+
+		expect(canPostStories(GUILD_ID)).toBe(false);
+	});
+
+	it('funnels a commenter to the Gallery instead of the raw channel', () => {
+		seedStories(VIEW | Permissions.SEND_MESSAGES);
+
+		expect(shouldRedirectAwayFromRawStoriesChannel(GUILD_ID, 'ch-stories')).toBe(true);
 	});
 });

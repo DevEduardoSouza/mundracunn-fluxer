@@ -15,6 +15,13 @@ const SEEN_STORAGE_KEY_PREFIX = 'social_home_stories_seen';
  */
 const SEARCH_RETRY_AFTER_MS = 5 * 60 * 1000;
 
+/**
+ * Mirrors STORY_HITS_PER_PAGE in SocialHomeStoriesCommands: the bar has no "load more", so a fresh
+ * fetch already truncates to this many. {@link SocialHomeStories.addStories} keeps the same ceiling
+ * so a long-lived page can't grow the bar past what a reload would show.
+ */
+const MAX_STORIES_IN_BAR = 25;
+
 type SeenByAuthor = Record<string, string>;
 
 function seenStorageKey(guildId: string): string {
@@ -135,6 +142,34 @@ class SocialHomeStories {
 		this.stories = [...stories];
 		this.nowMs = Date.now();
 		this.isLoading = false;
+		this.isIndexing = false;
+		this.error = null;
+	}
+
+	hasStory(storyId: string): boolean {
+		return this.stories.some((story) => story.id === storyId);
+	}
+
+	/**
+	 * Folds stories that arrived after the initial fetch into the bar, newest first, de-duplicated
+	 * by id. Used by the live watcher (SocialHomeStoriesCommands): posting a story used to leave the
+	 * bar untouched until the reader navigated away and back, because the fetch only ran on mount.
+	 *
+	 * Merging rather than replacing keeps whatever the initial fetch already resolved, and the cap
+	 * mirrors the fetch's own — the bar has no "load more", so beyond this the oldest simply fall
+	 * off, exactly as they would on a fresh load.
+	 */
+	addStories(stories: ReadonlyArray<Message>): void {
+		const byId = new Map(this.stories.map((story) => [story.id, story]));
+		let added = false;
+		for (const story of stories) {
+			if (byId.has(story.id)) continue;
+			byId.set(story.id, story);
+			added = true;
+		}
+		if (!added) return;
+		this.stories = [...byId.values()].sort((a, b) => compare(b.id, a.id)).slice(0, MAX_STORIES_IN_BAR);
+		this.nowMs = Date.now();
 		this.isIndexing = false;
 		this.error = null;
 	}

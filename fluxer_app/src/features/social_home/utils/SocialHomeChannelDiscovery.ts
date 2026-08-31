@@ -21,7 +21,20 @@ const STORIES_CHANNEL_NAME = 'stories';
 const FORUM_CATEGORY_NAME_PREFIX = 'forum';
 const FORUM_GUIDELINES_CHANNEL_NAMES: ReadonlySet<string> = new Set(['diretrizes', 'guidelines']);
 const FEED_CHANNEL_VIEW_PERMISSIONS = Permissions.VIEW_CHANNEL | Permissions.READ_MESSAGE_HISTORY;
-const STORIES_POST_PERMISSIONS = Permissions.VIEW_CHANNEL | Permissions.SEND_MESSAGES;
+/**
+ * ATTACH_FILES, not just SEND_MESSAGES: commenting on a story is an ordinary reply in the very same
+ * channel, so gating on SEND_MESSAGES made "can comment" and "can publish a story" the same
+ * permission — every member who was allowed to discuss a story also got the publish button. The
+ * class owner asked for exactly the opposite on 30/08/2026 ("os membros podem comentar, isso é
+ * necessário, mas não quero que consigam postar nem foto nem vídeo").
+ *
+ * A story is media by definition (the fetch only ever picks up image/video messages), so whoever
+ * cannot attach a file cannot author one — which makes ATTACH_FILES the honest gate. Denying it to
+ * @everyone/Aluno on the Stories channel is then the whole configuration, done in Fluxer's own
+ * permission UI, and it also stops the raw channel from accepting an upload; hiding the button
+ * alone would not.
+ */
+const STORIES_POST_PERMISSIONS = Permissions.VIEW_CHANNEL | Permissions.SEND_MESSAGES | Permissions.ATTACH_FILES;
 
 /**
  * Categories in a real class are decorated - the pilot guild ships a paint-palette emoji before
@@ -123,9 +136,10 @@ export function getStoriesChannel(guildId: string): Channel | undefined {
 
 /**
  * Who can post a Story is deliberately not hardcoded to a role name: the kickoff checklist
- * (CLAUDE.md section 7) left "só professor/admin ou monitores também?" open, and the client can
- * answer that later purely by editing the Stories channel's permission overwrites in Fluxer's own
- * UI — whoever ends up with SEND_MESSAGES there sees the publish button, no code change needed.
+ * (CLAUDE.md section 7) left "só professor/admin ou monitores também?" open, and the class answers
+ * it purely by editing the Stories channel's permission overwrites in Fluxer's own UI — whoever
+ * ends up with {@link STORIES_POST_PERMISSIONS} there sees the publish button, no code change
+ * needed. Commenting stays open to everyone with SEND_MESSAGES.
  */
 export function canPostStories(guildId: string): boolean {
 	const channel = getStoriesChannel(guildId);

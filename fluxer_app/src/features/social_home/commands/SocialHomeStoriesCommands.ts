@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import type {Message} from '@app/features/messaging/models/MessagingMessage';
+import Messages from '@app/features/messaging/state/MessagingMessages';
 import {failureCode} from '@app/features/platform/utils/ResponseInspection';
 import {isIndexing, searchMessages} from '@app/features/search/utils/SearchUtils';
 import SocialHomeStories from '@app/features/social_home/state/SocialHomeStories';
@@ -9,6 +10,7 @@ import {fetchStoriesByChannel} from '@app/features/social_home/utils/SocialHomeS
 import {APIErrorCodes} from '@fluxer/constants/src/ApiErrorCodes';
 import {fromTimestamp, sortBySnowflakeDesc} from '@fluxer/snowflake/src/SnowflakeUtils';
 import type {I18n} from '@lingui/core';
+import {reaction} from 'mobx';
 
 const STORY_WINDOW_MS = 24 * 60 * 60 * 1000;
 /**
@@ -90,6 +92,56 @@ async function fetchStoriesViaFallback(guildId: string, channelId: string, minId
 		return;
 	}
 	SocialHomeStories.setStories(messages);
+}
+
+function isStoryMessage(message: Message): boolean {
+	return message.attachments.some((attachment) => {
+		const contentType = attachment.content_type ?? '';
+		return contentType.startsWith('image/') || contentType.startsWith('video/');
+	});
+}
+
+/**
+ * Keeps the bar current after the initial fetch. Without this the bar only ever loaded on mount, so
+ * publishing a story and coming straight back to the Gallery showed nothing until the reader
+ * navigated away and returned — which is what the class owner hit on 30/08/2026 ("o stories parece
+ * ter parado de funcionar", right after posting three videos).
+ *
+ * Watches the Stories channel's `lastMessageId` (the `Channels` store bumps it on MESSAGE_CREATE),
+ * the same no-subscription technique ForumCoverCommands.watchNewMessages uses for covers. The new
+ * message is taken from the message cache when the gateway already delivered it; otherwise one
+ * per-channel history request resolves it. Deliberately *not* the search path: Meilisearch indexes
+ * a message asynchronously, so a story is routinely not searchable yet at the moment it is posted.
+ *
+ * A comment also bumps `lastMessageId`; it simply carries no media and is dropped by
+ * {@link isStoryMessage}.
+ */
+export function watchNewStories(guildId: string): () => void {
+	return reaction(
+		() => getStoriesChannel(guildId)?.lastMessageId ?? null,
+		(lastMessageId) => {
+			if (lastMessageId == null || isStale(guildId)) return;
+			if (SocialHomeStories.hasStory(lastMessageId)) return;
+			const channelId = getStoriesChannel(guildId)?.id;
+			if (channelId == null) return;
+			const cached = Messages.getCachedMessages(channelId)?.get(lastMessageId);
+			if (cached) {
+				if (isStoryMessage(cached)) SocialHomeStories.addStories([cached]);
+				return;
+			}
+			void mergeStoriesFromChannel(guildId, channelId);
+		},
+	);
+}
+
+async function mergeStoriesFromChannel(guildId: string, channelId: string): Promise<void> {
+	try {
+		const messages = await fetchStoriesByChannel(channelId, fromTimestamp(Date.now() - STORY_WINDOW_MS));
+		if (isStale(guildId)) return;
+		SocialHomeStories.addStories(messages);
+	} catch {
+		// A refresh that fails leaves the bar exactly as it was; the next post tries again.
+	}
 }
 
 export async function fetchStories(i18n: I18n, guildId: string): Promise<void> {
