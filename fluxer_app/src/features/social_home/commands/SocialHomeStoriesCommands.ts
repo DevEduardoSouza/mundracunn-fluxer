@@ -71,7 +71,7 @@ function applyError(guildId: string, error: unknown): void {
  * The real fix belongs in the API (range over the numeric `createdAt` the index already carries) and
  * is a candidate for an upstream PR — note the same clause backs `max_id` pagination elsewhere.
  */
-async function fetchStoriesViaSearch(i18n: I18n, guildId: string, channelId: string): Promise<void> {
+async function fetchStoriesViaSearch(i18n: I18n, guildId: string, channelId: string): Promise<boolean> {
 	const results = await Promise.all(
 		STORY_MEDIA_TYPES.map((mediaType) =>
 			searchMessages(
@@ -88,11 +88,11 @@ async function fetchStoriesViaSearch(i18n: I18n, guildId: string, channelId: str
 		),
 	);
 	if (isStale(guildId)) {
-		return;
+		return true;
 	}
+	// Still building the index — the caller reads the channel instead, same as the Feed does.
 	if (results.some(isIndexing)) {
-		SocialHomeStories.setIndexing();
-		return;
+		return false;
 	}
 	const byId = new Map<string, Message>();
 	for (const result of results) {
@@ -104,6 +104,7 @@ async function fetchStoriesViaSearch(i18n: I18n, guildId: string, channelId: str
 		}
 	}
 	SocialHomeStories.setStories(sortBySnowflakeDesc([...byId.values()]).slice(0, STORY_HITS_PER_PAGE));
+	return true;
 }
 
 async function fetchStoriesViaFallback(guildId: string, channelId: string, minId: string): Promise<void> {
@@ -185,7 +186,17 @@ export async function fetchStories(i18n: I18n, guildId: string): Promise<void> {
 		return;
 	}
 	try {
-		await fetchStoriesViaSearch(i18n, guildId, storiesChannel.id);
+		if (await fetchStoriesViaSearch(i18n, guildId, storiesChannel.id)) {
+			return;
+		}
+		// Index still building: the channel answers without it. Search is not marked unavailable —
+		// the next load should try it again. See the same handling in SocialHomeCommands.fetchFeed.
+		try {
+			await fetchStoriesViaFallback(guildId, storiesChannel.id, minId);
+		} catch {
+			if (!isStale(guildId)) SocialHomeStories.setIndexing();
+		}
+		return;
 	} catch (error) {
 		if (!isSearchUnavailableError(error)) {
 			applyError(guildId, error);

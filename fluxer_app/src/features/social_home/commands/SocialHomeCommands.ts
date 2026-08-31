@@ -33,12 +33,16 @@ function applyError(guildId: string, error: unknown): void {
 	SocialHome.setError(error instanceof Error ? error.message : String(error));
 }
 
+/**
+ * @returns false when the search backend answered "still indexing", so the caller can serve the
+ * same posts from the channels instead. Nothing is written to the store in that case.
+ */
 async function fetchFeedViaSearch(
 	i18n: I18n,
 	guildId: string,
 	channelIds: Array<string>,
 	options: FetchFeedOptions,
-): Promise<void> {
+): Promise<boolean> {
 	const result = await searchMessages(
 		i18n,
 		{contextGuildId: guildId},
@@ -52,14 +56,14 @@ async function fetchFeedViaSearch(
 		},
 	);
 	if (isStale(guildId)) {
-		return;
+		return true;
 	}
 	if (isIndexing(result)) {
-		SocialHome.setIndexing();
-		return;
+		return false;
 	}
 	SocialHome.setPosts(result.messages, {append: options.before != null});
 	SocialHome.setHasMore(result.messages.length === FEED_HITS_PER_PAGE);
+	return true;
 }
 
 async function fetchFeedViaFallback(
@@ -96,7 +100,21 @@ export async function fetchFeed(i18n: I18n, guildId: string, options: FetchFeedO
 		return;
 	}
 	try {
-		await fetchFeedViaSearch(i18n, guildId, channelIds, options);
+		if (await fetchFeedViaSearch(i18n, guildId, channelIds, options)) {
+			return;
+		}
+		// "Preparando a busca desta turma pela primeira vez": the index is still being built, which
+		// happens right after a class posts into a brand-new channel. Reading the channels directly
+		// answers the same question without the index, so the reader gets the Gallery now instead of
+		// a message telling them to try again — reported on 31/08/2026 ("toda primeira postagem de
+		// uma pasta do fórum aparece essa mensagem... daí tem que atualizar"). Search is deliberately
+		// NOT marked unavailable: the next load should use it again, once the index catches up.
+		// Only if reading the channels fails too does the "still indexing" message earn its place.
+		try {
+			await fetchFeedViaFallback(guildId, channelIds, options);
+		} catch {
+			if (!isStale(guildId)) SocialHome.setIndexing();
+		}
 	} catch (error) {
 		if (!isSearchUnavailableError(error)) {
 			applyError(guildId, error);
