@@ -195,6 +195,14 @@ export const SuspiciousActivityFlagsDescriptions: Record<keyof typeof Suspicious
 	REQUIRE_REVERIFIED_EMAIL_OR_REVERIFIED_PHONE: 'Requires re-verified email or re-verified phone',
 	REQUIRE_INBOUND_PHONE_VERIFICATION: 'Requires inbound SMS verification (user must text code to platform number)',
 };
+/**
+ * Bit of `suspiciousActivityFlags` upstream uses to mark a stored phone requirement as deferred
+ * until the user joins a discoverable or large community. This fork has none of the machinery that
+ * sets it — the value is mirrored from upstream (`1 << 16`) purely so the admin response can report
+ * the flag with the same meaning, and so a future upstream sync lines up instead of colliding.
+ */
+export const DEFERRED_PHONE_ON_COMMUNITY_JOIN = 1 << 16;
+
 export const PHONE_ADD_CLEARABLE_FLAGS =
 	SuspiciousActivityFlags.REQUIRE_VERIFIED_PHONE |
 	SuspiciousActivityFlags.REQUIRE_REVERIFIED_PHONE |
