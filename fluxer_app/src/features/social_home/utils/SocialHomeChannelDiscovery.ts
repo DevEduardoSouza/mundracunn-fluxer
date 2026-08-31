@@ -8,8 +8,33 @@ import {ChannelTypes, Permissions} from '@fluxer/constants/src/ChannelConstants'
 const SKETCHBOOKS_CATEGORY_NAME = 'sketchbooks';
 const PROFESSOR_FEED_CHANNEL_NAME = 'feed-do-professor';
 const STORIES_CHANNEL_NAME = 'stories';
+/**
+ * Forum posts feed the Gallery too — decision 4 of docs/analise-forum.md §5 ("a Galeria (Feed)
+ * agrega também as postagens do fórum"), which shipped in the forum feature but never reached this
+ * discovery, so a class that moved to the forum saw an empty Gallery.
+ *
+ * The convention is duplicated from ForumChannelDiscovery rather than imported, on purpose: that
+ * file's own header says the two features stay decoupled by copy so either can be rebased or
+ * dropped without touching the other (client priority #1). The forum names need diacritics
+ * stripped ("Fórum" must match "forum"), which is why they get their own normalizer below.
+ */
+const FORUM_CATEGORY_NAME_PREFIX = 'forum';
+const FORUM_GUIDELINES_CHANNEL_NAMES: ReadonlySet<string> = new Set(['diretrizes', 'guidelines']);
 const FEED_CHANNEL_VIEW_PERMISSIONS = Permissions.VIEW_CHANNEL | Permissions.READ_MESSAGE_HISTORY;
-const STORIES_POST_PERMISSIONS = Permissions.VIEW_CHANNEL | Permissions.SEND_MESSAGES;
+/**
+ * ATTACH_FILES, not just SEND_MESSAGES: commenting on a story is an ordinary reply in the very same
+ * channel, so gating on SEND_MESSAGES made "can comment" and "can publish a story" the same
+ * permission — every member who was allowed to discuss a story also got the publish button. The
+ * class owner asked for exactly the opposite on 30/08/2026 ("os membros podem comentar, isso é
+ * necessário, mas não quero que consigam postar nem foto nem vídeo").
+ *
+ * A story is media by definition (the fetch only ever picks up image/video messages), so whoever
+ * cannot attach a file cannot author one — which makes ATTACH_FILES the honest gate. Denying it to
+ * @everyone/Aluno on the Stories channel is then the whole configuration, done in Fluxer's own
+ * permission UI, and it also stops the raw channel from accepting an upload; hiding the button
+ * alone would not.
+ */
+const STORIES_POST_PERMISSIONS = Permissions.VIEW_CHANNEL | Permissions.SEND_MESSAGES | Permissions.ATTACH_FILES;
 
 /**
  * Categories in a real class are decorated - the pilot guild ships a paint-palette emoji before
@@ -22,6 +47,19 @@ const STORIES_POST_PERMISSIONS = Permissions.VIEW_CHANNEL | Permissions.SEND_MES
  */
 function normalizeChannelName(name: string | undefined): string {
 	return (name ?? '')
+		.toLowerCase()
+		.replace(/[^\p{L}\p{N}-]+/gu, ' ')
+		.trim();
+}
+
+/**
+ * Stricter than {@link normalizeChannelName}: it also strips diacritics, because the forum
+ * convention anchors on the bare word "forum" while real categories are written "🗂️ Fórum".
+ */
+function normalizeForumName(name: string | undefined): string {
+	return (name ?? '')
+		.normalize('NFD')
+		.replace(/\p{Diacritic}/gu, '')
 		.toLowerCase()
 		.replace(/[^\p{L}\p{N}-]+/gu, ' ')
 		.trim();
@@ -49,12 +87,28 @@ export function getSketchbooksCategory(guildId: string): Channel | undefined {
 export function discoverFeedChannelIds(guildId: string): Array<string> {
 	const channels = Channels.getGuildChannels(guildId);
 	const sketchbooksCategory = getSketchbooksCategory(guildId);
+	const forumCategoryIds = new Set(
+		channels
+			.filter(
+				(channel) =>
+					channel.type === ChannelTypes.GUILD_CATEGORY &&
+					normalizeForumName(channel.name).startsWith(FORUM_CATEGORY_NAME_PREFIX),
+			)
+			.map((channel) => channel.id),
+	);
 	const channelIds: Array<string> = [];
 	for (const channel of channels) {
 		if (channel.type !== ChannelTypes.GUILD_TEXT) continue;
 		const isSketchbookChannel = sketchbooksCategory != null && channel.parentId === sketchbooksCategory.id;
 		const isProfessorFeedChannel = normalizeChannelName(channel.name) === PROFESSOR_FEED_CHANNEL_NAME;
-		if (!isSketchbookChannel && !isProfessorFeedChannel) continue;
+		// A forum post is a channel, so its images are ordinary channel images — the Feed's
+		// `has: ["image"]` search picks them up with no extra machinery. The rules channel is
+		// excluded: it is a panel, and its text-only message would never match anyway.
+		const isForumPostChannel =
+			channel.parentId != null &&
+			forumCategoryIds.has(channel.parentId) &&
+			!FORUM_GUIDELINES_CHANNEL_NAMES.has(normalizeForumName(channel.name));
+		if (!isSketchbookChannel && !isProfessorFeedChannel && !isForumPostChannel) continue;
 		if (!canViewChannel(channel.id)) continue;
 		channelIds.push(channel.id);
 	}
@@ -82,9 +136,10 @@ export function getStoriesChannel(guildId: string): Channel | undefined {
 
 /**
  * Who can post a Story is deliberately not hardcoded to a role name: the kickoff checklist
- * (CLAUDE.md section 7) left "só professor/admin ou monitores também?" open, and the client can
- * answer that later purely by editing the Stories channel's permission overwrites in Fluxer's own
- * UI — whoever ends up with SEND_MESSAGES there sees the publish button, no code change needed.
+ * (CLAUDE.md section 7) left "só professor/admin ou monitores também?" open, and the class answers
+ * it purely by editing the Stories channel's permission overwrites in Fluxer's own UI — whoever
+ * ends up with {@link STORIES_POST_PERMISSIONS} there sees the publish button, no code change
+ * needed. Commenting stays open to everyone with SEND_MESSAGES.
  */
 export function canPostStories(guildId: string): boolean {
 	const channel = getStoriesChannel(guildId);

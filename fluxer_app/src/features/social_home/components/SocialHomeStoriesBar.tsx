@@ -2,7 +2,7 @@
 
 import {Routes} from '@app/app/Routes';
 import * as RouterUtils from '@app/features/navigation/utils/RouterUtils';
-import {fetchStories} from '@app/features/social_home/commands/SocialHomeStoriesCommands';
+import {fetchStories, watchNewStories} from '@app/features/social_home/commands/SocialHomeStoriesCommands';
 import {openStoryViewer} from '@app/features/social_home/commands/SocialHomeStoryViewerCommands';
 import styles from '@app/features/social_home/components/SocialHomeStoriesBar.module.css';
 import SocialHomeStories from '@app/features/social_home/state/SocialHomeStories';
@@ -42,7 +42,11 @@ export const SocialHomeStoriesBar: React.FC<SocialHomeStoriesBarProps> = observe
 		SocialHomeStories.reset();
 		SocialHomeStories.startClock();
 		void fetchStories(i18n, guildId);
+		// Publishing a story leaves the reader right here, so the bar has to notice it without a
+		// remount — see watchNewStories.
+		const stopWatching = watchNewStories(guildId);
 		return () => {
+			stopWatching();
 			SocialHomeStories.stopClock();
 			SocialHomeStories.reset();
 		};

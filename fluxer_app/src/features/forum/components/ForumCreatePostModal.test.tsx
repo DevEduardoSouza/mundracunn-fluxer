@@ -22,6 +22,7 @@ vi.mock('@app/features/messaging/models/MessagingMessage', () => ({Message: clas
 vi.mock('@app/features/forum/utils/ForumChannelDiscovery', () => ({
 	getStudentRole: vi.fn(() => undefined),
 	getGuidelinesChannel: vi.fn(() => undefined),
+	canEditGuidelines: vi.fn(() => false),
 }));
 vi.mock('@app/features/user/state/Users', () => ({default: {currentUserId: 'user-a'}}));
 vi.mock('@app/features/messaging/components/markdown', () => ({

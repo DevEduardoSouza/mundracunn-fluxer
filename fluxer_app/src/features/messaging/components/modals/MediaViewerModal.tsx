@@ -854,6 +854,9 @@ const MediaViewerModalComponent: FC = observer(() => {
 						width={currentItem.naturalWidth}
 						height={currentItem.naturalHeight}
 						duration={currentItem.duration}
+						// The player already knows how to paint a ThumbHash behind the play button; it
+						// simply was never handed one here, so every video opened on a black rectangle.
+						placeholder={currentItem.placeholder ?? undefined}
 						autoPlay
 						fillContainer
 						isMobile={isMobile}

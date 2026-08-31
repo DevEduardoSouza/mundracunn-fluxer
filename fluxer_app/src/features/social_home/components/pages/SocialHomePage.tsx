@@ -13,6 +13,7 @@ import {SocialHomeFeedList} from '@app/features/social_home/components/SocialHom
 import {SocialHomePublishBar} from '@app/features/social_home/components/SocialHomePublishBar';
 import {SocialHomeStoriesBar} from '@app/features/social_home/components/SocialHomeStoriesBar';
 import {SocialHomeStoryCommentsPanel} from '@app/features/social_home/components/SocialHomeStoryCommentsPanel';
+import {SocialHomeStoryProgressBar} from '@app/features/social_home/components/SocialHomeStoryProgressBar';
 import SocialHome from '@app/features/social_home/state/SocialHome';
 import {remFromPx} from '@app/features/theme/layout/RemFromPx';
 import {Button} from '@app/features/ui/button/Button';
@@ -195,6 +196,7 @@ export const SocialHomePage: React.FC<SocialHomePageProps> = observer(({guildId}
 				data-flx="social_home.social-home-page.channel-view-scaffold"
 			/>
 			<SocialHomeStoryCommentsPanel data-flx="social_home.social-home-page.social-home-story-comments-panel" />
+			<SocialHomeStoryProgressBar data-flx="social_home.social-home-page.social-home-story-progress-bar" />
 		</>
 	);
 });

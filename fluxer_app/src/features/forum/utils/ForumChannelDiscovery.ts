@@ -178,6 +178,22 @@ export function canCreateForumPostInCategory(categoryId: string): boolean {
 }
 
 /**
+ * Whether the current user may rewrite the posting guidelines — SEND_MESSAGES in the guidelines
+ * channel, which is exactly who {@link setupForumChannels} leaves able to write there (staff).
+ *
+ * This exists because the sidebar hides the entire forum category (see {@link isForumHiddenChannel}),
+ * so the banner is the only place staff ever sees the rules and there was no way at all to reach
+ * the channel that stores them — the class owner reported precisely that on 30/08/2026 ("tem onde
+ * eu editar esse campo... não encontrei").
+ */
+export function canEditGuidelines(guildId: string): boolean {
+	const channel = getGuidelinesChannel(guildId);
+	if (!channel) return false;
+	const permissions = Permission.getChannelPermissions(channel.id) ?? 0n;
+	return (permissions & Permissions.SEND_MESSAGES) === Permissions.SEND_MESSAGES;
+}
+
+/**
  * Whether a channel is a forum post (a text channel under a forum category, not the guidelines
  * channel). Unlike {@link getForumPostChannels} this doesn't filter by view permission — the caller
  * already has the channel — so it's safe to use from the channel header.

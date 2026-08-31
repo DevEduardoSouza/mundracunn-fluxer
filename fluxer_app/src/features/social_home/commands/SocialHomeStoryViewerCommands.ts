@@ -5,7 +5,9 @@ import type {Message} from '@app/features/messaging/models/MessagingMessage';
 import {attachmentsToViewerItems} from '@app/features/messaging/utils/MediaViewerItemUtils';
 import {openStoryComments} from '@app/features/social_home/commands/SocialHomeStoryCommentsCommands';
 import SocialHomeStories from '@app/features/social_home/state/SocialHomeStories';
+import SocialHomeStoryProgress from '@app/features/social_home/state/SocialHomeStoryProgress';
 import type {StoryGroup} from '@app/features/social_home/utils/SocialHomeStoriesGrouping';
+import {buildStorySegments} from '@app/features/social_home/utils/SocialHomeStorySegments';
 import {getNextStoryId} from '@app/features/social_home/utils/SocialHomeStoryChronology';
 import * as MediaViewerCommands from '@app/features/ui/commands/MediaViewerCommands';
 import type {MediaViewerItem} from '@app/features/ui/state/MediaViewer';
@@ -98,6 +100,10 @@ export function openStoryViewer(groups: ReadonlyArray<StoryGroup>, startGroupInd
 	// comment panel matches what is on screen instead of the group's oldest story.
 	const anchorMessage = clickedGroup?.stories[resumeStoryIndex] ?? clickedFlattened?.firstMessage;
 	if (!anchorMessage) return;
+	// Captured before the viewer opens so the progress bar can read it on its first render.
+	SocialHomeStoryProgress.open(
+		buildStorySegments(flattenedGroups.map((flattened) => flattened?.itemCountByStory ?? [])),
+	);
 	MediaViewerCommands.openMediaViewer(allItems, Math.min(startIndex, allItems.length - 1), {
 		channelId: anchorMessage.channelId,
 		messageId: anchorMessage.id,

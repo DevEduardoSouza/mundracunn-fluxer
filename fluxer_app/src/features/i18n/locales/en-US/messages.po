@@ -586,6 +586,11 @@ msgstr "{countLabel} weeks"
 msgid "{countLabel} years"
 msgstr "{countLabel} years"
 
+#. Accessible label for the segmented progress bar over the story viewer. {current} is the story being watched, {total} how many that person posted.
+#: src/features/social_home/components/SocialHomeStoryProgressBar.tsx:33
+msgid "{current} of {total}"
+msgstr "{current} of {total}"
+
 #. Media viewer attachment position text, such as 2 of 5.
 #: src/features/messaging/components/modals/media_modal/shared.ts:140
 msgid "{currentAttachmentNumber} of {totalAttachments}"
@@ -9175,7 +9180,7 @@ msgid "Couldn't create role"
 msgstr "Couldn't create role"
 
 #. Error shown when the one-click class channel setup fails.
-#: src/features/social_home/components/pages/SocialHomePage.tsx:52
+#: src/features/social_home/components/pages/SocialHomePage.tsx:53
 msgid "Couldn't create the class channels. Try again."
 msgstr "Couldn't create the class channels. Try again."
 
@@ -9322,7 +9327,7 @@ msgid "Couldn't load invites"
 msgstr "Couldn't load invites"
 
 #. Shown when fetching the class feed fails.
-#: src/features/social_home/components/pages/SocialHomePage.tsx:36
+#: src/features/social_home/components/pages/SocialHomePage.tsx:37
 msgid "Couldn't load the feed."
 msgstr "Couldn't load the feed."
 
@@ -9731,7 +9736,7 @@ msgid "Create channel"
 msgstr "Create channel"
 
 #. Button that creates the conventional Home channels (stories, professor feed, sketchbooks).
-#: src/features/social_home/components/pages/SocialHomePage.tsx:48
+#: src/features/social_home/components/pages/SocialHomePage.tsx:49
 msgid "Create class channels"
 msgstr "Create class channels"
 
@@ -12453,10 +12458,12 @@ msgid "Echo cancellation"
 msgstr "Echo cancellation"
 
 #. Action label for opening the edit flow for the selected item.
+#. Button in the forum posting-guidelines panel, shown only to whoever can write in the guidelines channel; it opens that channel so the rules message can be edited.
 #. Button or menu action label in the linked accounts tab. Keep it concise.
 #. Button or menu action label in the search engines tab. Keep it concise.
 #. Top-level native menu bar title (Edit menu, holds cut/copy/paste).
 #: src/features/emoji/components/stickers/StickerGridItem.tsx:42
+#: src/features/forum/components/ForumGuidelinesBanner.tsx:45
 #: src/features/platform/utils/DesktopLocaleBridge.ts:42
 #: src/features/user/components/modals/tabs/chat_settings_tab/SearchEnginesTab.tsx:35
 #: src/features/user/components/modals/tabs/ExpressionPacksTab.tsx:123
@@ -15015,7 +15022,7 @@ msgstr "Follow voice input"
 #. Heading of the highlighted strip at the top of the forum list with the posts the user follows.
 #. State of the forum follow button once the post is followed; clicking it unfollows.
 #: src/features/forum/components/ForumFollowButton.tsx:19
-#: src/features/forum/components/ForumPostList.tsx:24
+#: src/features/forum/components/ForumPostList.tsx:25
 msgid "Following"
 msgstr "Following"
 
@@ -16026,7 +16033,7 @@ msgstr "Google lens"
 #. Button that collapses the forum posting-guidelines panel for good ("já li").
 #. Short label in the whats new modal.
 #: src/features/app/components/whats_new/WhatsNewModal.tsx:37
-#: src/features/forum/components/ForumGuidelinesBanner.tsx:32
+#: src/features/forum/components/ForumGuidelinesBanner.tsx:33
 msgid "Got it"
 msgstr "Got it"
 
@@ -16630,7 +16637,7 @@ msgid "Hide preview thumbnail"
 msgstr "Hide preview thumbnail"
 
 #. Accessible label for the expanded forum posting-guidelines panel header.
-#: src/features/forum/components/ForumGuidelinesBanner.tsx:40
+#: src/features/forum/components/ForumGuidelinesBanner.tsx:41
 msgid "Hide the posting guidelines"
 msgstr "Hide the posting guidelines"
 
@@ -19202,7 +19209,7 @@ msgid "Loading destinations…"
 msgstr "Loading destinations…"
 
 #. Loading state shown while the class feed posts are being fetched.
-#: src/features/social_home/components/pages/SocialHomePage.tsx:28
+#: src/features/social_home/components/pages/SocialHomePage.tsx:29
 msgid "Loading feed…"
 msgstr "Loading feed…"
 
@@ -22225,12 +22232,12 @@ msgid "No pinned messages"
 msgstr "No pinned messages"
 
 #. Empty state shown in the forum list when the title search matches nothing.
-#: src/features/forum/components/ForumPostList.tsx:20
+#: src/features/forum/components/ForumPostList.tsx:21
 msgid "No posts match your search."
 msgstr "No posts match your search."
 
 #. Empty state shown when the class feed has no posts to display.
-#: src/features/social_home/components/pages/SocialHomePage.tsx:40
+#: src/features/social_home/components/pages/SocialHomePage.tsx:41
 msgid "No posts yet."
 msgstr "No posts yet."
 
@@ -22756,7 +22763,7 @@ msgid "Okay"
 msgstr "Okay"
 
 #. Heading of the collapsed section of forum posts hidden by the inactivity filter. {count} is how many posts are in it.
-#: src/features/forum/components/ForumPostList.tsx:15
+#: src/features/forum/components/ForumPostList.tsx:16
 msgid "Older posts ({count})"
 msgstr "Older posts ({count})"
 
@@ -24598,7 +24605,7 @@ msgid "posted {time}"
 msgstr "posted {time}"
 
 #. Header of the forum panel that shows the rules message from the guidelines channel.
-#: src/features/forum/components/ForumGuidelinesBanner.tsx:28
+#: src/features/forum/components/ForumGuidelinesBanner.tsx:29
 msgid "Posting guidelines"
 msgstr "Posting guidelines"
 
@@ -29217,7 +29224,7 @@ msgid "Sets the level for every sound effect. Per-sound overrides ignore this."
 msgstr "Sets the level for every sound effect. Per-sound overrides ignore this."
 
 #. Shown when the feed search backend is still indexing the class channels.
-#: src/features/social_home/components/pages/SocialHomePage.tsx:32
+#: src/features/social_home/components/pages/SocialHomePage.tsx:33
 msgid "Setting up search for this class for the first time — try again in a moment."
 msgstr "Setting up search for this class for the first time — try again in a moment."
 
@@ -29884,7 +29891,7 @@ msgid "Show system tray icon"
 msgstr "Show system tray icon"
 
 #. Accessible label for the collapsed forum posting-guidelines panel header.
-#: src/features/forum/components/ForumGuidelinesBanner.tsx:36
+#: src/features/forum/components/ForumGuidelinesBanner.tsx:37
 msgid "Show the posting guidelines"
 msgstr "Show the posting guidelines"
 
@@ -32858,7 +32865,7 @@ msgid "This class doesn't have a forum yet. One click creates it: a “Fórum”
 msgstr "This class doesn't have a forum yet. One click creates it: a “Fórum” category and a #diretrizes channel for the posting rules."
 
 #. Empty state shown to admins of a class whose conventional Home channels are missing.
-#: src/features/social_home/components/pages/SocialHomePage.tsx:44
+#: src/features/social_home/components/pages/SocialHomePage.tsx:45
 msgid "This class doesn't have its Home channels yet. One click creates them: #stories, #feed-do-professor and a sketchbooks category."
 msgstr "This class doesn't have its Home channels yet. One click creates them: #stories, #feed-do-professor and a sketchbooks category."
 
@@ -38216,7 +38223,7 @@ msgid "You are using the full standard {baseCurrencyLabel} price instead of loca
 msgstr "You are using the full standard {baseCurrencyLabel} price instead of localized pricing."
 
 #. Empty state of the forum list when the "Following" filter is on but the user follows nothing.
-#: src/features/forum/components/ForumPostList.tsx:28
+#: src/features/forum/components/ForumPostList.tsx:29
 msgid "You aren't following any posts yet. Tap the star on a post to follow it."
 msgstr "You aren't following any posts yet. Tap the star on a post to follow it."
 

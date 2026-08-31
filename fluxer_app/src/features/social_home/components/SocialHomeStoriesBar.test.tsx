@@ -20,7 +20,10 @@ vi.mock('@app/app/Routes', () => ({
 	Routes: {guildChannel: (guildId: string, channelId: string) => `/channels/${guildId}/${channelId}`},
 }));
 vi.mock('@app/features/navigation/utils/RouterUtils', () => ({transitionTo: vi.fn()}));
-vi.mock('@app/features/social_home/commands/SocialHomeStoriesCommands', () => ({fetchStories: vi.fn()}));
+vi.mock('@app/features/social_home/commands/SocialHomeStoriesCommands', () => ({
+	fetchStories: vi.fn(),
+	watchNewStories: vi.fn(() => () => {}),
+}));
 vi.mock('@app/features/social_home/commands/SocialHomeStoryViewerCommands', () => ({openStoryViewer: vi.fn()}));
 vi.mock('@app/features/social_home/utils/SocialHomeChannelDiscovery', () => ({
 	canPostStories: vi.fn(() => false),
