@@ -8,6 +8,18 @@ import {ChannelTypes, Permissions} from '@fluxer/constants/src/ChannelConstants'
 const SKETCHBOOKS_CATEGORY_NAME = 'sketchbooks';
 const PROFESSOR_FEED_CHANNEL_NAME = 'feed-do-professor';
 const STORIES_CHANNEL_NAME = 'stories';
+/**
+ * Forum posts feed the Gallery too — decision 4 of docs/analise-forum.md §5 ("a Galeria (Feed)
+ * agrega também as postagens do fórum"), which shipped in the forum feature but never reached this
+ * discovery, so a class that moved to the forum saw an empty Gallery.
+ *
+ * The convention is duplicated from ForumChannelDiscovery rather than imported, on purpose: that
+ * file's own header says the two features stay decoupled by copy so either can be rebased or
+ * dropped without touching the other (client priority #1). The forum names need diacritics
+ * stripped ("Fórum" must match "forum"), which is why they get their own normalizer below.
+ */
+const FORUM_CATEGORY_NAME_PREFIX = 'forum';
+const FORUM_GUIDELINES_CHANNEL_NAMES: ReadonlySet<string> = new Set(['diretrizes', 'guidelines']);
 const FEED_CHANNEL_VIEW_PERMISSIONS = Permissions.VIEW_CHANNEL | Permissions.READ_MESSAGE_HISTORY;
 const STORIES_POST_PERMISSIONS = Permissions.VIEW_CHANNEL | Permissions.SEND_MESSAGES;
 
@@ -22,6 +34,19 @@ const STORIES_POST_PERMISSIONS = Permissions.VIEW_CHANNEL | Permissions.SEND_MES
  */
 function normalizeChannelName(name: string | undefined): string {
 	return (name ?? '')
+		.toLowerCase()
+		.replace(/[^\p{L}\p{N}-]+/gu, ' ')
+		.trim();
+}
+
+/**
+ * Stricter than {@link normalizeChannelName}: it also strips diacritics, because the forum
+ * convention anchors on the bare word "forum" while real categories are written "🗂️ Fórum".
+ */
+function normalizeForumName(name: string | undefined): string {
+	return (name ?? '')
+		.normalize('NFD')
+		.replace(/\p{Diacritic}/gu, '')
 		.toLowerCase()
 		.replace(/[^\p{L}\p{N}-]+/gu, ' ')
 		.trim();
@@ -49,12 +74,28 @@ export function getSketchbooksCategory(guildId: string): Channel | undefined {
 export function discoverFeedChannelIds(guildId: string): Array<string> {
 	const channels = Channels.getGuildChannels(guildId);
 	const sketchbooksCategory = getSketchbooksCategory(guildId);
+	const forumCategoryIds = new Set(
+		channels
+			.filter(
+				(channel) =>
+					channel.type === ChannelTypes.GUILD_CATEGORY &&
+					normalizeForumName(channel.name).startsWith(FORUM_CATEGORY_NAME_PREFIX),
+			)
+			.map((channel) => channel.id),
+	);
 	const channelIds: Array<string> = [];
 	for (const channel of channels) {
 		if (channel.type !== ChannelTypes.GUILD_TEXT) continue;
 		const isSketchbookChannel = sketchbooksCategory != null && channel.parentId === sketchbooksCategory.id;
 		const isProfessorFeedChannel = normalizeChannelName(channel.name) === PROFESSOR_FEED_CHANNEL_NAME;
-		if (!isSketchbookChannel && !isProfessorFeedChannel) continue;
+		// A forum post is a channel, so its images are ordinary channel images — the Feed's
+		// `has: ["image"]` search picks them up with no extra machinery. The rules channel is
+		// excluded: it is a panel, and its text-only message would never match anyway.
+		const isForumPostChannel =
+			channel.parentId != null &&
+			forumCategoryIds.has(channel.parentId) &&
+			!FORUM_GUIDELINES_CHANNEL_NAMES.has(normalizeForumName(channel.name));
+		if (!isSketchbookChannel && !isProfessorFeedChannel && !isForumPostChannel) continue;
 		if (!canViewChannel(channel.id)) continue;
 		channelIds.push(channel.id);
 	}
