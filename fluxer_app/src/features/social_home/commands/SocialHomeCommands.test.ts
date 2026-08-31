@@ -121,8 +121,27 @@ describe('fetchFeed — search path', () => {
 		expect(SocialHome.getError()).toBeNull();
 	});
 
-	it('surfaces the indexing state without touching posts or marking search unavailable', async () => {
+	/**
+	 * "Preparando a busca desta turma pela primeira vez" used to be a dead end: the reader had to
+	 * reload by hand, which is what the class owner hit every time a forum post opened a brand-new
+	 * channel (31/08/2026). Reading the channels needs no index, so the Gallery just loads.
+	 */
+	it('serves the Gallery from the channels while the index is still being built', async () => {
 		mockSearchIndexing(searchMessagesMock);
+		const imagePost = buildSketchbookImagePost({id: testSnowflake(2_000), channelId: ANA_CHANNEL_ID});
+		mockFallbackMessages(fetchFeedByChannelMock, [imagePost]);
+
+		await fetchFeed(fakeI18n, GUILD_ID);
+
+		expect(SocialHome.getPosts().map((post) => post.id)).toEqual([imagePost.id]);
+		expect(SocialHome.getIsIndexing()).toBe(false);
+		// The index will catch up; the next load must go back to search.
+		expect(SocialHome.isSearchUnavailable()).toBe(false);
+	});
+
+	it('falls back to the indexing message only when the channels fail too', async () => {
+		mockSearchIndexing(searchMessagesMock);
+		fetchFeedByChannelMock.mockRejectedValueOnce(new Error('sem rede'));
 
 		await fetchFeed(fakeI18n, GUILD_ID);
 
