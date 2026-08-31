@@ -1,0 +1,34 @@
+/* SPDX-License-Identifier: AGPL-3.0-or-later */
+
+.track {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: calc(var(--z-index-modal) + 2);
+	/* O story avanca clicando na midia; se a barra capturasse o clique, travaria a navegacao.
+	   O portal do media viewer ja e pointer-events: none, mas cada filho reabilita o proprio
+	   (ver o comentario no SocialHomeStoryCommentsPanel.module.css) - aqui nao reabilitamos. */
+	pointer-events: none;
+	display: flex;
+	gap: 0.25rem;
+	padding: 0.75rem 1rem;
+}
+
+/* Some o painel de comentarios: no desktop a barra recua para nao cruzar o painel; num
+   viewport estreito o painel ocupa a tela toda, a barra fica com largura zero e some -
+   que e o certo, porque o viewer tambem esta escondido atras dele. */
+.trackWithComments {
+	right: min(24rem, 100vw);
+}
+
+.segment {
+	flex: 1;
+	height: 0.1875rem;
+	border-radius: 0.125rem;
+	background: rgba(255, 255, 255, 0.35);
+}
+
+.segmentWatched {
+	background: rgba(255, 255, 255, 0.95);
+}

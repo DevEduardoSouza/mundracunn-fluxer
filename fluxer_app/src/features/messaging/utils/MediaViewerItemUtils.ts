@@ -32,6 +32,7 @@ export function attachmentToViewerItem(
 		naturalHeight: attachment.height || 0,
 		type,
 		contentHash: attachment.content_hash,
+		placeholder: attachment.placeholder ?? null,
 		attachmentId: attachment.id,
 		filename: attachment.filename,
 		fileSize: attachment.size,

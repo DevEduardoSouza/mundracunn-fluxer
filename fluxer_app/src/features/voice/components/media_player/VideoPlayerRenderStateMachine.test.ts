@@ -41,6 +41,7 @@ describe('VideoPlayerRenderStateMachine', () => {
 		expect(model.shouldAttachSource).toBe(false);
 		expect(model.shouldHideVideo).toBe(true);
 		expect(model.shouldShowPosterOverlay).toBe(true);
+		expect(model.shouldShowPlaceholderBackdrop).toBe(false);
 		expect(model.shouldShowControlsOverlay).toBe(false);
 	});
 
@@ -51,6 +52,7 @@ describe('VideoPlayerRenderStateMachine', () => {
 		expect(model.shouldAttachSource).toBe(true);
 		expect(model.shouldHideVideo).toBe(false);
 		expect(model.shouldShowPosterOverlay).toBe(false);
+		expect(model.shouldShowPlaceholderBackdrop).toBe(false);
 		expect(model.shouldShowControlsOverlay).toBe(true);
 	});
 
@@ -61,7 +63,19 @@ describe('VideoPlayerRenderStateMachine', () => {
 		expect(model.shouldAttachSource).toBe(false);
 		expect(model.shouldHideVideo).toBe(true);
 		expect(model.shouldShowPosterOverlay).toBe(false);
+		// Nothing is on screen yet in this branch — no source, no poster — so the ThumbHash is the
+		// only thing standing between the reader and a black rectangle.
+		expect(model.shouldShowPlaceholderBackdrop).toBe(true);
 		expect(model.shouldShowControlsOverlay).toBe(true);
+	});
+
+	it('never asks for the poster overlay and the placeholder backdrop at once', () => {
+		for (const autoPlay of [false, true]) {
+			for (const hasPlayed of [false, true]) {
+				const model = selectVideoPlayerRenderModel(signals({autoPlay, hasPlayed}));
+				expect(model.shouldShowPosterOverlay && model.shouldShowPlaceholderBackdrop).toBe(false);
+			}
+		}
 	});
 
 	it('prioritizes ended and error render states over base playback flags', () => {

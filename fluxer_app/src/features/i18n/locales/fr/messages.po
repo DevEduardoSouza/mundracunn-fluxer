@@ -585,6 +585,11 @@ msgstr "{countLabel} semaines"
 msgid "{countLabel} years"
 msgstr "{countLabel} ans"
 
+#. Accessible label for the segmented progress bar over the story viewer. {current} is the story being watched, {total} how many that person posted.
+#: src/features/social_home/components/SocialHomeStoryProgressBar.tsx:33
+msgid "{current} of {total}"
+msgstr ""
+
 #. Media viewer attachment position text, such as 2 of 5.
 #: src/features/messaging/components/modals/media_modal/shared.ts:140
 msgid "{currentAttachmentNumber} of {totalAttachments}"
@@ -9167,7 +9172,7 @@ msgid "Couldn't create role"
 msgstr "Impossible de créer le rôle"
 
 #. Error shown when the one-click class channel setup fails.
-#: src/features/social_home/components/pages/SocialHomePage.tsx:52
+#: src/features/social_home/components/pages/SocialHomePage.tsx:53
 msgid "Couldn't create the class channels. Try again."
 msgstr ""
 
@@ -9314,7 +9319,7 @@ msgid "Couldn't load invites"
 msgstr "Impossible de charger les invitations"
 
 #. Shown when fetching the class feed fails.
-#: src/features/social_home/components/pages/SocialHomePage.tsx:36
+#: src/features/social_home/components/pages/SocialHomePage.tsx:37
 msgid "Couldn't load the feed."
 msgstr ""
 
@@ -9723,7 +9728,7 @@ msgid "Create channel"
 msgstr "Créer un salon"
 
 #. Button that creates the conventional Home channels (stories, professor feed, sketchbooks).
-#: src/features/social_home/components/pages/SocialHomePage.tsx:48
+#: src/features/social_home/components/pages/SocialHomePage.tsx:49
 msgid "Create class channels"
 msgstr ""
 
@@ -15007,7 +15012,7 @@ msgstr "Suivre l'entrée vocale"
 #. Heading of the highlighted strip at the top of the forum list with the posts the user follows.
 #. State of the forum follow button once the post is followed; clicking it unfollows.
 #: src/features/forum/components/ForumFollowButton.tsx:19
-#: src/features/forum/components/ForumPostList.tsx:24
+#: src/features/forum/components/ForumPostList.tsx:25
 msgid "Following"
 msgstr ""
 
@@ -19194,7 +19199,7 @@ msgid "Loading destinations…"
 msgstr "Chargement des destinations…"
 
 #. Loading state shown while the class feed posts are being fetched.
-#: src/features/social_home/components/pages/SocialHomePage.tsx:28
+#: src/features/social_home/components/pages/SocialHomePage.tsx:29
 msgid "Loading feed…"
 msgstr ""
 
@@ -22217,12 +22222,12 @@ msgid "No pinned messages"
 msgstr "Aucun message épinglé"
 
 #. Empty state shown in the forum list when the title search matches nothing.
-#: src/features/forum/components/ForumPostList.tsx:20
+#: src/features/forum/components/ForumPostList.tsx:21
 msgid "No posts match your search."
 msgstr ""
 
 #. Empty state shown when the class feed has no posts to display.
-#: src/features/social_home/components/pages/SocialHomePage.tsx:40
+#: src/features/social_home/components/pages/SocialHomePage.tsx:41
 msgid "No posts yet."
 msgstr ""
 
@@ -22748,7 +22753,7 @@ msgid "Okay"
 msgstr "OK"
 
 #. Heading of the collapsed section of forum posts hidden by the inactivity filter. {count} is how many posts are in it.
-#: src/features/forum/components/ForumPostList.tsx:15
+#: src/features/forum/components/ForumPostList.tsx:16
 msgid "Older posts ({count})"
 msgstr ""
 
@@ -29209,7 +29214,7 @@ msgid "Sets the level for every sound effect. Per-sound overrides ignore this."
 msgstr "Définit le volume de tous les effets sonores. Les réglages individuels des sons ignorent ce paramètre."
 
 #. Shown when the feed search backend is still indexing the class channels.
-#: src/features/social_home/components/pages/SocialHomePage.tsx:32
+#: src/features/social_home/components/pages/SocialHomePage.tsx:33
 msgid "Setting up search for this class for the first time — try again in a moment."
 msgstr ""
 
@@ -32850,7 +32855,7 @@ msgid "This class doesn't have a forum yet. One click creates it: a “Fórum”
 msgstr ""
 
 #. Empty state shown to admins of a class whose conventional Home channels are missing.
-#: src/features/social_home/components/pages/SocialHomePage.tsx:44
+#: src/features/social_home/components/pages/SocialHomePage.tsx:45
 msgid "This class doesn't have its Home channels yet. One click creates them: #stories, #feed-do-professor and a sketchbooks category."
 msgstr ""
 
@@ -38208,7 +38213,7 @@ msgid "You are using the full standard {baseCurrencyLabel} price instead of loca
 msgstr "Vous utilisez le prix standard complet en {baseCurrencyLabel} au lieu du prix localisé."
 
 #. Empty state of the forum list when the "Following" filter is on but the user follows nothing.
-#: src/features/forum/components/ForumPostList.tsx:28
+#: src/features/forum/components/ForumPostList.tsx:29
 msgid "You aren't following any posts yet. Tap the star on a post to follow it."
 msgstr ""
 

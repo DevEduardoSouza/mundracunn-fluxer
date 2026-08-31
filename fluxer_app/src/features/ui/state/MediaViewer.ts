@@ -11,6 +11,12 @@ export type MediaViewerItem = Readonly<{
 	naturalHeight: number;
 	type: 'image' | 'gif' | 'gifv' | 'video' | 'audio';
 	contentHash?: string | null;
+	/**
+	 * ThumbHash of the media, as the API sends it on the attachment — for a video that is a frame of
+	 * the video itself, which is what {@link VideoPlayer} paints behind the play button instead of a
+	 * black rectangle while the file loads.
+	 */
+	placeholder?: string | null;
 	attachmentId?: string;
 	embedIndex?: number;
 	filename?: string;

@@ -19,6 +19,14 @@ export interface VideoPlayerRenderModel {
 	shouldAttachSource: boolean;
 	shouldHideVideo: boolean;
 	shouldShowPosterOverlay: boolean;
+	/**
+	 * An autoplaying video has no poster overlay to hang a preview off, and its source is only
+	 * attached once playback starts — so until the first frame decodes there is nothing on screen at
+	 * all and the player reads as a black rectangle. This paints the attachment's ThumbHash there in
+	 * the meantime. Strictly complementary to {@link shouldShowPosterOverlay}: a click-to-play video
+	 * still shows its preview inside the overlay, never twice.
+	 */
+	shouldShowPlaceholderBackdrop: boolean;
 	shouldShowControlsOverlay: boolean;
 }
 
@@ -63,6 +71,7 @@ function createRenderModel(signals: VideoPlayerRenderSignals): VideoPlayerRender
 		shouldAttachSource: signals.hasPlayed,
 		shouldHideVideo: !signals.hasPlayed,
 		shouldShowPosterOverlay: !signals.hasPlayed && !signals.autoPlay,
+		shouldShowPlaceholderBackdrop: !signals.hasPlayed && signals.autoPlay,
 		shouldShowControlsOverlay: signals.hasPlayed || signals.autoPlay,
 	};
 }

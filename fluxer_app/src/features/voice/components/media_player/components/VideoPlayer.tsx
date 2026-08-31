@@ -509,6 +509,14 @@ export const VideoPlayer = observer(function VideoPlayer({
 				>
 					<track kind="captions" data-flx="voice.media-player.video-player.track" />
 				</video>
+				{renderModel.shouldShowPlaceholderBackdrop && thumbHashURL && (
+					<img
+						src={thumbHashURL}
+						alt=""
+						className={styles.autoPlayPlaceholder}
+						data-flx="voice.media-player.video-player.auto-play-placeholder"
+					/>
+				)}
 				{renderModel.shouldShowPosterOverlay && (
 					<FocusRing offset={-2} data-flx="voice.media-player.video-player.focus-ring--2">
 						<button

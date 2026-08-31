@@ -71,6 +71,16 @@
 	object-fit: cover;
 }
 
+/* Behind an autoplaying video, so it has to frame the same way the video will (`contain`, not the
+   `cover` the poster overlay uses) or the picture visibly jumps when the first frame lands. */
+.autoPlayPlaceholder {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+}
+
 .playOverlayButton {
 	display: flex;
 	align-items: center;
