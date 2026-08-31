@@ -50,7 +50,28 @@ function applyError(guildId: string, error: unknown): void {
 	SocialHomeStories.setError(error instanceof Error ? error.message : String(error));
 }
 
-async function fetchStoriesViaSearch(i18n: I18n, guildId: string, channelId: string, minId: string): Promise<void> {
+/**
+ * Deliberately without `minId`, even though a 24h window is exactly what it is for.
+ *
+ * The search backend indexes a message's `id` as a string (it is the Meilisearch document's primary
+ * key), while `min_id`/`max_id` are turned into a *numeric* range filter over that same field —
+ * `meiliRangeFilter('id', {gt: minId})` in fluxer_api's MeilisearchDomainAdapters. Meilisearch does
+ * not compare a string field numerically, so the clause matches nothing and every windowed search
+ * comes back empty. Verified against production on 31/08/2026: the identical query returns the
+ * story with `min_id` dropped and zero results with it present.
+ *
+ * That is an upstream bug, not something this fork introduced, and it is why the Stories bar looked
+ * "broken" from the moment the self-host gained a search backend (before that the fallback path
+ * below did the work and the window was honoured by the channel API instead). Filtering here would
+ * be the wrong place to fix it anyway — the window is a *display* rule, and
+ * SocialHomeStories.getVisibleStories already re-applies it every minute against the clock, so
+ * dropping the server-side filter changes nothing a reader can see. `sortOrder: 'desc'` still means
+ * the newest stories are the ones that survive the hit cap.
+ *
+ * The real fix belongs in the API (range over the numeric `createdAt` the index already carries) and
+ * is a candidate for an upstream PR — note the same clause backs `max_id` pagination elsewhere.
+ */
+async function fetchStoriesViaSearch(i18n: I18n, guildId: string, channelId: string): Promise<void> {
 	const results = await Promise.all(
 		STORY_MEDIA_TYPES.map((mediaType) =>
 			searchMessages(
@@ -62,7 +83,6 @@ async function fetchStoriesViaSearch(i18n: I18n, guildId: string, channelId: str
 					sortBy: 'timestamp',
 					sortOrder: 'desc',
 					hitsPerPage: STORY_HITS_PER_PAGE,
-					minId,
 				},
 			),
 		),
@@ -165,7 +185,7 @@ export async function fetchStories(i18n: I18n, guildId: string): Promise<void> {
 		return;
 	}
 	try {
-		await fetchStoriesViaSearch(i18n, guildId, storiesChannel.id, minId);
+		await fetchStoriesViaSearch(i18n, guildId, storiesChannel.id);
 	} catch (error) {
 		if (!isSearchUnavailableError(error)) {
 			applyError(guildId, error);
