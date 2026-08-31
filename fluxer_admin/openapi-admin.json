@@ -14881,6 +14881,10 @@
 					"premium_grace_ends_at": {"nullable": true, "type": "string"},
 					"premium_lifetime_sequence": {"nullable": true, "allOf": [{"$ref": "#/components/schemas/Int32Type"}]},
 					"suspicious_activity_flags": {"$ref": "#/components/schemas/SuspiciousActivityFlags"},
+					"phone_verification_deferred": {
+						"type": "boolean",
+						"description": "Whether a stored phone requirement is deferred until the user joins a discoverable or large community"
+					},
 					"temp_banned_until": {"nullable": true, "type": "string"},
 					"pending_deletion_at": {"nullable": true, "type": "string"},
 					"pending_bulk_message_deletion_at": {"nullable": true, "type": "string"},
@@ -14921,6 +14925,7 @@
 					"premium_grace_ends_at",
 					"premium_lifetime_sequence",
 					"suspicious_activity_flags",
+					"phone_verification_deferred",
 					"temp_banned_until",
 					"pending_deletion_at",
 					"pending_bulk_message_deletion_at",
