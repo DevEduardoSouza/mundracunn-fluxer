@@ -2,7 +2,7 @@
 
 import {UserFlags} from '@fluxer/constants/src/UserConstants';
 import {HTTP_STATUS} from '../../test/TestConstants';
-import {afterEach, beforeEach, describe, expect, test} from 'vitest';
+import {afterEach, beforeEach, describe, test} from 'vitest';
 import {createTestAccount} from '../../auth/tests/AuthTestUtils';
 import {getInstanceConfigRepository} from '../../middleware/ServiceSingletons';
 import {type ApiTestHarness, createApiTestHarness} from '../../test/ApiTestHarness';
