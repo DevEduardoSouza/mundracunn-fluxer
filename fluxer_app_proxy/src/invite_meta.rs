@@ -453,11 +453,11 @@ fn build_guild_meta(
     endpoints: &InviteMetaEndpoints,
 ) -> InvitePageMeta {
     let title = format!("Entrar em {} na MUNDRACUNN", guild.name);
-    let mut description = format!("You've been invited to join {}.", guild.name);
+    let mut description = format!("Você foi convidado para entrar em {}.", guild.name);
     if let Some(channel_name) =
         channel.and_then(|channel| clean_optional_text(channel.name.as_deref()))
     {
-        description.push_str(&format!(" Channel: {channel_name}."));
+        description.push_str(&format!(" Canal: {channel_name}."));
     }
     if let Some(member_count) = guild.member_count {
         description.push_str(&format!(" {}", format_member_count(member_count as i64)));
@@ -503,9 +503,9 @@ fn build_group_dm_meta(
         .as_ref()
         .map(|recipients| recipients.len() as i64);
     let mut description = if let Some(inviter_name) = inviter_name {
-        format!("{inviter_name} invited you to a group DM.")
+        format!("{inviter_name} convidou você para um grupo.")
     } else {
-        "You've been invited to a group DM.".to_owned()
+        "Você foi convidado para um grupo.".to_owned()
     };
     if let Some(member_count) = member_count {
         description.push_str(&format!(" {}", format_member_count(member_count)));
@@ -597,7 +597,7 @@ fn clean_optional_text(value: Option<&str>) -> Option<&str> {
 }
 
 fn format_member_count(value: i64) -> String {
-    let noun = if value == 1 { "member" } else { "members" };
+    let noun = if value == 1 { "membro" } else { "membros" };
     format!("{} {noun}", format_count(value))
 }
 
@@ -796,8 +796,8 @@ mod tests {
         let meta = build_guild_meta(&guild, Some(&channel), None, &endpoints());
 
         assert_eq!(meta.title, "Entrar em Rust Friends na MUNDRACUNN");
-        assert!(meta.description.contains("Channel: general."));
-        assert!(meta.description.contains("12,345 members"));
+        assert!(meta.description.contains("Canal: general."));
+        assert!(meta.description.contains("12,345 membros"));
         assert_eq!(
             meta.image_url.as_deref(),
             Some("https://media.example.test/media/icons/42/iconhash.webp?size=160&animated=false")
@@ -824,7 +824,7 @@ mod tests {
         let meta = build_group_dm_meta(&channel, Some(&inviter), &endpoints());
 
         assert_eq!(meta.title, "Entrar no grupo de Ada na MUNDRACUNN");
-        assert!(meta.description.contains("3 members"));
+        assert!(meta.description.contains("3 membros"));
         assert_eq!(
             meta.image_url.as_deref(),
             Some("https://media.example.test/media/avatars/99/avatarhash.webp?size=160")
