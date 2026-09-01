@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import {canAccessFavorites} from '@app/features/app/utils/InstanceOwnerAccess';
 import {Routes} from '@app/app/Routes';
 import Accessibility from '@app/features/accessibility/state/Accessibility';
 import styles from '@app/features/app/components/layout/GuildsLayout.module.css';
@@ -70,7 +71,7 @@ export const FavoritesButton = observer(({className}: FavoritesButtonProps = {})
 			return 8;
 		})() * getAppZoomFactor();
 	const isActive = shouldShowHoverState || isSelected;
-	if (!Accessibility.showFavorites) {
+	if (!Accessibility.showFavorites || !canAccessFavorites()) {
 		return null;
 	}
 	return (

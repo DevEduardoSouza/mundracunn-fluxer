@@ -452,7 +452,7 @@ fn build_guild_meta(
     inviter: Option<&UserDbRow>,
     endpoints: &InviteMetaEndpoints,
 ) -> InvitePageMeta {
-    let title = format!("Join {} on Fluxer", guild.name);
+    let title = format!("Entrar em {} na MUNDRACUNN", guild.name);
     let mut description = format!("You've been invited to join {}.", guild.name);
     if let Some(channel_name) =
         channel.and_then(|channel| clean_optional_text(channel.name.as_deref()))
@@ -491,11 +491,11 @@ fn build_group_dm_meta(
     let channel_name = clean_optional_text(channel.name.as_deref());
     let inviter_name = inviter.map(display_user_name);
     let title = if let Some(channel_name) = channel_name {
-        format!("Join {channel_name} on Fluxer")
+        format!("Entrar em {channel_name} na MUNDRACUNN")
     } else if let Some(inviter_name) = inviter_name.as_deref() {
-        format!("Join {inviter_name}'s group DM on Fluxer")
+        format!("Entrar no grupo de {inviter_name} na MUNDRACUNN")
     } else {
-        "Join a group DM on Fluxer".to_owned()
+        "Entrar em um grupo na MUNDRACUNN".to_owned()
     };
 
     let member_count = channel
@@ -795,7 +795,7 @@ mod tests {
 
         let meta = build_guild_meta(&guild, Some(&channel), None, &endpoints());
 
-        assert_eq!(meta.title, "Join Rust Friends on Fluxer");
+        assert_eq!(meta.title, "Entrar em Rust Friends na MUNDRACUNN");
         assert!(meta.description.contains("Channel: general."));
         assert!(meta.description.contains("12,345 members"));
         assert_eq!(
@@ -823,7 +823,7 @@ mod tests {
 
         let meta = build_group_dm_meta(&channel, Some(&inviter), &endpoints());
 
-        assert_eq!(meta.title, "Join Ada's group DM on Fluxer");
+        assert_eq!(meta.title, "Entrar no grupo de Ada na MUNDRACUNN");
         assert!(meta.description.contains("3 members"));
         assert_eq!(
             meta.image_url.as_deref(),

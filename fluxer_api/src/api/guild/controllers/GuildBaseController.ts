@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import {UserFlags} from '@fluxer/constants/src/UserConstants';
+import {MissingPermissionsError} from '@fluxer/errors/src/domains/core/MissingPermissionsError';
 import {SingleCommunityCannotCreateGuildsError} from '@fluxer/errors/src/domains/guild/SingleCommunityCannotCreateGuildsError';
 import {SingleCommunityCannotDeleteError} from '@fluxer/errors/src/domains/guild/SingleCommunityCannotDeleteError';
 import {SingleCommunityCannotLeaveError} from '@fluxer/errors/src/domains/guild/SingleCommunityCannotLeaveError';
@@ -48,6 +50,13 @@ export function GuildBaseController(app: HonoApp) {
 			const policy = await ctx.get('instanceConfigRepository').getInstancePolicyConfig();
 			if (policy.single_community_enabled) {
 				throw new SingleCommunityCannotCreateGuildsError();
+			}
+			// MUNDRACUNN: this instance hosts one course, so creating communities belongs to whoever
+			// runs it — requested 31/08/2026 ("limitar para que usuários comuns não possam criar
+			// comunidades"). The client hides the "+" for the same audience (InstanceOwnerAccess.ts);
+			// this is the half that actually enforces it, since the button is only paint.
+			if ((user.flags & UserFlags.STAFF) !== UserFlags.STAFF) {
+				throw new MissingPermissionsError();
 			}
 			const auditLogReason = ctx.get('auditLogReason') ?? null;
 			const locale = ctx.get('requestLocale') ?? null;

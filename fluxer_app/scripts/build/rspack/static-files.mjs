@@ -19,17 +19,16 @@ function resolveStaticCdnEndpoint(staticCdnEndpoint) {
 function generateManifest(staticCdnEndpoint) {
 	const cdn = resolveStaticCdnEndpoint(staticCdnEndpoint);
 	const manifest = {
-		name: 'Fluxer',
-		short_name: 'Fluxer',
-		description:
-			'Fluxer is a free and open source instant messaging and VoIP platform built for friends, groups, and communities.',
+		name: 'MUNDRACUNN',
+		short_name: 'MUNDRACUNN',
+		description: 'Comunidade MUNDRACUNN — aulas, sketchbooks e fórum da turma.',
 		start_url: '/',
 		display: 'standalone',
 		orientation: 'portrait-primary',
 		theme_color: '#4641D9',
 		background_color: '#2b2d31',
 		categories: ['social', 'communication'],
-		lang: 'en',
+		lang: 'pt-BR',
 		scope: '/',
 		icons: [
 			{

@@ -301,7 +301,14 @@ export class EmailService implements IEmailService {
 		locale: string | null,
 		variables: EmailTemplateVariables[T],
 	): Promise<boolean> {
-		const result = this.emailI18n.getTemplate(templateKey, locale, variables);
+		// Branding is merged in here, at the single place every template passes through, rather than
+		// at each of the ~40 call sites. Undefined entries are dropped so the packaged defaults win.
+		const result = this.emailI18n.getTemplate(templateKey, locale, {
+			...variables,
+			...(this.config.productName ? {product_name: this.config.productName} : {}),
+			...(this.config.appealsEmail ? {appeals_email: this.config.appealsEmail} : {}),
+			...(this.config.safetyEmail ? {safety_email: this.config.safetyEmail} : {}),
+		});
 		if (!result.ok) {
 			logger.error({key: templateKey, locale: result.locale, error: result.error}, 'Failed to resolve email template');
 			return false;

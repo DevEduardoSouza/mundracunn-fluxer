@@ -6,7 +6,7 @@ import styles from '@app/features/app/components/layout/sidebar_nav/AddGuildButt
 import {useContextMenuHoverState} from '@app/features/app/hooks/useContextMenuHoverState';
 import {useHover} from '@app/features/app/hooks/useHover';
 import {useMergeRefs} from '@app/features/app/hooks/useMergeRefs';
-import RuntimeConfig from '@app/features/app/state/RuntimeConfig';
+import {canCreateGuild} from '@app/features/app/utils/InstanceOwnerAccess';
 import {AddGuildModal, type AddGuildModalView} from '@app/features/guild/components/modals/AddGuildModal';
 import {
 	CREATE_COMMUNITY_DESCRIPTOR,
@@ -92,7 +92,8 @@ export const AddGuildButton = observer(() => {
 		));
 	};
 	const shouldShowHoverState = isHovering || contextMenuOpen;
-	if (RuntimeConfig.singleCommunityEnabled) {
+	// canCreateGuild already folds in singleCommunityEnabled — see InstanceOwnerAccess.
+	if (!canCreateGuild()) {
 		return null;
 	}
 	return (
