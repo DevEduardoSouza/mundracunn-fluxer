@@ -223,8 +223,12 @@ export const PermissionsDescriptions: Record<keyof typeof Permissions, string> =
 	VIEW_CHANNEL_MEMBERS: 'Allows viewing the member list in a channel',
 };
 export const ALL_PERMISSIONS = Object.values(Permissions).reduce((acc, p) => acc | p, 0n);
+// MUNDRACUNN: CREATE_INSTANT_INVITE deliberately left out of the @everyone default. Students
+// join through open registration in the admin panel, so a common member has no reason to mint
+// invite links — requested 01/09/2026 ("usuarios comuns nao devem conseguir criar links de
+// convite"). Teachers and admins still create them: guild owners bypass permission checks, and
+// any role can be granted the permission explicitly.
 export const DEFAULT_PERMISSIONS =
-	Permissions.CREATE_INSTANT_INVITE |
 	Permissions.ADD_REACTIONS |
 	Permissions.STREAM |
 	Permissions.VIEW_CHANNEL |
