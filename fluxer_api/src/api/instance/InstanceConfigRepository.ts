@@ -76,6 +76,10 @@ interface InstanceAppPublicConfig {
 export type InstancePremiumMode = 'mirror' | 'everyone';
 
 export interface InstancePolicyConfig {
+	// MUNDRACUNN: when on, only STAFF can create guilds. Kept as instance policy rather than a
+	// hardcoded check so the owner can flip it in the admin panel, and so the test suite (which
+	// creates guilds with ordinary users) is not gated by a production-only rule.
+	staff_only_guild_creation: boolean;
 	single_community_enabled: boolean;
 	single_community_locked: boolean;
 	single_community_guild_id: string | null;
@@ -395,6 +399,7 @@ function normalizeAppPublicConfig(value: unknown): InstanceAppPublicConfig {
 }
 
 const DEFAULT_INSTANCE_POLICY_CONFIG: InstancePolicyConfig = {
+	staff_only_guild_creation: false,
 	single_community_enabled: false,
 	single_community_locked: false,
 	single_community_guild_id: null,
@@ -419,6 +424,7 @@ function normalizeInstancePolicyConfig(value: unknown): InstancePolicyConfig {
 		return {...DEFAULT_INSTANCE_POLICY_CONFIG};
 	}
 	return {
+		staff_only_guild_creation: value.staff_only_guild_creation === true,
 		single_community_enabled: value.single_community_enabled === true,
 		single_community_locked: value.single_community_locked === true,
 		single_community_guild_id: normalizeNullableString(value.single_community_guild_id),

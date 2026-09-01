@@ -90,6 +90,7 @@ async function buildInstanceConfigResponse(): Promise<InstanceConfigResponse> {
 		self_hosted: Config.instance.selfHosted,
 		app_public: appPublic,
 		policy: {
+			staff_only_guild_creation: policy.staff_only_guild_creation,
 			single_community_enabled: policy.single_community_enabled,
 			single_community_locked: policy.single_community_locked,
 			single_community_guild_id: policy.single_community_guild_id,
@@ -566,6 +567,14 @@ async function applyInstancePolicyUpdate(
 			patch.single_community_enabled = false;
 			patch.single_community_locked = true;
 		}
+	}
+	// MUNDRACUNN: plain toggle, no lock semantics. Unlike single_community/direct_messages, turning
+	// this off does not strand anything - existing guilds keep working either way.
+	if (
+		policy.staff_only_guild_creation !== undefined &&
+		policy.staff_only_guild_creation !== current.staff_only_guild_creation
+	) {
+		patch.staff_only_guild_creation = policy.staff_only_guild_creation;
 	}
 	if (
 		policy.direct_messages_disabled !== undefined &&
