@@ -159,6 +159,14 @@ function createEmailServiceForConfig(
 		fromName: emailConfigSource.fromName,
 		appBaseUrl: Config.endpoints.webApp,
 		marketingBaseUrl: Config.endpoints.marketing,
+		// Same source of truth the rest of the app uses for the instance's name
+		// (FLUXER_APP_PRODUCT_NAME / instance branding), so the message body stops saying "Fluxer"
+		// on a rebranded self-host while the sender already says otherwise.
+		productName: Config.instance.branding.productName,
+		// appealsEmail/safetyEmail stay on the packaged defaults on purpose: they only appear in the
+		// ban/deletion/report templates, and pointing them at this instance's noreply address would
+		// be worse than leaving a known placeholder. Fill them once the community has a real inbox.
+		
 	};
 	return new EmailService(emailConfig, emailI18n, createEmailProvider(emailConfigSource), bouncedEmailChecker);
 }
