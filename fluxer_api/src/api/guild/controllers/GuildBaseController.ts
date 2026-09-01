@@ -55,7 +55,9 @@ export function GuildBaseController(app: HonoApp) {
 			// runs it — requested 31/08/2026 ("limitar para que usuários comuns não possam criar
 			// comunidades"). The client hides the "+" for the same audience (InstanceOwnerAccess.ts);
 			// this is the half that actually enforces it, since the button is only paint.
-			if ((user.flags & UserFlags.STAFF) !== UserFlags.STAFF) {
+			// Behind an instance policy: as a hardcoded check it also fired in the test suite, whose
+			// harness creates guilds with ordinary users, and took 959 API tests down with it.
+			if (policy.staff_only_guild_creation && (user.flags & UserFlags.STAFF) !== UserFlags.STAFF) {
 				throw new MissingPermissionsError();
 			}
 			const auditLogReason = ctx.get('auditLogReason') ?? null;

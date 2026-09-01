@@ -507,6 +507,7 @@ const AppPublicConfigUpdateRequest = z.object({
 });
 
 const InstancePolicyResponse = z.object({
+	staff_only_guild_creation: z.boolean(),
 	single_community_enabled: z.boolean(),
 	single_community_locked: z.boolean(),
 	single_community_guild_id: z.string().nullable(),
@@ -725,6 +726,7 @@ export const InstanceConfigUpdateRequest = z.object({
 		.nullish(),
 	policy: z
 		.object({
+			staff_only_guild_creation: z.boolean().optional(),
 			single_community_enabled: z.boolean().optional(),
 			single_community_name: z.string().trim().min(1).max(100).optional(),
 			direct_messages_disabled: z.boolean().optional(),
