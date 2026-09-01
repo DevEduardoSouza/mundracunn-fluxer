@@ -8,7 +8,10 @@ import {EMAIL_I18N_LOCALE_MESSAGES} from '@pkgs/email/src/email_i18n/EmailI18nLo
 import {EMAIL_I18N_MESSAGES} from '@pkgs/email/src/email_i18n/EmailI18nMessages';
 import type {EmailTemplate, EmailTemplateKey} from '@pkgs/email/src/email_i18n/EmailI18nTypes.generated';
 
-const DEFAULT_LOCALE = 'en-US';
+// MUNDRACUNN: this instance hosts a Brazilian course, so an email with no resolved locale
+// should land in Portuguese rather than English. Upstream defaults to en-US; every other
+// locale still works, this only changes what happens when the request carries none.
+const DEFAULT_LOCALE = 'pt-BR';
 const DEFAULT_EMAIL_TEMPLATE_VARIABLES = {
 	product_name: 'Fluxer',
 	appeals_email: 'appeals@fluxer.app',

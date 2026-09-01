@@ -28,8 +28,8 @@ const EMAIL_I18N_PT_BR_MESSAGES = defineEmailI18nLocaleMessages({
 		"body": "Olá,\n\nUse o código de verificação abaixo para enviar seu relatório do Digital Services Act para o {product_name}:\n\n{code}\n\nEste código expira em {expiresAt, date, full} às {expiresAt, time, short}.\n\nSe você não solicitou isso, pode ignorar este e-mail.\n\n– Equipe de Segurança do {product_name}"
 	},
 	"email_change_new": {
-		"subject": "Verifique seu novo e-mail do {product_name}",
-		"body": "Olá, {username},\n\nInsira este código no aplicativo para verificar seu novo e-mail do {product_name}:\n\n{code}\n\nEste código expira em {expiresAt, date, full} às {expiresAt, time, short}.\n\nSe você não solicitou isso, pode ignorar este e-mail.\n\n– Equipe do {product_name}"
+		"subject": "Verifique sua conta da Área de Membros {product_name}",
+		"body": "Olá, {username},\n\nInsira este código no aplicativo para verificar sua conta da Área de Membros {product_name}:\n\n{code}\n\nEste código expira em {expiresAt, date, full} às {expiresAt, time, short}.\n\nSe você não solicitou isso, pode ignorar este e-mail.\n\n– Equipe {product_name}"
 	},
 	"email_change_original": {
 		"subject": "Confirme a alteração do e-mail da sua conta do {product_name}",
@@ -40,8 +40,8 @@ const EMAIL_I18N_PT_BR_MESSAGES = defineEmailI18nLocaleMessages({
 		"body": "Olá, {username},\n\nO endereço de e-mail da sua conta do {product_name} foi alterado para {newEmail}.\n\nSe você fez essa alteração, nenhuma ação é necessária. Se você não fez, pode reverter a alteração e proteger sua conta usando este link:\n\n{revertUrl}\n\nIsso restaurará seu e-mail anterior, desconectará você de todos os lugares, removerá números de telefone vinculados, desativará a MFA e exigirá que você defina uma nova senha.\n\n– Equipe de Segurança do {product_name}"
 	},
 	"email_verification": {
-		"subject": "Verifique o endereço de e-mail da sua conta do {product_name}",
-		"body": "Olá, {username},\n\nPor favor, verifique o endereço de e-mail da sua conta do {product_name} clicando no link abaixo:\n\n{verifyUrl}\n\nSe você não criou uma conta do {product_name}, pode ignorar este e-mail com segurança.\n\nEste link é válido por 24 horas.\n\n– Equipe do {product_name}"
+		"subject": "Verifique sua conta da Área de Membros {product_name}",
+		"body": "Olá, {username},\n\nClique no link abaixo para verificar sua conta da Área de Membros {product_name}:\n\n{verifyUrl}\n\nEste link é válido por 24 horas.\n\nSe você não solicitou isso, pode ignorar este e-mail.\n\n– Equipe {product_name}"
 	},
 	"gift_chargeback_notification": {
 		"subject": "Vantagens do seu presente resgatado foram removidas",
