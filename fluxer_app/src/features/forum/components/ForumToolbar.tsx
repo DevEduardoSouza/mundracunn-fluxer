@@ -26,12 +26,14 @@ import {modal, push as pushModal} from '@app/features/ui/commands/ModalCommands'
 import {Input} from '@app/features/ui/components/form/FormInput';
 import {useContextMenuTrigger} from '@app/features/ui/hooks/useContextMenuTrigger';
 import Users from '@app/features/user/state/Users';
+import {MenuBottomSheet, type MenuGroupType} from '@app/features/ui/menu_bottom_sheet/MenuBottomSheet';
+import {isMobileExperienceEnabled} from '@app/features/ui/utils/MobileExperience';
 import {msg} from '@lingui/core/macro';
 import {useLingui} from '@lingui/react/macro';
 import {CaretDownIcon, MagnifyingGlassIcon, PlusIcon, SlidersHorizontalIcon, StarIcon} from '@phosphor-icons/react';
 import {observer} from 'mobx-react-lite';
 import type React from 'react';
-import {useCallback} from 'react';
+import {useCallback, useMemo, useState} from 'react';
 
 const NEW_POST_DESCRIPTOR = msg({
 	message: 'New post',
@@ -187,6 +189,54 @@ const ForumSortMenu: React.FC<{guildId: string; onClose: () => void}> = observer
 	);
 });
 
+/**
+ * As mesmas opcoes do ForumSortMenu, mas como dados em vez de JSX.
+ *
+ * No celular o ContextMenu nao existe: ele retorna null quando a experiencia
+ * mobile esta ligada (ContextMenu.tsx:708), e o app inteiro troca menu de
+ * contexto por bottom sheet. Sem isto o botao "Sort & view" abria o estado do
+ * menu e nao renderizava nada - foi o que o cliente relatou.
+ */
+function useSortMenuGroups(guildId: string): Array<MenuGroupType> {
+	const {i18n} = useLingui();
+	const sortBy = Forum.getSortBy();
+	const viewMode = Forum.getViewMode();
+	const inactiveDaysOverride = Forum.getInactiveDaysOverride();
+	const classInactiveDays = getClassInactiveDays(guildId);
+	return useMemo(
+		() => [
+			{
+				items: [
+					{label: i18n._(SORT_ACTIVITY_DESCRIPTOR), selected: sortBy === 'activity', onSelect: () => Forum.setSortBy('activity')},
+					{label: i18n._(SORT_CREATED_DESCRIPTOR), selected: sortBy === 'created', onSelect: () => Forum.setSortBy('created')},
+					{label: i18n._(SORT_TITLE_DESCRIPTOR), selected: sortBy === 'title', onSelect: () => Forum.setSortBy('title')},
+				],
+			},
+			{
+				items: [
+					{label: i18n._(VIEW_LIST_DESCRIPTOR), selected: viewMode === 'list', onSelect: () => Forum.setViewMode('list')},
+					{label: i18n._(VIEW_GALLERY_DESCRIPTOR), selected: viewMode === 'grid', onSelect: () => Forum.setViewMode('grid')},
+				],
+			},
+			{
+				items: [
+					{
+						label: i18n._(HIDE_INACTIVE_DEFAULT_DESCRIPTOR, {days: classInactiveDays}),
+						selected: inactiveDaysOverride == null,
+						onSelect: () => Forum.setInactiveDaysOverride(null),
+					},
+					...FORUM_INACTIVE_DAYS_OPTIONS.map((days) => ({
+						label: days === 0 ? i18n._(HIDE_INACTIVE_NEVER_DESCRIPTOR) : i18n._(HIDE_INACTIVE_DAYS_DESCRIPTOR, {days}),
+						selected: inactiveDaysOverride === days,
+						onSelect: () => Forum.setInactiveDaysOverride(days),
+					})),
+				],
+			},
+		],
+		[i18n, sortBy, viewMode, inactiveDaysOverride, classInactiveDays],
+	);
+}
+
 interface ForumToolbarProps {
 	guildId: string;
 }
@@ -194,6 +244,9 @@ interface ForumToolbarProps {
 export const ForumToolbar: React.FC<ForumToolbarProps> = observer(({guildId}) => {
 	const {i18n} = useLingui();
 	const {isOpen, withTracking} = useContextMenuTrigger();
+	const [sortSheetOpen, setSortSheetOpen] = useState(false);
+	const sortMenuGroups = useSortMenuGroups(guildId);
+	const closeSortSheet = useCallback(() => setSortSheetOpen(false), []);
 	const query = Forum.getQuery();
 	const showOnlyFollowed = Forum.getShowOnlyFollowed();
 	const followedCount = Forum.getFollowedPosts().length;
@@ -203,6 +256,12 @@ export const ForumToolbar: React.FC<ForumToolbarProps> = observer(({guildId}) =>
 	}, []);
 	const openSortMenu = useCallback(
 		(event: React.MouseEvent<HTMLButtonElement>) => {
+			// No celular o ContextMenu nao renderiza (ver useSortMenuGroups), entao vai
+			// de bottom sheet - o mesmo padrao que o resto do app usa no mobile.
+			if (isMobileExperienceEnabled()) {
+				setSortSheetOpen(true);
+				return;
+			}
 			ContextMenuCommands.openFromElementBottomRight(
 				event,
 				({onClose}) => (
@@ -292,6 +351,13 @@ export const ForumToolbar: React.FC<ForumToolbarProps> = observer(({guildId}) =>
 			>
 				{i18n._(SORT_AND_VIEW_DESCRIPTOR)}
 			</Button>
+			<MenuBottomSheet
+				isOpen={sortSheetOpen}
+				onClose={closeSortSheet}
+				title={i18n._(SORT_AND_VIEW_DESCRIPTOR)}
+				groups={sortMenuGroups}
+				data-flx="forum.forum-toolbar.sort-bottom-sheet"
+			/>
 		</div>
 	);
 });
