@@ -850,6 +850,11 @@ const MediaViewerModalComponent: FC = observer(() => {
 					data-flx="messaging.media-viewer-modal.render-media.video-player-container"
 				>
 					<VideoPlayer
+						// Sem key o React reusa a mesma instancia ao navegar entre stories, e a
+						// state machine do player continua com o video anterior anexado - o cliente
+						// relatou dois videos tocando ao mesmo tempo no celular. O <video> do gifv
+						// logo acima ja usa key pelo mesmo motivo.
+						key={currentItem.src}
 						src={currentItem.src}
 						width={currentItem.naturalWidth}
 						height={currentItem.naturalHeight}
