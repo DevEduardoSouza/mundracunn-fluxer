@@ -87,8 +87,8 @@ describe('Auth registration policy', () => {
 		await getInviteRepository().create({
 			code: createInviteCode(code),
 			type: InviteTypes.GUILD,
-			guild_id: createGuildID('1545063019757699072'),
-			channel_id: createChannelID('1545063019757699075'),
+			guild_id: createGuildID(1545063019757699072n),
+			channel_id: createChannelID(1545063019757699075n),
 			uses,
 			max_uses: maxUses,
 			max_age: 0,
