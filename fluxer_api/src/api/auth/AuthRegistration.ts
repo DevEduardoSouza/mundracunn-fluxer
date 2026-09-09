@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import {AdminACLs} from '@fluxer/constants/src/AdminACLs';
+import {InviteTypes} from '@fluxer/constants/src/ChannelConstants';
 import {ProfileFieldPrivacyFlags, UserFlags} from '@fluxer/constants/src/UserConstants';
 import {ValidationErrorCodes} from '@fluxer/constants/src/ValidationErrorCodes';
 import {RegistrationClosedError} from '@fluxer/errors/src/domains/auth/RegistrationClosedError';
@@ -140,7 +141,11 @@ export async function register(
 		throw InputValidationError.fromCode('consent', ValidationErrorCodes.MUST_AGREE_TO_TOS_AND_PRIVACY_POLICY);
 	}
 	const now = new Date();
-	const registrationAccess = await resolveRegistrationAccess(instanceConfigRepository, data.registration_url_code);
+	const registrationAccess = await resolveRegistrationAccess(
+		instanceConfigRepository,
+		data.registration_url_code,
+		await hasUsableGuildInvite(inviteService, data.invite_code),
+	);
 	const clientIp = requireClientIp(request, {
 		trustClientIpHeader: config.proxy.trust_client_ip_header,
 		clientIpHeaderName: config.proxy.client_ip_header,
@@ -468,9 +473,38 @@ function shouldAttemptBootstrapAdminGrant(
 	);
 }
 
+/**
+ * Whether the request carries a guild invite that can still be used.
+ *
+ * MUNDRACUNN: with `mode: closed` an invite used to be worth nothing at registration — the gate
+ * only ever looked at `registration_url_code`, so someone holding a perfectly valid channel
+ * invite was told REGISTRATION_CLOSED and the person who sent it had no way to know why. Minting
+ * an invite already requires CREATE_INSTANT_INVITE, which the fork removed from the @everyone
+ * default, so the invite itself is the authorization — which is how Discord has always worked.
+ *
+ * Deliberately narrow: only GUILD invites, and only while they still have uses left. An unknown,
+ * exhausted or expired code is simply not an authorization, and falls through to the normal
+ * closed-registration error rather than leaking whether the code ever existed.
+ */
+async function hasUsableGuildInvite(
+	inviteService: InviteService | null,
+	inviteCode: string | null | undefined,
+): Promise<boolean> {
+	const normalizedCode = inviteCode?.trim();
+	if (!inviteService || !normalizedCode) return false;
+	try {
+		const invite = await inviteService.getInvite(createInviteCode(normalizedCode));
+		if (invite.type !== InviteTypes.GUILD) return false;
+		return invite.maxUses === 0 || invite.uses < invite.maxUses;
+	} catch {
+		return false;
+	}
+}
+
 async function resolveRegistrationAccess(
 	instanceConfigRepository: InstanceConfigRepository,
 	registrationUrlCode: string | null | undefined,
+	invitedToGuild = false,
 ): Promise<{pendingApproval: boolean; registrationUrl: InstanceRegistrationUrl | null}> {
 	const registrationConfig = await instanceConfigRepository.getRegistrationConfig();
 	const normalizedCode = registrationUrlCode?.trim();
@@ -484,7 +518,9 @@ async function resolveRegistrationAccess(
 			throw new RegistrationUrlInvalidError();
 		}
 	}
-	if (!registrationUrl && registrationConfig.mode === 'closed') {
+	// Um convite de guild ainda utilizavel vale como autorizacao de cadastro: quem
+	// nao tem convite nem registration URL continua barrado.
+	if (!registrationUrl && !invitedToGuild && registrationConfig.mode === 'closed') {
 		throw new RegistrationClosedError();
 	}
 	return {
